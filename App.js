@@ -1,33 +1,41 @@
-import { createSwitchNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
-
-// Implementation of HomeScreen, OtherScreen, SignInScreen, AuthLoadingScreen
-// goes here.
+import React from 'react';
+import { createSwitchNavigator, createStackNavigator, createAppContainer, createDrawerNavigator } from 'react-navigation';
 import LoginScreen from './src/Auth/LoginScreen';
 import ForgotScreen from './src/Auth/ForgotScreen';
+import RecoverScreen from './src/Auth/RecoverScreen';
 import HomeScreen from './src/Home/HomeScreen';
 import ProfileScreen from './src/Profile/ProfileScreen';
-import AuthLoadingScreen from './src/AuthloadingScreen'
+import AuthLoadingScreen from './src/AuthloadingScreen';
+import SideBar from './src/SideBar';
 
-const AppStack = createStackNavigator({ Home: HomeScreen, Profile: ProfileScreen });
-const AuthStack = createStackNavigator({ Login: LoginScreen, Forgot: ForgotScreen });
+const AppStack = createStackNavigator(
+  { 
+    Home: HomeScreen, 
+    Profile: ProfileScreen 
+  });
+const AuthStack = createStackNavigator(
+  { 
+    Login: LoginScreen, 
+    Forgot: ForgotScreen, 
+    Recover: RecoverScreen 
+  });
+  const AppDrawerMenu = createDrawerNavigator(
+    {
+    Home: HomeScreen,
+    Profile: ProfileScreen
+    },
+    {
+      contentComponent: props => <SideBar {...props} />,
+    }
+  );
 
 export default createAppContainer(createSwitchNavigator(
   {
     AuthLoading: AuthLoadingScreen,
-    App: AppStack,
+    App: AppDrawerMenu,
     Auth: AuthStack,
   },
   {
     initialRouteName: 'AuthLoading',
   }
 ));
-// import React, { Component } from 'react'
-
-// import HomeScreen from './src/Home/HomeScreen'
-
-// export default class AuthLoadingScreen extends Component {
-
-//   render() {
-//     return <HomeScreen />
-//   }
-// }

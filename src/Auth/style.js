@@ -40,18 +40,24 @@ export default StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold'
   },
+  subTitleForgot:{
+    fontSize: 10,
+    marginBottom: 5,
+    color: '#fff',
+    fontWeight: 'bold'
+  },
   inputLogin:{
     width: '100%',
     backgroundColor: '#ffffff82', 
     color: '#fff',
     borderRadius: 10, 
     height: 40, 
-    marginBottom: 15,
+    marginBottom: 10,
     paddingLeft: 15,
     paddingRight: 15
   },
   textBtn:{
     color: '#fff', 
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   }
 });

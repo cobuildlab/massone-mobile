@@ -6,11 +6,11 @@ import {
   Image,
   TextInput
 } from "react-native";
-import { Content, ListItem, Body, CheckBox, Left, Right, Switch, Button, Icon, Header, Title } from 'native-base';
+import { Content, ListItem, Body, CheckBox, Left, Right, Switch, Button, Icon } from 'native-base';
 import styles from './style';
 import ButtomComponet from '../componets/ButtomBlue'
 
-class ForgotScreen extends React.Component {
+class RecoverScreen extends React.Component {
   static navigationOptions = {
     header: null
   };
@@ -22,12 +22,12 @@ class ForgotScreen extends React.Component {
   _forgot = async () => {
     this.props.navigation.navigate('Forgot');
   };
-  _recover = async () => {
-    this.props.navigation.navigate('Recover');
-  };
   _goBack = () => {
     this.props.navigation.goBack();
   };
+  _goBackLogin = () => {
+    this.props.navigation.popToTop()
+  }
 
   render() {
     return (
@@ -41,19 +41,29 @@ class ForgotScreen extends React.Component {
             style={styles.viewLogo}
             source={require('../assets/image/logoWhite.png')}
           />
-          <Text style={styles.title}>Forgor Password?</Text>
-          <Text style={styles.subTitleForgot}>Enter your Email and we will send you a password link</Text>
+          <Text style={styles.title}>Recover Password</Text>
+          <Text style={styles.subTitleForgot}>Enter your code and new password</Text>
           <View style={{width: '80%', marginTop: 25}}>
             
             <TextInput 
             style={styles.inputLogin} 
-            placeholder="Email" 
+            placeholder="Code" 
             placeholderTextColor="#fff"
             />
-            <ButtomComponet text="Send Request" onPress={this._recover} block primary/>
+            <TextInput 
+            style={styles.inputLogin} 
+            placeholder="New Password" 
+            placeholderTextColor="#fff"
+            />
+            <TextInput 
+            style={styles.inputLogin} 
+            placeholder="Confirm Password" 
+            placeholderTextColor="#fff"
+            />
+            <ButtomComponet text="Recover" onPress={this._goBackLogin} block primary/>
             <Button block transparent onPress={this._goBack}>
               <Text style={styles.textBtn}>
-                Go back Login
+                Go back
               </Text>
             </Button>
             {/* <Button block light onPress={this._signInAsync}>
@@ -70,4 +80,4 @@ class ForgotScreen extends React.Component {
 
   
 }
-export default ForgotScreen;
+export default RecoverScreen;
