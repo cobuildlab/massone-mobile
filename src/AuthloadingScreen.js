@@ -6,21 +6,59 @@ import {
   StyleSheet,
   View,
 } from 'react-native';
+import { LOG, WARN, ERROR } from "./utils";
+import authStore from './Auth/authStore';
+import * as authActions from './Auth/actions';
 
 class AuthLoadingScreen extends React.Component {
   constructor(props) {
     super(props);
-    this._bootstrapAsync();
   }
 
-  // Fetch the token from storage then navigate to our appropriate place
-  _bootstrapAsync = async () => {
-    const userToken = await AsyncStorage.getItem('userToken');
+  componentDidMount() {
+    this.loginSubscription = authStore.subscribe('Login', this.loginHandler);
 
-    // This will switch to the App screen or Auth screen and this loading
-    // screen will be unmounted and thrown away.
-    this.props.navigation.navigate(userToken ? 'App' : 'Auth');
-  };
+    setTimeout(() => {
+      this._bootstrapAsync();
+    }, 3000);
+  }
+
+    componentWillUnmount() {
+        this.loginSubscription.unsubscribe();
+    }
+
+    loginHandler = (user) => {
+      let token;
+
+      try {
+        token = user.token;
+      } catch (e) {
+        return LOG(this, e);
+      }
+
+      if (token) {
+        return this.props.navigation.navigate('App');
+      }
+
+      this.props.navigation.navigate('Auth');
+    }
+
+    // Fetch the token from AsycnStorage/FluxState then navigate to our appropriate place
+    _bootstrapAsync = async () => {
+      let userData = authStore.getState('Login');
+
+      if (!userData || !userData.token) {
+        const userString = await AsyncStorage.getItem('user');
+
+        try {
+            userData = JSON.parse(userString);
+        } catch (e) {
+            LOG(this, e);
+        }
+      }
+
+      authActions.setStoredUser(userData || {});
+    };
 
   // Render any loading content that you like here
   render() {
