@@ -5,7 +5,7 @@ import { LOG, WARN, ERROR, storeErrorHandler } from "../utils";
 class AuthStore extends Flux.DashStore {
   constructor() {
     super();
-  
+
     this.addEvent('Login', (nextState) => {
       AsyncStorage.setItem("user", JSON.stringify(nextState))
         .then(() => {
@@ -18,7 +18,6 @@ class AuthStore extends Flux.DashStore {
       return nextState;
     });
 
-    // The logout Event
     this.addEvent('Logout', (nextState) => {
       AsyncStorage.clear()
         .then(() => {
@@ -30,6 +29,10 @@ class AuthStore extends Flux.DashStore {
 
       return nextState;
     });
+
+    this.addEvent('ForgotPassword');
+
+    this.addEvent('ResetPassword');
 
     this.addEvent('AuthStoreError', storeErrorHandler);
   }

@@ -1,30 +1,58 @@
 import React, { Component } from "react";
-import { 
+import {
   View,
   Text,
   AsyncStorage,
   Image,
-  TextInput
 } from "react-native";
-import { Content, ListItem, Body, CheckBox, Left, Right, Switch, Button, Icon } from 'native-base';
+import { Content, ListItem, Body, CheckBox, Left, Right, Switch, Button, Icon,
+Input } from 'native-base';
 import styles from './style';
-import ButtomComponet from '../componets/ButtomBlue'
+import ButtomComponet from '../componets/ButtomBlue';
+import * as authActions from './actions';
+import authStore from './authStore';
+import { CustomToast } from '../utils/components';
 
 class RecoverScreen extends React.Component {
   static navigationOptions = {
     header: null
   };
 
-  _signInAsync = async () => {
-    await AsyncStorage.setItem('userToken', 'abc');
-    this.props.navigation.navigate('App');
-  };
-  _forgot = async () => {
-    this.props.navigation.navigate('Forgot');
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+      code: '',
+      password: '',
+      repeatPassword: '',
+    };
+  }
+
+  componentDidMount() {
+    this.resetPasswordSubscription = authStore.subscribe('ResetPassword', this.resetPasswordHandler);
+    this.authStoreError = authStore.subscribe('AuthStoreError', this.errorHandler);
+  }
+
+  componentWillUnmount() {
+    this.resetPasswordSubscription.unsubscribe();
+    this.authStoreError.unsubscribe();
+  }
+
+  resetPasswordHandler = () => {
+    this.setState({isLoading: false});
+    CustomToast('Password changed!');
+    this.props.navigation.navigate('Login');
+  }
+
+  errorHandler = (err) => {
+    this.setState({isLoading: false});
+    CustomToast(err, 'danger');
+  }
+
   _goBack = () => {
     this.props.navigation.goBack();
   };
+
   _goBackLogin = () => {
     this.props.navigation.popToTop()
   }
@@ -44,40 +72,52 @@ class RecoverScreen extends React.Component {
           <Text style={styles.title}>Recover Password</Text>
           <Text style={styles.subTitleForgot}>Enter your code and new password</Text>
           <View style={{width: '80%', marginTop: 25}}>
-            
-            <TextInput 
-            style={styles.inputLogin} 
-            placeholder="Code" 
+
+            <Input
+            style={styles.inputLogin}
+            autoCapitalize={'none'}
+            value={this.state.code}
+            placeholder="Code"
             placeholderTextColor="#fff"
+            value={this.state.code}
+            onChangeText={(text) => this.setState({code: text})}
             />
-            <TextInput 
-            style={styles.inputLogin} 
-            placeholder="New Password" 
+            <Input
+            style={styles.inputLogin}
+            placeholder="New Password"
             placeholderTextColor="#fff"
+            value={this.state.password}
+            onChangeText={(text) => this.setState({password: text})}
+            secureTextEntry={true}
             />
-            <TextInput 
-            style={styles.inputLogin} 
-            placeholder="Confirm Password" 
+            <Input
+            style={styles.inputLogin}
+            placeholder="Confirm Password"
             placeholderTextColor="#fff"
+            value={this.state.repeatPassword}
+            onChangeText={(text) => this.setState({repeatPassword: text})}
+            secureTextEntry={true}
             />
-            <ButtomComponet text="Recover" onPress={this._goBackLogin} block primary/>
+            <ButtomComponet text="Recover" onPress={this.resetPassword} block primary/>
             <Button block transparent onPress={this._goBack}>
               <Text style={styles.textBtn}>
                 Go back
               </Text>
             </Button>
-            {/* <Button block light onPress={this._signInAsync}>
-              <Text>Light</Text>
-            </Button>
-            <Button block light onPress={this._forgot}>
-              <Text>Light</Text>
-            </Button> */}
           </View>
           </View>
         </Content>
     );
   }
 
-  
+  resetPassword = () => {
+    this.setState({isLoading: true}, () => {
+      authActions.resetPassword(
+        this.state.code,
+        this.state.password,
+        this.state.repeatPassword,
+      );
+    });
+  }
 }
 export default RecoverScreen;
