@@ -17,6 +17,7 @@ import authStore from './authStore';
 import { LOG } from '../utils';
 import { CustomToast, Loading } from '../utils/components';
 import { BG_MOBILE_IMG, LOGO_WHITE } from '../assets/image/';
+import { withNamespaces } from 'react-i18next';
 
 class LoginScreen extends Component {
   static navigationOptions = {
@@ -67,6 +68,8 @@ class LoginScreen extends Component {
   };
 
   render() {
+    const { t } = this.props;
+
     return (
       <Content contentContainerStyle={{ flexGrow: 1 }}>
         {this.state.isLoading ? <Loading /> : null}
@@ -74,8 +77,8 @@ class LoginScreen extends Component {
         <View style={styles.container}>
           <Image style={styles.viewBackground} source={BG_MOBILE_IMG} />
           <Image style={styles.viewLogo} source={LOGO_WHITE} />
-          <Text style={styles.title}>Welcome Back!</Text>
-          <Text style={styles.subTitle}>Please login to your account</Text>
+          <Text style={styles.title}>{t('AUTH.wellcomeBack')}</Text>
+          <Text style={styles.subTitle}>{t('AUTH.pleaseLogin')}</Text>
           <View style={{ width: '80%' }}>
             <Input
               style={styles.inputLogin}
@@ -103,20 +106,20 @@ class LoginScreen extends Component {
               </Left>
               <Body style={{ borderBottomWidth: 0 }}>
                 <TouchableOpacity onPress={this.rememberMe}>
-                  <Text style={styles.textBtn}>Remember me</Text>
+                  <Text style={styles.textBtn}>{t('AUTH.rememberMe')}</Text>
                 </TouchableOpacity>
               </Body>
               <Right style={{ borderBottomWidth: 0 }}>
                 <Button transparent light onPress={this.forgot}>
-                  <Text style={styles.textBtn}>Forgot Password</Text>
+                  <Text style={styles.textBtn}>{t('AUTH.forgotPassword')}</Text>
                 </Button>
               </Right>
             </ListItem>
-            <ButtomComponet text="Login" onPress={this.login} block primary />
+            <ButtomComponet text={t('AUTH.login')} onPress={this.login} block primary />
           </View>
           <View>
             <Button block transparent onPress={this.goBack}>
-              <Text style={styles.textBtn}>Terms of use. Privacy Policy</Text>
+              <Text style={styles.textBtn}>{t('AUTH.termsAndPrivacy')}</Text>
             </Button>
           </View>
         </View>
@@ -142,4 +145,5 @@ class LoginScreen extends Component {
     });
   };
 }
-export default LoginScreen;
+
+export default withNamespaces()(LoginScreen);

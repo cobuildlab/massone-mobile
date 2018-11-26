@@ -7,6 +7,7 @@ import * as authActions from './actions';
 import authStore from './authStore';
 import { CustomToast, Loading } from '../utils/components';
 import { BG_MOBILE_IMG, LOGO_WHITE } from '../assets/image/';
+import { withNamespaces } from 'react-i18next';
 
 class RecoverScreen extends Component {
   static navigationOptions = {
@@ -51,6 +52,8 @@ class RecoverScreen extends Component {
   };
 
   render() {
+    const { t } = this.props;
+
     return (
       <Content contentContainerStyle={{ flexGrow: 1 }}>
         {this.state.isLoading ? <Loading /> : null}
@@ -64,22 +67,22 @@ class RecoverScreen extends Component {
             style={styles.viewLogo}
             source={LOGO_WHITE}
           />
-          <Text style={styles.title}>Recover Password</Text>
+          <Text style={styles.title}>{t('AUTH.recoverPassword')}</Text>
           <Text style={styles.subTitleForgot}>
-            Enter your code and new password
+            {t('AUTH.enterYourCode')}
           </Text>
           <View style={{ width: '80%', marginTop: 25 }}>
             <Input
               style={styles.inputLogin}
               autoCapitalize={'none'}
               value={this.state.code}
-              placeholder="Code"
+              placeholder={t('AUTH.code')}
               placeholderTextColor="#fff"
               onChangeText={(text) => this.setState({ code: text })}
             />
             <Input
               style={styles.inputLogin}
-              placeholder="New Password"
+              placeholder={t('AUTH.newPassword')}
               placeholderTextColor="#fff"
               value={this.state.password}
               onChangeText={(text) => this.setState({ password: text })}
@@ -87,20 +90,20 @@ class RecoverScreen extends Component {
             />
             <Input
               style={styles.inputLogin}
-              placeholder="Confirm Password"
+              placeholder={t('AUTH.confirmPassword')}
               placeholderTextColor="#fff"
               value={this.state.repeatPassword}
               onChangeText={(text) => this.setState({ repeatPassword: text })}
               secureTextEntry={true}
             />
             <ButtomComponet
-              text="Recover"
+              text={t('AUTH.recover')}
               onPress={this.resetPassword}
               block
               primary
             />
             <Button block transparent onPress={this.goBack}>
-              <Text style={styles.textBtn}>Go back</Text>
+              <Text style={styles.textBtn}>{t('APP.goBack')}</Text>
             </Button>
           </View>
         </View>
@@ -122,4 +125,5 @@ class RecoverScreen extends Component {
     });
   };
 }
-export default RecoverScreen;
+
+export default withNamespaces()(RecoverScreen);

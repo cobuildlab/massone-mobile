@@ -33,7 +33,7 @@ const AppDrawerMenu = createDrawerNavigator(
   },
 );
 
-const App = createAppContainer(
+const AppNavigator = createAppContainer(
   createSwitchNavigator(
     {
       AuthLoading: AuthLoadingScreen,
@@ -46,8 +46,10 @@ const App = createAppContainer(
   ),
 );
 
-export default () => (
+const App = () => (
   <Root>
-    <App />
+    <AppNavigator />
   </Root>
 );
+
+export default App;

@@ -2,10 +2,18 @@ import Flux from 'flux-state';
 import { AsyncStorage } from 'react-native';
 import { LOG, ERROR, storeErrorHandler } from '../utils';
 
+/**
+ * The Auth store, to handle user authentication events
+ * @extends Flux
+ */
 class AuthStore extends Flux.DashStore {
   constructor() {
     super();
 
+    /**
+     * Login event, to set or update the user's session, it will save the user
+     * to AsyncStorage
+     */
     this.addEvent('Login', (nextState) => {
       AsyncStorage.setItem('user', JSON.stringify(nextState))
         .then(() => {
@@ -18,6 +26,9 @@ class AuthStore extends Flux.DashStore {
       return nextState;
     });
 
+    /**
+     * Logout event, it will remove user from AsyncStorage
+     */
     this.addEvent('Logout', (nextState) => {
       AsyncStorage.clear()
         .then(() => {

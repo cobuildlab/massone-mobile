@@ -7,6 +7,7 @@ import * as authActions from './actions';
 import authStore from './authStore';
 import { CustomToast, Loading } from '../utils/components';
 import { BG_MOBILE_IMG, LOGO_WHITE } from '../assets/image/';
+import { withNamespaces } from 'react-i18next';
 
 class ForgotScreen extends Component {
   static navigationOptions = {
@@ -49,6 +50,8 @@ class ForgotScreen extends Component {
   };
 
   render() {
+    const { t } = this.props;
+
     return (
       <Content contentContainerStyle={{ flexGrow: 1 }}>
         {this.state.isLoading ? <Loading /> : null}
@@ -56,9 +59,9 @@ class ForgotScreen extends Component {
         <View style={styles.container}>
           <Image style={styles.viewBackground} source={BG_MOBILE_IMG} />
           <Image style={styles.viewLogo} source={LOGO_WHITE} />
-          <Text style={styles.title}>Forgor Password?</Text>
+          <Text style={styles.title}>{t('AUTH.forgotPassword')}</Text>
           <Text style={styles.subTitleForgot}>
-            Enter your Email and we will send you a password link
+            {t('AUTH.enterEmailForCode')}
           </Text>
           <View style={{ width: '80%', marginTop: 25 }}>
             <Input
@@ -66,23 +69,23 @@ class ForgotScreen extends Component {
               keyboardType={'email-address'}
               autoCapitalize={'none'}
               value={this.state.email}
-              placeholder="Email"
+              placeholder={t('AUTH.email')}
               placeholderTextColor="#fff"
               onChangeText={(text) => this.setState({ email: text })}
             />
             <ButtomComponet
-              text="Send Request"
+              text={t('AUTH.sendRequest')}
               onPress={this.forgotPassword}
               block
               primary
             />
             <Button block transparent onPress={this.goToResetPassword}>
               <Text style={styles.textBtn}>
-                Already have a code? Click here
+                {t('AUTH.alreadyHaveCode')}
               </Text>
             </Button>
             <Button block transparent onPress={this.goBack}>
-              <Text style={styles.textBtn}>Go back Login</Text>
+              <Text style={styles.textBtn}>{t('APP.goBack')}</Text>
             </Button>
           </View>
         </View>
@@ -104,4 +107,5 @@ class ForgotScreen extends Component {
     });
   };
 }
-export default ForgotScreen;
+
+export default withNamespaces()(ForgotScreen);
