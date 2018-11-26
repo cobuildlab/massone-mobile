@@ -1,10 +1,9 @@
 import authStore from '../../Auth/authStore';
-// import {checkInternetConnection} from 'react-native-offline';
+import { API_URL } from 'react-native-dotenv';
 import * as authActions from '../../Auth/actions';
+// import {checkInternetConnection} from 'react-native-offline';
 // import {i18next} from '../i18n';
 // import { LOG, WARN, ERROR } from '../utils';
-
-const API_URL = 'https://massone-api.cobuildlab.com';
 
 /**
  * POST method fetch
