@@ -1,15 +1,39 @@
 import React, { Component } from "react";
 import { SafeAreaView } from 'react-navigation';
-import { 
+import {
   View,
   StyleSheet,
   AsyncStorage,
 } from "react-native";
 import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
+import * as authActions from '../Auth/actions';
+import authStore from '../Auth/authStore';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'Welcome to the app!',
+  };
+
+  componentDidMount() {
+    this.logoutSubscription = authStore.subscribe('Logout', this.logoutHandler);
+  }
+
+  componentWillUnmount() {
+    this.logoutSubscription.unsubscribe();
+  }
+
+  logoutHandler = () => {
+    this.setState({ isLoading: false });
+    this.props.navigation.navigate('Auth');
+  }
+  _showMoreApp = () => {
+    this.props.navigation.navigate('Profile');
+  };
+
+  logout = () => {
+    this.setState({isLoading: true}, () => {
+      authActions.logout();
+    })
   };
 
   render() {
@@ -26,17 +50,16 @@ class HomeScreen extends React.Component {
           </Body>
           <Right />
         </Header>
-
-          <View>
+        <View>
           <Text>
             This is Content Section
           </Text>
           <Button primary onPress={this._showMoreApp}>
-              <Text>
-                Show me more of the app
-              </Text>
+            <Text>
+              Show me more of the app
+            </Text>
             </Button>
-            <Button primary onPress={this._signOutAsync}>
+            <Button primary onPress={this.logout}>
               <Text>
               Actually, sign me out :)
               </Text>
@@ -45,22 +68,5 @@ class HomeScreen extends React.Component {
       </View>
     );
   }
-
-  _showMoreApp = () => {
-    this.props.navigation.navigate('Profile');
-  };
-
-  _signOutAsync = async () => {
-    await AsyncStorage.clear();
-    this.props.navigation.navigate('Auth');
-  };
 }
 export default HomeScreen;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-});

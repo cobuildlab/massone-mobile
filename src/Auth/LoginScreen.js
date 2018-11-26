@@ -1,24 +1,62 @@
 import React, { Component } from "react";
-import { 
+import {
   View,
   Text,
   AsyncStorage,
   Image,
-  TextInput
 } from "react-native";
-import { Content, ListItem, Body, CheckBox, Left, Right, Switch, Button, Icon } from 'native-base';
+import { Content, ListItem, Body, CheckBox, Left, Right, Switch, Button, Icon,
+Input } from 'native-base';
 import styles from './style';
-import ButtomComponet from '../componets/ButtomBlue'
+import ButtomComponet from '../componets/ButtomBlue';
+import * as authActions from './actions';
+import authStore from './authStore';
+import { CustomToast } from '../utils/components';
 
 class LoginScreen extends React.Component {
   static navigationOptions = {
     header: null
   };
 
-  _signInAsync = async () => {
-    await AsyncStorage.setItem('userToken', 'abc');
-    this.props.navigation.navigate('App');
-  };
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+      username: '',
+      password: '',
+    };
+  }
+
+  componentDidMount() {
+    this.loginSubscription = authStore.subscribe('Login', this.loginHandler);
+    this.authStoreError = authStore.subscribe('AuthStoreError', this.errorHandler);
+  }
+
+  componentWillUnmount() {
+    this.loginSubscription.unsubscribe();
+    this.authStoreError.unsubscribe();
+  }
+
+  loginHandler = (user) => {
+    this.setState({isLoading: false});
+    let token;
+
+    try {
+      token = user.token;
+    } catch (e) {
+      return LOG(this, e);
+    }
+
+    if (token) {
+      return this.props.navigation.navigate('App');
+    }
+  }
+
+  errorHandler = (err) => {
+    this.setState({isLoading: false});
+    CustomToast(err, 'danger');
+  }
+
   _forgot = async () => {
     this.props.navigation.navigate('Forgot');
   };
@@ -38,23 +76,29 @@ class LoginScreen extends React.Component {
           <Text style={styles.title}>Welcome Back!</Text>
           <Text style={styles.subTitle}>Please login to your account</Text>
             <View style={{width: '80%'}}>
-              
-              <TextInput 
-              style={styles.inputLogin} 
-              placeholder="Username" 
+
+              <Input
+              style={styles.inputLogin}
+              autoCapitalize={'none'}
+              value={this.state.username}
+              placeholder="Username"
               placeholderTextColor="#fff"
+              onChangeText={(text) => this.setState({username: text})}
               />
-              <TextInput 
-              style={styles.inputLogin} 
+              <Input
+              style={styles.inputLogin}
+              value={this.state.password}
               placeholderTextColor="#fff"
-              placeholder="Password" 
+              placeholder="Password"
+              onChangeText={(text) => this.setState({password: text})}
+              secureTextEntry={true}
               />
               <ListItem icon>
                 <Left style={{marginLeft: -18}}>
                   <CheckBox checked={false} color="white" />
                 </Left>
                 <Body style={{borderBottomWidth: 0}}>
-                  <Text style={styles.textBtn}>Remenber me</Text>
+                  <Text style={styles.textBtn}>Remember me</Text>
                 </Body>
                 <Right style={{borderBottomWidth: 0}}>
                 <Button transparent light onPress={this._forgot}>
@@ -62,7 +106,7 @@ class LoginScreen extends React.Component {
                 </Button>
                 </Right>
               </ListItem>
-              <ButtomComponet text="Login" onPress={this._signInAsync} block primary/>
+              <ButtomComponet text="Login" onPress={this.login} block primary/>
             </View>
             <View>
               <Button block transparent onPress={this._goBack}>
@@ -76,6 +120,10 @@ class LoginScreen extends React.Component {
     );
   }
 
-  
+  login = () => {
+    this.setState({ isLoading: true }, () => {
+      authActions.login(this.state.username, this.state.password);
+    });
+  }
 }
 export default LoginScreen;
