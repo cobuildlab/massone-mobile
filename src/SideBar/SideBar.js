@@ -2,17 +2,15 @@ import React, { Component } from "react";
 import { SafeAreaView } from 'react-navigation';
 import { 
   View,
-
-  StyleSheet,
+  TouchableOpacity,
   Image
 } from "react-native";
 import styles from './style'
-import { Button, Text, Icon } from "native-base";
+import { Button, Text, Icon, ListItem, List } from "native-base";
 
 class SideBar extends Component {
   render() {
     const routes = this.props.navigation.state.routes
-    console.warn(routes)
     return (
       <View style={styles.container}>
         <View>
@@ -31,22 +29,24 @@ class SideBar extends Component {
           {routes.map(route => {
             let icon
 
-            if (route.key == 'Home') {
-              icon = <Icon name="home" />
+            if (route.key == 'Jobs') {
+              icon = <Icon type="FontAwesome" name="id-badge" style={{fontSize: 20, color: '#fff', marginRight: 10}} />
             }
             if (route.key == 'Profile') {
-              icon = <Icon name="user" />
+              icon = <Icon type="FontAwesome" name="user" style={{fontSize: 20, color: '#fff'}} />
             }
 
             return (
-              <Button key={route.key} onPress={() => {
+              <TouchableOpacity 
+              style={styles.itemMenu}
+              key={route.key} 
+              onPress={() => {
               this.props.navigation.navigate(route.key)
             }}>
-              {icon}
-              <Text>
-                {route.routeName}
+              <Text style={styles.textItemMenu}>
+              {icon} {route.routeName}
               </Text>
-            </Button>
+            </TouchableOpacity>
             )
           })}
         </View>

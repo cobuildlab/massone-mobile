@@ -30,4 +30,19 @@ export default StyleSheet.create({
     height: 200,
     justifyContent: 'flex-start',
   },
+  itemMenu:{
+    width: '95%', 
+    paddingTop: 10, 
+    paddingBottom: 10, 
+    paddingLeft: 15, 
+    paddingRight: 15, 
+    borderBottomColor: '#3d65b0', 
+    borderBottomWidth: 1, 
+    marginLeft: 5, 
+    marginRight: 5 
+  },
+  textItemMenu:{
+    color: '#fff',
+    fontSize: 20,
+  }
 });
