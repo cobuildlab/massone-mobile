@@ -1,5 +1,4 @@
-import { StyleSheet, Platform, Dimensions } from 'react-native';
-var width = Dimensions.get('window').width;
+import { StyleSheet, Platform } from 'react-native';
 
 export default StyleSheet.create({
   container: {
@@ -7,7 +6,7 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  viewLogo:{
+  viewLogo: {
     width: 220,
     height: 200,
     marginBottom: '10%',
@@ -17,9 +16,9 @@ export default StyleSheet.create({
       android: {
         marginTop: '20%',
       },
-  }),
+    }),
   },
-  viewBackground:{
+  viewBackground: {
     backgroundColor: '#fff',
     flex: 1,
     resizeMode: 'cover',
@@ -28,36 +27,36 @@ export default StyleSheet.create({
     height: '100%',
     justifyContent: 'flex-start',
   },
-  title:{
+  title: {
     fontSize: 36,
     marginBottom: 8,
     color: '#fff',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
-  subTitle:{
+  subTitle: {
     fontSize: 16,
     marginBottom: 20,
     color: '#fff',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
-  subTitleForgot:{
+  subTitleForgot: {
     fontSize: 10,
     marginBottom: 5,
     color: '#fff',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
-  inputLogin:{
+  inputLogin: {
     width: '100%',
-    backgroundColor: '#ffffff82', 
+    backgroundColor: '#ffffff82',
     color: '#fff',
-    borderRadius: 10, 
-    height: 40, 
+    borderRadius: 10,
+    height: 40,
     marginBottom: 10,
     paddingLeft: 15,
-    paddingRight: 15
+    paddingRight: 15,
   },
-  textBtn:{
-    color: '#fff', 
+  textBtn: {
+    color: '#fff',
     fontWeight: 'bold',
-  }
+  },
 });

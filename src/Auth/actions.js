@@ -1,6 +1,5 @@
 import Flux from 'flux-state';
 import authStore from './authStore';
-import { LOG, WARN, ERROR } from "../utils";
 import { resetPasswordValidator } from './validators';
 import { postData } from '../utils/fetch';
 
@@ -29,7 +28,7 @@ const logout = () => {
 
   authStore.clearState();
   return Flux.dispatchEvent('Logout', {});
-}
+};
 
 /**
  * Logout on unautorized API response (status 401/403)
@@ -38,7 +37,7 @@ const logout = () => {
 const logoutOnUnautorized = () => {
   authStore.clearState();
   return Flux.dispatchEvent('Logout', {});
-}
+};
 
 /**
  * Action for setting/updating the stored user from AsyncStorage/Flux or to ser user on app first load
@@ -49,7 +48,7 @@ const setStoredUser = (user) => {
   setTimeout(() => {
     Flux.dispatchEvent('Login', user);
   });
-}
+};
 
 /**
  * Forgot password action
@@ -73,7 +72,7 @@ const forgotPassword = (email) => {
  */
 const resetPassword = (code, password, repeatPassword) => {
   try {
-    resetPasswordValidator(code, password, repeatPassword)
+    resetPasswordValidator(code, password, repeatPassword);
   } catch (err) {
     return Flux.dispatchEvent('AuthStoreError', err);
   }
@@ -87,4 +86,11 @@ const resetPassword = (code, password, repeatPassword) => {
     });
 };
 
-export { login, setStoredUser, logout, logoutOnUnautorized, forgotPassword, resetPassword };
+export {
+  login,
+  setStoredUser,
+  logout,
+  logoutOnUnautorized,
+  forgotPassword,
+  resetPassword,
+};

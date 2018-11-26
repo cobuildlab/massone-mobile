@@ -1,4 +1,4 @@
-import { isValidString } from "../utils";
+import { isValidString } from '../utils';
 
 const resetPasswordValidator = (code, password, repeatPassword) => {
   if (!isValidString(code)) {
@@ -16,8 +16,6 @@ const resetPasswordValidator = (code, password, repeatPassword) => {
   if (password !== repeatPassword) {
     throw new Error('Passwords do not match');
   }
-}
-
-export {
-  resetPasswordValidator
 };
+
+export { resetPasswordValidator };

@@ -2,7 +2,7 @@ import authStore from '../../Auth/authStore';
 // import {checkInternetConnection} from 'react-native-offline';
 import * as authActions from '../../Auth/actions';
 // import {i18next} from '../i18n';
-import {LOG, WARN, ERROR} from "../utils";
+// import { LOG, WARN, ERROR } from '../utils';
 
 const API_URL = 'https://massone-api.cobuildlab.com';
 
@@ -13,21 +13,23 @@ const API_URL = 'https://massone-api.cobuildlab.com';
  * @return {Promise}         the data from the endpoint
  */
 export async function postData(url, data, isAuth = true) {
-    // await checkConnection();
+  // await checkConnection();
 
-    return timeout(fetch(`${API_URL}${url}`, {
-        body: JSON.stringify(data),
-        headers: {
-            'Accept': 'application/json',
-            'Accept-Language': 'en',
-            'Content-Type': 'application/json',
-            'Authorization': (isAuth) ? `jwt ${authStore.getState('Login').token}` : '',
-        },
-        method: 'POST',
-    }))
-        .then(checkStatus)
-        .then((res) => res)
-        .catch((err) => Promise.reject(err));
+  return timeout(
+    fetch(`${API_URL}${url}`, {
+      body: JSON.stringify(data),
+      headers: {
+        Accept: 'application/json',
+        'Accept-Language': 'en',
+        'Content-Type': 'application/json',
+        Authorization: isAuth ? `jwt ${authStore.getState('Login').token}` : '',
+      },
+      method: 'POST',
+    }),
+  )
+    .then(checkStatus)
+    .then((res) => res)
+    .catch((err) => Promise.reject(err));
 }
 
 /**
@@ -37,21 +39,23 @@ export async function postData(url, data, isAuth = true) {
  * @return {Promise}         the data from the endpoint
  */
 export async function putData(url, data, isAuth = true) {
-    // await checkConnection();
+  // await checkConnection();
 
-    return timeout(fetch(`${API_URL}${url}`, {
-        body: JSON.stringify(data),
-        headers: {
-            'Accept': 'application/json',
-            'Accept-Language': 'en',
-            'Content-Type': 'application/json',
-            'Authorization': (isAuth) ? `jwt ${authStore.getState('Login').token}` : '',
-        },
-        method: 'PUT',
-    }))
-        .then(checkStatus)
-        .then((res) => res)
-        .catch((err) => Promise.reject(err));
+  return timeout(
+    fetch(`${API_URL}${url}`, {
+      body: JSON.stringify(data),
+      headers: {
+        Accept: 'application/json',
+        'Accept-Language': 'en',
+        'Content-Type': 'application/json',
+        Authorization: isAuth ? `jwt ${authStore.getState('Login').token}` : '',
+      },
+      method: 'PUT',
+    }),
+  )
+    .then(checkStatus)
+    .then((res) => res)
+    .catch((err) => Promise.reject(err));
 }
 
 /**
@@ -61,22 +65,24 @@ export async function putData(url, data, isAuth = true) {
  * @return {Promise}         the data from the endpoint
  */
 export async function getData(url, isAuth = true) {
-    // await checkConnection();
+  // await checkConnection();
 
-    const headers = {
-        'Accept': 'application/json',
-        'Accept-Language': 'en',
-        'Content-Type': 'application/json',
-        'Authorization': (isAuth) ? `jwt ${authStore.getState('Login').token}` : '',
-    };
+  const headers = {
+    Accept: 'application/json',
+    'Accept-Language': 'en',
+    'Content-Type': 'application/json',
+    Authorization: isAuth ? `jwt ${authStore.getState('Login').token}` : '',
+  };
 
-    return timeout(fetch(`${API_URL}${url}`, {
-        headers,
-        method: 'GET',
-    }))
-        .then(checkStatus)
-        .then((res) => res)
-        .catch((err) => Promise.reject(err));
+  return timeout(
+    fetch(`${API_URL}${url}`, {
+      headers,
+      method: 'GET',
+    }),
+  )
+    .then(checkStatus)
+    .then((res) => res)
+    .catch((err) => Promise.reject(err));
 }
 
 /**
@@ -86,20 +92,22 @@ export async function getData(url, isAuth = true) {
  * @return {Promise}         the data from the endpoint
  */
 export async function deleteData(url, isAuth = true) {
-    // await checkConnection();
+  // await checkConnection();
 
-    return timeout(fetch(`${API_URL}${url}`, {
-        headers: {
-            'Accept': 'application/json',
-            'Accept-Language': 'en',
-            'Content-Type': 'application/json',
-            'Authorization': (isAuth) ? `jwt ${authStore.getState('Login').token}` : '',
-        },
-        method: 'DELETE',
-    }))
-        .then(checkStatus)
-        .then((res) => res)
-        .catch((err) => Promise.reject(err));
+  return timeout(
+    fetch(`${API_URL}${url}`, {
+      headers: {
+        Accept: 'application/json',
+        'Accept-Language': 'en',
+        'Content-Type': 'application/json',
+        Authorization: isAuth ? `jwt ${authStore.getState('Login').token}` : '',
+      },
+      method: 'DELETE',
+    }),
+  )
+    .then(checkStatus)
+    .then((res) => res)
+    .catch((err) => Promise.reject(err));
 }
 
 /**
@@ -109,27 +117,28 @@ export async function deleteData(url, isAuth = true) {
  * @return {Promise}         the data parsed to blob from the endpoint
  */
 export async function downloadData(url, isAuth = true) {
-    // await checkConnection();
+  // await checkConnection();
 
-    return timeout(fetch(`${API_URL}${url}`, {
-        method: 'GET',
-        headers: {
-            'Authorization': (isAuth) ? `jwt ${authStore.getState('Login').token}` : '',
-        }
-    })
-        .then((response) => {
-            if (response.status === 401 || response.status === 403) {
-                accountActions.logoutOnUnautorized();
-            }
+  return timeout(
+    fetch(`${API_URL}${url}`, {
+      method: 'GET',
+      headers: {
+        Authorization: isAuth ? `jwt ${authStore.getState('Login').token}` : '',
+      },
+    }).then((response) => {
+      if (response.status === 401 || response.status === 403) {
+        authActions.logoutOnUnautorized();
+      }
 
-            if (response.ok) return response.blob();
+      if (response.ok) return response.blob();
 
-            return response.json().then((err) => {
-                return Promise.reject(err);
-            })
-        }))
-        .then((res) => res)
-        .catch((err) => Promise.reject(err));
+      return response.json().then((err) => {
+        return Promise.reject(err);
+      });
+    }),
+  )
+    .then((res) => res)
+    .catch((err) => Promise.reject(err));
 }
 
 /**
@@ -139,57 +148,57 @@ export async function downloadData(url, isAuth = true) {
  * @return {Promise}         the data from the endpoint
  */
 export async function postFormData(url, formData, isAuth = true) {
-    // await checkConnection();
+  // await checkConnection();
 
-    return timeout(fetch(`${API_URL}${url}`, {
-        body: formData,
-        headers: {
-            'Accept': 'application/json',
-            'Accept-Language': 'en',
-            'Authorization': (isAuth) ? `jwt ${authStore.getState('Login').token}` : '',
-        },
-        method: 'POST',
-    }))
-        .then(checkStatus)
-        .then((res) => res)
-        .catch((err) => Promise.reject(err));
+  return timeout(
+    fetch(`${API_URL}${url}`, {
+      body: formData,
+      headers: {
+        Accept: 'application/json',
+        'Accept-Language': 'en',
+        Authorization: isAuth ? `jwt ${authStore.getState('Login').token}` : '',
+      },
+      method: 'POST',
+    }),
+  )
+    .then(checkStatus)
+    .then((res) => res)
+    .catch((err) => Promise.reject(err));
 }
-
 
 /*
 reject or resolve based on status then Parses the response to json
  */
 function checkStatus(response) {
-    console.log(response)
-    if (response && response.status === 401 || response.status === 403) {
-        authtActions.logoutOnUnautorized();
+  if ((response && response.status === 401) || response.status === 403) {
+    authActions.logoutOnUnautorized();
+  }
+
+  if (response && response.ok) {
+    if (response.status === 204) {
+      return { status: 'No content response' };
     }
 
-    if (response && response.ok) {
-        if (response.status === 204) {
-            return {status: 'No content response'}
-        }
-
-        return response.json().then((res) => {
-            return Promise.resolve(res);
-        })
-    } else {
-        return response.json().then((err) => {
-            return Promise.reject(err);
-        })
-    }
+    return response.json().then((res) => {
+      return Promise.resolve(res);
+    });
+  } else {
+    return response.json().then((err) => {
+      return Promise.reject(err);
+    });
+  }
 }
 
 /**
  * check if the device is connected to internet
  */
-async function checkConnection() {
-    const isConnected = await checkInternetConnection();
-
-    if (!isConnected) {
-        throw new Error(i18next.t('APP.noInternet'));
-    }
-}
+// async function checkConnection() {
+//   const isConnected = await checkInternetConnection();
+//
+//   if (!isConnected) {
+//     throw new Error(i18next.t('APP.noInternet'));
+//   }
+// }
 
 /**
  * Timeout for fetch request
@@ -197,10 +206,10 @@ async function checkConnection() {
  * @param  {promise} promise the fetch promise
  */
 function timeout(promise, ms = 20000) {
-    return new Promise(function (resolve, reject) {
-        setTimeout(function () {
-            reject(new Error('APP.timeout'));
-        }, ms);
-        promise.then(resolve, reject)
-    })
+  return new Promise(function(resolve, reject) {
+    setTimeout(function() {
+      reject(new Error('APP.timeout'));
+    }, ms);
+    promise.then(resolve, reject);
+  });
 }
