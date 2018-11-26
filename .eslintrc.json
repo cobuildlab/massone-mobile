@@ -22,6 +22,7 @@
     "fetch": true
   },
   "rules": {
+    "comma-dangle": ["error", "always-multiline"],
     "indent": ["error", 2],
     "react/prop-types": [1, { "ignore": ["navigation"], "customValidators": [] }]
   }
