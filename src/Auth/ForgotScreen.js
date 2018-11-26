@@ -40,7 +40,7 @@ class ForgotScreen extends Component {
 
   forgotPasswordHandler = () => {
     this.setState({ isLoading: false });
-    CustomToast('You will receive an email with a code to reset your password');
+    CustomToast(this.props.t('AUTH.youWillreceiveCode'));
     this.props.navigation.navigate('Recover');
   };
 

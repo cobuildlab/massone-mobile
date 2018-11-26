@@ -30,6 +30,8 @@ export default {
     enterYourUsername: 'Enter your username',
     enterYourEmail: 'Enter your email',
     passwordNotMatch: 'Passwords do not match',
+    youWillreceiveCode: 'You will receive an email with a code to reset your password',
+    passwordChanged: 'Password changed!',
     code: 'Code',
   },
 };

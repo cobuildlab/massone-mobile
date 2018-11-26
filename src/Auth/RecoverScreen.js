@@ -42,7 +42,7 @@ class RecoverScreen extends Component {
 
   resetPasswordHandler = () => {
     this.setState({ isLoading: false });
-    CustomToast('Password changed!');
+    CustomToast(this.props.t('AUTH.passwordChanged'));
     this.props.navigation.navigate('Login');
   };
 
