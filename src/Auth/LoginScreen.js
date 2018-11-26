@@ -4,6 +4,7 @@ import {
   Text,
   AsyncStorage,
   Image,
+  TouchableOpacity,
 } from "react-native";
 import { Content, ListItem, Body, CheckBox, Left, Right, Switch, Button, Icon,
 Input } from 'native-base';
@@ -11,7 +12,7 @@ import styles from './style';
 import ButtomComponet from '../componets/ButtomBlue';
 import * as authActions from './actions';
 import authStore from './authStore';
-import { CustomToast } from '../utils/components';
+import { CustomToast, Loading } from '../utils/components';
 
 class LoginScreen extends React.Component {
   static navigationOptions = {
@@ -22,6 +23,7 @@ class LoginScreen extends React.Component {
     super(props);
     this.state = {
       isLoading: false,
+      rememberMe: false,
       username: '',
       password: '',
     };
@@ -64,6 +66,8 @@ class LoginScreen extends React.Component {
   render() {
     return (
         <Content contentContainerStyle={{ flexGrow: 1 }}>
+          {this.state.isLoading ? <Loading/> : null}
+
           <View style={styles.container}>
           <Image
             style={styles.viewBackground}
@@ -95,10 +99,15 @@ class LoginScreen extends React.Component {
               />
               <ListItem icon>
                 <Left style={{marginLeft: -18}}>
-                  <CheckBox checked={false} color="white" />
+                  <CheckBox
+                    onPress={this.rememberMe} 
+                    checked={this.state.rememberMe} 
+                    color={this.state.rememberMe ? '#537DBf' : 'white'} />
                 </Left>
                 <Body style={{borderBottomWidth: 0}}>
-                  <Text style={styles.textBtn}>Remember me</Text>
+                  <TouchableOpacity onPress={this.rememberMe}>
+                    <Text style={styles.textBtn}>Remember me</Text>
+                  </TouchableOpacity>
                 </Body>
                 <Right style={{borderBottomWidth: 0}}>
                 <Button transparent light onPress={this._forgot}>
@@ -118,6 +127,10 @@ class LoginScreen extends React.Component {
           </View>
         </Content>
     );
+  }
+
+  rememberMe = () => {
+    this.setState({ rememberMe: !this.state.rememberMe });
   }
 
   login = () => {

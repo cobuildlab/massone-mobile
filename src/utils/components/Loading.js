@@ -34,7 +34,7 @@ class Loading extends Component {
     return (
         <View style={styles.modalBackground}>
           <View style={styles.activityIndicatorWrapper}>
-            <Spinner color={'blue'}/>
+            <Spinner color={'#537DBf'}/>
           </View>
         </View>
     )

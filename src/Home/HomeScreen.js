@@ -6,13 +6,22 @@ import {
   Button,
   AsyncStorage,
 } from "react-native";
+import { Content } from 'native-base';
 import * as authActions from '../Auth/actions';
 import authStore from '../Auth/authStore';
+import { Loading } from '../utils/components';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
     title: 'Welcome to the app!',
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+    };
+  }
 
   componentDidMount() {
     this.logoutSubscription = authStore.subscribe('Logout', this.logoutHandler);
@@ -29,10 +38,18 @@ class HomeScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Button title="Show me more of the app" onPress={this._showMoreApp} />
-        <Button title="Actually, sign me out :)" onPress={this.logout} />
-      </View>
+      <Content contentContainerStyle={{
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center'
+      }}>
+        {this.state.isLoading ? <Loading/> : null}
+
+        <View style={styles.container}>
+          <Button title="Show me more of the app" onPress={this._showMoreApp} />
+          <Button title="Actually, sign me out :)" onPress={this.logout} />
+        </View>
+      </Content>
     );
   }
 
@@ -50,8 +67,6 @@ export default HomeScreen;
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
+    zIndex: 1,
   }
 });

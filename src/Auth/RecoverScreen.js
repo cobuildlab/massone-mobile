@@ -11,7 +11,7 @@ import styles from './style';
 import ButtomComponet from '../componets/ButtomBlue';
 import * as authActions from './actions';
 import authStore from './authStore';
-import { CustomToast } from '../utils/components';
+import { CustomToast, Loading } from '../utils/components';
 
 class RecoverScreen extends React.Component {
   static navigationOptions = {
@@ -60,6 +60,8 @@ class RecoverScreen extends React.Component {
   render() {
     return (
         <Content contentContainerStyle={{ flexGrow: 1 }}>
+          {this.state.isLoading ? <Loading/> : null}
+
           <View style={styles.container}>
           <Image
             style={styles.viewBackground}
