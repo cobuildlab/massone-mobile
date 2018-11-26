@@ -1,11 +1,11 @@
 import React, { Component } from "react";
+import { SafeAreaView } from 'react-navigation';
 import { 
   View,
-  Text,
   StyleSheet,
-  Button,
   AsyncStorage,
 } from "react-native";
+import { Container, Header, Title, Content, Footer, FooterTab, Button, Left, Right, Body, Icon, Text } from 'native-base';
 
 class HomeScreen extends React.Component {
   static navigationOptions = {
@@ -14,9 +14,34 @@ class HomeScreen extends React.Component {
 
   render() {
     return (
-      <View style={styles.container}>
-        <Button title="Show me more of the app" onPress={this._showMoreApp} />
-        <Button title="Actually, sign me out :)" onPress={this._signOutAsync} />
+      <View>
+        <Header>
+          <Left>
+            <Button transparent onPress={() => this.props.navigation.openDrawer()}>
+              <Icon name='menu' />
+            </Button>
+          </Left>
+          <Body>
+            <Title>Header</Title>
+          </Body>
+          <Right />
+        </Header>
+
+          <View>
+          <Text>
+            This is Content Section
+          </Text>
+          <Button primary onPress={this._showMoreApp}>
+              <Text>
+                Show me more of the app
+              </Text>
+            </Button>
+            <Button primary onPress={this._signOutAsync}>
+              <Text>
+              Actually, sign me out :)
+              </Text>
+            </Button>
+          </View>
       </View>
     );
   }

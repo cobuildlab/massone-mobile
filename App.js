@@ -6,7 +6,7 @@ import RecoverScreen from './src/Auth/RecoverScreen';
 import HomeScreen from './src/Home/HomeScreen';
 import ProfileScreen from './src/Profile/ProfileScreen';
 import AuthLoadingScreen from './src/AuthloadingScreen';
-import SideBar from './src/SideBar';
+import SideBar from './src/SideBar/SideBar';
 
 const AppStack = createStackNavigator(
   { 
