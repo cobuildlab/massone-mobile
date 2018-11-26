@@ -4,11 +4,13 @@ import {
   AsyncStorage,
   StatusBar,
   StyleSheet,
+  Image,
   View,
 } from 'react-native';
 import { LOG, WARN, ERROR } from "./utils";
 import authStore from './Auth/authStore';
 import * as authActions from './Auth/actions';
+import LOGO_IMG from './assets/image/logoBlue.png';
 
 class AuthLoadingScreen extends React.Component {
   constructor(props) {
@@ -64,19 +66,28 @@ class AuthLoadingScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <ActivityIndicator />
-        <StatusBar barStyle="default" />
+        <Image source={LOGO_IMG} style={styles.imgSplash}/>
       </View>
     );
   }
 }
 
-export default AuthLoadingScreen;
-
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
+    container: {
+        flex: 1,
+        alignItems: 'center',
+        justifyContent: 'center',
+        backgroundColor: '#fff'
+    },
+    imgSplash: {
+        width:201,
+        height:123,
+        resizeMode: 'center',
+        flexDirection: 'column',
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
+
 });
+
+export default AuthLoadingScreen;
