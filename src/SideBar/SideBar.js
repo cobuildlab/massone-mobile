@@ -1,9 +1,5 @@
-import React, { Component } from "react";
-import { 
-  View,
-  Text,
-  StyleSheet
-} from "react-native";
+import React, { Component } from 'react';
+import { View, Text, StyleSheet } from 'react-native';
 
 class SideBar extends Component {
   render() {
@@ -14,12 +10,13 @@ class SideBar extends Component {
     );
   }
 }
-export default SideBar;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+  },
 });
+
+export default SideBar;
