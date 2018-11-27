@@ -7,11 +7,7 @@ import {
   createDrawerNavigator,
 } from 'react-navigation';
 
-import {
-  LoginScreen,
-  ForgotScreen,
-  RecoverScreen,
-} from './src/Auth';
+import { LoginScreen, ForgotScreen, RecoverScreen } from './src/Auth';
 import HomeScreen from './src/Home/HomeScreen';
 import ProfileScreen from './src/Profile/ProfileScreen';
 import AuthLoadingScreen from './src/AuthloadingScreen';
