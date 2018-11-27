@@ -1,9 +1,15 @@
-import React, { Component } from 'react';
-import { View, StyleSheet, Button } from 'react-native';
-import { Content } from 'native-base';
+import React, { Component } from "react";
+import { SafeAreaView } from 'react-navigation';
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  AsyncStorage,
+} from "react-native";
+import { Header, Title, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
 import * as authActions from '../Auth/actions';
 import authStore from '../Auth/authStore';
-import { Loading } from '../utils/components';
+import styles from './style'
 
 class HomeScreen extends Component {
   static navigationOptions = {
@@ -28,40 +34,96 @@ class HomeScreen extends Component {
   logoutHandler = () => {
     this.setState({ isLoading: false });
     this.props.navigation.navigate('Auth');
-  };
-
-  render() {
-    return (
-      <Content
-        contentContainerStyle={{
-          flex: 1,
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        {this.state.isLoading ? <Loading /> : null}
-
-        <View style={styles.container}>
-          <Button title="Show me more of the app" onPress={this.showMoreApp} />
-          <Button title="Actually, sign me out :)" onPress={this.logout} />
-        </View>
-      </Content>
-    );
   }
-
-  showMoreApp = () => {
-    this.props.navigation.navigate('Profile');
-  };
 
   logout = () => {
     this.setState({ isLoading: true }, () => {
       authActions.logout();
     });
   };
-}
-export default HomeScreen;
 
-const styles = StyleSheet.create({
-  container: {
-    zIndex: 1,
-  },
-});
+  render() {
+    return (
+      <View>
+        <Header style={styles.bgHeader}>
+          <Left>
+            <Button transparent onPress={() => this.props.navigation.openDrawer()}>
+              <Icon name='menu' style={{color: '#3d65b0'}} />
+            </Button>
+          </Left>
+          <Body>
+            <Title style={styles.titleHeader}>Jobs</Title>
+          </Body>
+          <Right>
+          <Button transparent>
+              <Icon type="FontAwesome" name='bell-o' style={{color: '#3d65b0', fontSize: 20}} />
+          </Button>
+          <Button transparent onPress={this.logout}>
+              <Icon type="FontAwesome" name='sign-out' style={{color: '#3d65b0', fontSize: 20}} />
+          </Button>
+          </Right>
+        </Header>
+        <View>
+        <List>
+          <TouchableOpacity style={styles.listItem}>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.issueName}>
+                Issue Name
+              </Text>
+              <Text>
+                for
+              </Text>
+              <Text style={styles.customerName}>
+                Customers Name
+              </Text>
+            </View>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.textDate}>
+                Start Date:
+              </Text>
+              <Text style={styles.textNumDate}>
+                01/01/18
+              </Text>
+              <Text style={styles.textDate}>
+                End Date:
+              </Text>
+              <Text style={styles.textNumDate}>
+                02/02/18
+              </Text>
+            </View>
+          </TouchableOpacity>
+          <TouchableOpacity style={styles.listItem}>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.issueName}>
+                Issue Name
+              </Text>
+              <Text>
+                for
+              </Text>
+              <Text style={styles.customerName}>
+                Customers Name
+              </Text>
+            </View>
+            <View style={{flexDirection: 'row'}}>
+              <Text style={styles.textDate}>
+                Start Date:
+              </Text>
+              <Text style={styles.textNumDate}>
+                01/01/18
+              </Text>
+              <Text style={styles.textDate}>
+                End Date:
+              </Text>
+              <Text style={styles.textNumDate}>
+                02/02/18
+              </Text>
+            </View>
+          </TouchableOpacity>
+        </List>
+          </View>
+      </View>
+    );
+  }
+}
+
+export default HomeScreen;

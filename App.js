@@ -25,7 +25,7 @@ const AuthStack = createStackNavigator({
 
 const AppDrawerMenu = createDrawerNavigator(
   {
-    Home: HomeScreen,
+    Jobs: HomeScreen,
     Profile: ProfileScreen,
   },
   {
