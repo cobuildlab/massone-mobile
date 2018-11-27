@@ -1,47 +1,42 @@
-import { StyleSheet, Platform, Dimensions } from 'react-native';
-var width = Dimensions.get('window').width;
+import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
-  bgHeader:{
-    backgroundColor: '#e4e4e4'
+  bgHeader: {
+    backgroundColor: '#e4e4e4',
   },
   titleHeader: {
     color: '#537DBf',
-    fontSize: 18
+    fontSize: 18,
   },
-  listItem:{
+  listItem: {
     width: '95%',
     paddingLeft: 15,
     paddingRight: 15,
-    paddingTop: 15,
-    paddingBottom: 15,
     marginLeft: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#ccc'
   },
-  issueName:{
+  issueName: {
     fontSize: 16,
     fontWeight: '700',
     color: '#537DBf',
     marginRight: 5,
     marginBottom: 3,
   },
-  customerName:{
+  customerName: {
     fontSize: 16,
     fontWeight: '700',
     color: '#a4a3bf',
     marginLeft: 5,
     marginBottom: 3,
   },
-  textDate:{
+  textDate: {
     fontSize: 14,
     color: '#777',
     fontWeight: '700',
     marginRight: 4,
   },
-  textNumDate:{
+  textNumDate: {
     fontSize: 14,
     marginLeft: 2,
     marginRight: 4,
-  }
+  },
 });

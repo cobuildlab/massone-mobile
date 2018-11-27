@@ -8,15 +8,15 @@ import {
 } from 'react-navigation';
 
 import { LoginScreen, ForgotScreen, RecoverScreen } from './src/Auth';
-import HomeScreen from './src/Home/HomeScreen';
+import JobsListScreen from './src/Jobs/JobsListScreen';
+import JobDetailsScreen from './src/Jobs/JobDetailsScreen';
 import ProfileScreen from './src/Profile/ProfileScreen';
 import AuthLoadingScreen from './src/AuthloadingScreen';
-import DetailsScreen from './src/DetailsJobs/DetailsScreen';
 import SideBar from './src/SideBar/SideBar';
 
 const JobsStack = createStackNavigator({
-  Home: HomeScreen,
-  DetailsJobs: DetailsScreen,
+  Jobs: JobsListScreen,
+  JobDetails: JobDetailsScreen,
 });
 
 const AuthStack = createStackNavigator({
