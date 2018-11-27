@@ -13,7 +13,11 @@ export default StyleSheet.create({
     width: '95%',
     paddingLeft: 15,
     paddingRight: 15,
+    paddingTop: 15,
+    paddingBottom: 15,
     marginLeft: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#ccc'
   },
   issueName:{
     fontSize: 16,

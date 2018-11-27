@@ -15,7 +15,13 @@ import {
 import HomeScreen from './src/Home/HomeScreen';
 import ProfileScreen from './src/Profile/ProfileScreen';
 import AuthLoadingScreen from './src/AuthloadingScreen';
+import DetailsScreen from './src/DetailsJobs/DetailsScreen';
 import SideBar from './src/SideBar/SideBar';
+
+const JobsStack = createStackNavigator({
+  Home: HomeScreen,
+  DetailsJobs: DetailsScreen,
+});
 
 const AuthStack = createStackNavigator({
   Login: LoginScreen,
@@ -25,7 +31,7 @@ const AuthStack = createStackNavigator({
 
 const AppDrawerMenu = createDrawerNavigator(
   {
-    Jobs: HomeScreen,
+    Jobs: JobsStack,
     Profile: ProfileScreen,
   },
   {

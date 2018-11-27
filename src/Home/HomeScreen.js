@@ -6,15 +6,15 @@ import {
   StyleSheet,
   AsyncStorage,
 } from "react-native";
-import { Header, Title, Button, Left, Right, Body, Icon, Text, List, ListItem } from 'native-base';
+import { Header, Title, Button, Left, Right, Body, Icon, Text, List, SwipeRow} from 'native-base';
 import * as authActions from '../Auth/actions';
 import authStore from '../Auth/authStore';
 import styles from './style'
 
 class HomeScreen extends Component {
   static navigationOptions = {
-    title: 'Welcome to the app!',
-  };
+    header: null,
+  }
 
   constructor(props) {
     super(props);
@@ -35,12 +35,6 @@ class HomeScreen extends Component {
     this.setState({ isLoading: false });
     this.props.navigation.navigate('Auth');
   }
-
-  logout = () => {
-    this.setState({ isLoading: true }, () => {
-      authActions.logout();
-    });
-  };
 
   render() {
     return (
@@ -65,7 +59,16 @@ class HomeScreen extends Component {
         </Header>
         <View>
         <List>
-          <TouchableOpacity style={styles.listItem}>
+        <SwipeRow
+            leftOpenValue={75}
+            rightOpenValue={-75}
+            left={
+              <Button success onPress={() => alert('Add')}>
+                <Icon active type="MaterialIcons" name="check" />
+              </Button>
+            }
+            body={
+              <TouchableOpacity onPress={this.goToJobDetails} style={styles.listItem}>
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.issueName}>
                 Issue Name
@@ -91,8 +94,24 @@ class HomeScreen extends Component {
                 02/02/18
               </Text>
             </View>
-          </TouchableOpacity>
-          <TouchableOpacity style={styles.listItem}>
+            </TouchableOpacity>
+            }
+            right={
+              <Button danger onPress={() => alert('Trash')}>
+                <Icon active type="MaterialIcons" name="close" />
+              </Button>
+            }
+          />
+          <SwipeRow
+            leftOpenValue={75}
+            rightOpenValue={-75}
+            left={
+              <Button success onPress={() => alert('Add')}>
+                <Icon active type="MaterialIcons" name="check" />
+              </Button>
+            }
+            body={
+              <TouchableOpacity onPress={this.goToJobDetails} style={styles.listItem}>
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.issueName}>
                 Issue Name
@@ -118,12 +137,29 @@ class HomeScreen extends Component {
                 02/02/18
               </Text>
             </View>
-          </TouchableOpacity>
+            </TouchableOpacity>
+            }
+            right={
+              <Button danger onPress={() => alert('Trash')}>
+                <Icon active type="MaterialIcons" name="close" />
+              </Button>
+            }
+          />
         </List>
           </View>
       </View>
     );
   }
+
+  goToJobDetails = () => {
+    this.props.navigation.navigate('DetailsJobs');
+  };
+
+  logout = () => {
+    this.setState({ isLoading: true }, () => {
+      authActions.logout();
+    });
+  };
 }
 
 export default HomeScreen;
