@@ -1,11 +1,13 @@
 import React from 'react';
-import { Root } from 'native-base';
+import { Root, StyleProvider } from 'native-base';
 import {
   createSwitchNavigator,
   createStackNavigator,
   createAppContainer,
   createDrawerNavigator,
 } from 'react-navigation';
+
+import getTheme from './native-base-theme/components';
 
 import { LoginScreen, ForgotScreen, RecoverScreen } from './src/Auth';
 import { JobsListScreen, JobDetailsScreen } from './src/Jobs';
@@ -49,7 +51,9 @@ const AppNavigator = createAppContainer(
 
 const App = () => (
   <Root>
-    <AppNavigator />
+    <StyleProvider style={getTheme()}>
+      <AppNavigator />
+    </StyleProvider>
   </Root>
 );
 
