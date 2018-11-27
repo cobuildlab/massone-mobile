@@ -144,7 +144,7 @@ class JobsListScreen extends Component {
   }
 
   goToJobDetails = () => {
-    this.props.navigation.navigate('DetailsJobs');
+    this.props.navigation.navigate('JobDetails');
   };
 
   logout = () => {
