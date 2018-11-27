@@ -11,13 +11,14 @@ import LoginScreen from './src/Auth/LoginScreen';
 import ForgotScreen from './src/Auth/ForgotScreen';
 import RecoverScreen from './src/Auth/RecoverScreen';
 import HomeScreen from './src/Home/HomeScreen';
+import DetailsScreen from './src/DetailsJobs/DetailsScreen';
 import ProfileScreen from './src/Profile/ProfileScreen';
 import AuthLoadingScreen from './src/AuthloadingScreen';
 import SideBar from './src/SideBar/SideBar';
 
-const AppStack = createStackNavigator({
+const JobsStack = createStackNavigator({
   Home: HomeScreen,
-  Profile: ProfileScreen
+  DetailsJobs: DetailsScreen,
 });
 
 const AuthStack = createStackNavigator({
@@ -27,7 +28,7 @@ const AuthStack = createStackNavigator({
 });
 
 const AppDrawerMenu = createDrawerNavigator({
-  Jobs: HomeScreen,
+  Jobs: JobsStack,
   Profile: ProfileScreen
   }, {
     contentComponent: props => < SideBar { ...props}/>,
