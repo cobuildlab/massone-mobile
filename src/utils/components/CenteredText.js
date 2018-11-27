@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import {
-  StyleSheet,
-  View,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Text } from 'native-base';
 
 const styles = StyleSheet.create({
@@ -19,18 +16,16 @@ const styles = StyleSheet.create({
   textCentered: {
     color: 'blue',
     textAlign: 'center',
-  }
+  },
 });
 
 class CenteredText extends Component {
   render() {
     return (
-        <View style={styles.centeredView}>
-          <Text style={styles.textCentered}>
-            {this.props.text}
-          </Text>
-        </View>
-    )
+      <View style={styles.centeredView}>
+        <Text style={styles.textCentered}>{this.props.text}</Text>
+      </View>
+    );
   }
 }
 

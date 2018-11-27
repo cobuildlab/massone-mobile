@@ -1,9 +1,5 @@
 import React, { Component } from 'react';
-import PropTypes from 'prop-types';
-import {
-  StyleSheet,
-  View,
-} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import { Spinner } from 'native-base';
 
 const styles = StyleSheet.create({
@@ -25,19 +21,19 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     display: 'flex',
     alignItems: 'center',
-    justifyContent: 'space-around'
-  }
+    justifyContent: 'space-around',
+  },
 });
 
 class Loading extends Component {
   render() {
     return (
-        <View style={styles.modalBackground}>
-          <View style={styles.activityIndicatorWrapper}>
-            <Spinner color={'blue'}/>
-          </View>
+      <View style={styles.modalBackground}>
+        <View style={styles.activityIndicatorWrapper}>
+          <Spinner color={'#537DBf'} />
         </View>
-    )
+      </View>
+    );
   }
 }
 

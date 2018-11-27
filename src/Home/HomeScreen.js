@@ -11,10 +11,17 @@ import * as authActions from '../Auth/actions';
 import authStore from '../Auth/authStore';
 import styles from './style'
 
-class HomeScreen extends React.Component {
+class HomeScreen extends Component {
   static navigationOptions = {
     title: 'Welcome to the app!',
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      isLoading: false,
+    };
+  }
 
   componentDidMount() {
     this.logoutSubscription = authStore.subscribe('Logout', this.logoutHandler);
@@ -28,14 +35,11 @@ class HomeScreen extends React.Component {
     this.setState({ isLoading: false });
     this.props.navigation.navigate('Auth');
   }
-  _showMoreApp = () => {
-    this.props.navigation.navigate('Profile');
-  };
 
   logout = () => {
-    this.setState({isLoading: true}, () => {
+    this.setState({ isLoading: true }, () => {
       authActions.logout();
-    })
+    });
   };
 
   render() {
@@ -64,18 +68,18 @@ class HomeScreen extends React.Component {
           <TouchableOpacity style={styles.listItem}>
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.issueName}>
-                Issue Name 
+                Issue Name
               </Text>
               <Text>
                 for
               </Text>
               <Text style={styles.customerName}>
-                Customers Name 
+                Customers Name
               </Text>
-            </View>    
+            </View>
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.textDate}>
-                Start Date: 
+                Start Date:
               </Text>
               <Text style={styles.textNumDate}>
                 01/01/18
@@ -86,23 +90,23 @@ class HomeScreen extends React.Component {
               <Text style={styles.textNumDate}>
                 02/02/18
               </Text>
-            </View>       
+            </View>
           </TouchableOpacity>
           <TouchableOpacity style={styles.listItem}>
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.issueName}>
-                Issue Name 
+                Issue Name
               </Text>
               <Text>
                 for
               </Text>
               <Text style={styles.customerName}>
-                Customers Name 
+                Customers Name
               </Text>
-            </View>    
+            </View>
             <View style={{flexDirection: 'row'}}>
               <Text style={styles.textDate}>
-                Start Date: 
+                Start Date:
               </Text>
               <Text style={styles.textNumDate}>
                 01/01/18
@@ -113,26 +117,13 @@ class HomeScreen extends React.Component {
               <Text style={styles.textNumDate}>
                 02/02/18
               </Text>
-            </View>       
+            </View>
           </TouchableOpacity>
         </List>
-      
-          {/* <Text>
-            This is Content Section
-          </Text>
-          <Button primary onPress={this._showMoreApp}>
-            <Text>
-              Show me more of the app
-            </Text>
-            </Button>
-            <Button primary onPress={this.logout}>
-              <Text>
-              Actually, sign me out :)
-              </Text>
-            </Button> */}
           </View>
       </View>
     );
   }
 }
+
 export default HomeScreen;
