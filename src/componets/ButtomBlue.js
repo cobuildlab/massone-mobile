@@ -15,8 +15,6 @@ export default ButtonBlue;
 const styles = StyleSheet.create({
   StyleButtom: {
     marginTop: 10,
-    backgroundColor: '#537DBf',
-    height: 35,
     padding: 0,
     borderRadius: 5,
   },

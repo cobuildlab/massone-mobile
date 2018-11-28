@@ -1,5 +1,5 @@
 import React from 'react';
-import { Root } from 'native-base';
+import { Root, StyleProvider } from 'native-base';
 import {
   createSwitchNavigator,
   createStackNavigator,
@@ -7,15 +7,18 @@ import {
   createDrawerNavigator,
 } from 'react-navigation';
 
-import {
-  LoginScreen,
-  ForgotScreen,
-  RecoverScreen,
-} from './src/Auth';
-import HomeScreen from './src/Home/HomeScreen';
+import getTheme from './native-base-theme/components';
+
+import { LoginScreen, ForgotScreen, RecoverScreen } from './src/Auth';
+import { JobsListScreen, JobDetailsScreen } from './src/Jobs';
 import ProfileScreen from './src/Profile/ProfileScreen';
 import AuthLoadingScreen from './src/AuthloadingScreen';
 import SideBar from './src/SideBar/SideBar';
+
+const JobsStack = createStackNavigator({
+  Jobs: JobsListScreen,
+  JobDetails: JobDetailsScreen,
+});
 
 const AuthStack = createStackNavigator({
   Login: LoginScreen,
@@ -25,7 +28,7 @@ const AuthStack = createStackNavigator({
 
 const AppDrawerMenu = createDrawerNavigator(
   {
-    Home: HomeScreen,
+    Jobs: JobsStack,
     Profile: ProfileScreen,
   },
   {
@@ -48,7 +51,9 @@ const AppNavigator = createAppContainer(
 
 const App = () => (
   <Root>
-    <AppNavigator />
+    <StyleProvider style={getTheme()}>
+      <AppNavigator />
+    </StyleProvider>
   </Root>
 );
 

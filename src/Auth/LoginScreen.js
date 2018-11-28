@@ -18,6 +18,7 @@ import { LOG } from '../utils';
 import { CustomToast, Loading } from '../utils/components';
 import { BG_MOBILE_IMG, LOGO_WHITE } from '../assets/image/';
 import { withNamespaces } from 'react-i18next';
+import { BLUE_MAIN } from '../constants/colorPalette';
 
 class LoginScreen extends Component {
   static navigationOptions = {
@@ -101,7 +102,7 @@ class LoginScreen extends Component {
                 <CheckBox
                   onPress={this.rememberMe}
                   checked={this.state.rememberMe}
-                  color={this.state.rememberMe ? '#537DBf' : 'white'}
+                  color={this.state.rememberMe ? BLUE_MAIN : 'white'}
                 />
               </Left>
               <Body style={{ borderBottomWidth: 0 }}>
@@ -115,7 +116,12 @@ class LoginScreen extends Component {
                 </Button>
               </Right>
             </ListItem>
-            <ButtomComponet text={t('AUTH.login')} onPress={this.login} block primary />
+            <ButtomComponet
+              text={t('AUTH.login')}
+              onPress={this.login}
+              block
+              primary
+            />
           </View>
           <View>
             <Button block transparent onPress={this.goBack}>
