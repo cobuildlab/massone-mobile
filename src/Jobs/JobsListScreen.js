@@ -15,7 +15,8 @@ import {
 } from 'native-base';
 import * as authActions from '../Auth/actions';
 import authStore from '../Auth/authStore';
-import styles from './style';
+import styles from './JobsListStyle';
+import { BLUE_MAIN } from '../constants/colorPalette';
 
 class JobsListScreen extends Component {
   static navigationOptions = {
@@ -45,32 +46,25 @@ class JobsListScreen extends Component {
   render() {
     return (
       <View>
-        <Header style={styles.bgHeader}>
+        <Header>
           <Left>
             <Button
               transparent
               onPress={() => this.props.navigation.openDrawer()}>
-              <Icon name="menu" style={{ color: '#3d65b0' }} />
+              <Icon name="menu" style={{ color: BLUE_MAIN }} />
             </Button>
           </Left>
           <Body>
             <Title style={styles.titleHeader}>Jobs</Title>
           </Body>
           <Right>
-            <Button transparent>
+            {/* <Button transparent>
               <Icon
                 type="FontAwesome"
                 name="bell-o"
-                style={{ color: '#3d65b0', fontSize: 20 }}
+                style={{ color: BLUE_MAIN, fontSize: 20 }}
               />
-            </Button>
-            <Button transparent onPress={this.logout}>
-              <Icon
-                type="FontAwesome"
-                name="sign-out"
-                style={{ color: '#3d65b0', fontSize: 20 }}
-              />
-            </Button>
+            </Button> */}
           </Right>
         </Header>
         <View>

@@ -380,7 +380,7 @@ export default (variables /*: * */ = variable) => {
     borderRadius: variables.borderRadiusBase,
     borderColor: variables.btnPrimaryBg,
     borderWidth: null,
-    height: 45,
+    height: 40,
     alignSelf: 'flex-start',
     flexDirection: 'row',
     elevation: 2,

@@ -3,6 +3,7 @@
 import color from 'color';
 
 import { Platform, Dimensions, PixelRatio } from 'react-native';
+import { GRAY_MAIN, BLUE_MAIN } from '../../src/constants/colorPalette';
 
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
@@ -105,7 +106,7 @@ export default {
   checkboxTickColor: '#fff',
 
   // Color
-  brandPrimary: platform === 'ios' ? '#007aff' : '#3F51B5',
+  brandPrimary: platform === 'ios' ? BLUE_MAIN : BLUE_MAIN,
   brandInfo: '#62B1F6',
   brandSuccess: '#5cb85c',
   brandDanger: '#d9534f',
@@ -149,13 +150,13 @@ export default {
 
   // Header
   toolbarBtnColor: platform === 'ios' ? '#007aff' : '#fff',
-  toolbarDefaultBg: platform === 'ios' ? '#F8F8F8' : '#3F51B5',
+  toolbarDefaultBg: platform === 'ios' ? GRAY_MAIN : GRAY_MAIN,
   toolbarHeight: platform === 'ios' ? 64 : 56,
   toolbarSearchIconSize: platform === 'ios' ? 20 : 23,
   toolbarInputColor: platform === 'ios' ? '#CECDD2' : '#fff',
   searchBarHeight: platform === 'ios' ? 30 : 40,
   searchBarInputHeight: platform === 'ios' ? 30 : 50,
-  toolbarBtnTextColor: platform === 'ios' ? '#007aff' : '#fff',
+  toolbarBtnTextColor: platform === 'ios' ? BLUE_MAIN : BLUE_MAIN,
   toolbarDefaultBorder: platform === 'ios' ? '#a7a6ab' : '#3F51B5',
   iosStatusbar: platform === 'ios' ? 'dark-content' : 'light-content',
   get statusBarColor() {
@@ -250,12 +251,12 @@ export default {
   // Title
   titleFontfamily: platform === 'ios' ? 'System' : 'Roboto_medium',
   titleFontSize: platform === 'ios' ? 17 : 19,
-  subTitleFontSize: platform === 'ios' ? 11 : 14,
+  subTitleFontSize: platform === 'ios' ? 14 : 14,
   subtitleColor: platform === 'ios' ? '#8e8e93' : '#FFF',
-  titleFontColor: platform === 'ios' ? '#000' : '#FFF',
+  titleFontColor: platform === 'ios' ? BLUE_MAIN : '#FFF',
 
   // Other
-  borderRadiusBase: platform === 'ios' ? 5 : 2,
+  borderRadiusBase: platform === 'ios' ? 5 : 5,
   borderWidth: 1 / PixelRatio.getPixelSizeForLayoutSize(1),
   contentPadding: 10,
   dropdownLinkColor: '#414142',
