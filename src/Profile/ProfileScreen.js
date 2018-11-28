@@ -1,22 +1,18 @@
 import React, { Component } from 'react';
-// import { SafeAreaView } from 'react-navigation';
 import { View } from 'react-native';
 import {
-  Header,
   Title,
-  Button,
-  Left,
-  Right,
   Body,
-  Icon,
   Card,
   CardItem,
   Text,
+  Content,
+  Container,
 } from 'native-base';
 import styles from './ProfileStyle';
 import * as authActions from '../Auth/actions';
 import authStore from '../Auth/authStore';
-import { BLUE_MAIN } from '../constants/colorPalette';
+import { CustomHeader } from '../utils/components';
 
 class ProfileScreen extends Component {
   static navigationOptions = {
@@ -26,6 +22,7 @@ class ProfileScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      user: Object.assign({}, authStore.getState('Login')),
       isLoading: false,
     };
   }
@@ -45,45 +42,45 @@ class ProfileScreen extends Component {
 
   render() {
     return (
-      <View>
-        <Header>
-          <Left>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.openDrawer()}>
-              <Icon name="menu" style={{ color: BLUE_MAIN }} />
-            </Button>
-          </Left>
-          <Body>
-            <Title style={styles.titleHeader}>Profile</Title>
-          </Body>
-          <Right>
-            <Button transparent onPress={this.logout}>
-              <Icon
-                type="FontAwesome"
-                name="sign-out"
-                style={{ color: BLUE_MAIN, fontSize: 20 }}
-              />
-            </Button>
-          </Right>
-        </Header>
-        <View>
-          <Card transparent>
-            <CardItem>
-              <Body>
-                <Title>Name:</Title>
-                <Text style={styles.textData}>Jose</Text>
-                <Title>Last Name:</Title>
-                <Text style={styles.textData}>Villalobos</Text>
-                <Title>Email:</Title>
-                <Text style={styles.textData}>jvillalobos@4geeks.co</Text>
-              </Body>
-            </CardItem>
-          </Card>
-        </View>
-      </View>
+      <Container>
+        <CustomHeader
+          leftButton={'openDrawer'}
+          title={'Profile'}
+          rightButton={{ icon: 'ios-log-out', handler: this.logout }}
+        />
+
+        <Content>
+          <View>
+            <Card transparent>
+              <CardItem>
+                <Body>
+                  <Title>Username:</Title>
+                  <Text style={styles.textData}>
+                    {this.state.user.username}
+                  </Text>
+                  <Title>Name:</Title>
+                  <Text style={styles.textData}>
+                    {this.state.user.first_name}
+                  </Text>
+                  <Title>Last Name:</Title>
+                  <Text style={styles.textData}>
+                    {this.state.user.last_name}
+                  </Text>
+                  <Title>Email:</Title>
+                  <Text style={styles.textData}>{this.state.user.email}</Text>
+                </Body>
+              </CardItem>
+            </Card>
+          </View>
+        </Content>
+      </Container>
     );
   }
+
+  openDrawer = () => {
+    this.props.navigation.openDrawer();
+  };
+
   goToJobDetails = () => {
     this.props.navigation.navigate('JobDetails');
   };

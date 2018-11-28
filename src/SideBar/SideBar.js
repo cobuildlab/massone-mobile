@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { SafeAreaView } from 'react-navigation';
 import { View, TouchableOpacity, Image } from 'react-native';
 import styles from './style';
-import { Button, Text, Icon, ListItem, List } from 'native-base';
+import { Text, Icon } from 'native-base';
 import { BG_MOBILE_IMG, LOGO_WHITE } from '../assets/image/';
 
 class SideBar extends Component {
@@ -11,15 +10,9 @@ class SideBar extends Component {
     return (
       <View style={styles.container}>
         <View>
-          <Image
-            style={styles.viewBackground}
-            source={BG_MOBILE_IMG}
-          />
+          <Image style={styles.viewBackground} source={BG_MOBILE_IMG} />
           <View style={styles.logoSideBar}>
-            <Image
-              style={styles.viewLogo}
-              source={LOGO_WHITE}
-            />
+            <Image style={styles.viewLogo} source={LOGO_WHITE} />
           </View>
         </View>
         <View>
@@ -51,6 +44,7 @@ class SideBar extends Component {
                 key={route.key}
                 onPress={() => {
                   this.props.navigation.navigate(route.key);
+                  this.props.navigation.closeDrawer();
                 }}>
                 <Text style={styles.textItemMenu}>
                   {icon} {route.routeName}

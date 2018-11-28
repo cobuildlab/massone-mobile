@@ -1,22 +1,18 @@
 import React, { Component } from 'react';
-// import { SafeAreaView } from 'react-navigation';
 import { View, TouchableOpacity } from 'react-native';
 import {
-  Header,
-  Title,
   Button,
-  Left,
-  Right,
-  Body,
   Icon,
   Text,
   List,
   SwipeRow,
+  Content,
+  Container,
 } from 'native-base';
 import * as authActions from '../Auth/actions';
 import authStore from '../Auth/authStore';
 import styles from './JobsListStyle';
-import { BLUE_MAIN } from '../constants/colorPalette';
+import { CustomHeader } from '../utils/components';
 
 class JobsListScreen extends Component {
   static navigationOptions = {
@@ -45,29 +41,10 @@ class JobsListScreen extends Component {
 
   render() {
     return (
-      <View>
-        <Header>
-          <Left>
-            <Button
-              transparent
-              onPress={() => this.props.navigation.openDrawer()}>
-              <Icon name="menu" style={{ color: BLUE_MAIN }} />
-            </Button>
-          </Left>
-          <Body>
-            <Title style={styles.titleHeader}>Jobs</Title>
-          </Body>
-          <Right>
-            {/* <Button transparent>
-              <Icon
-                type="FontAwesome"
-                name="bell-o"
-                style={{ color: BLUE_MAIN, fontSize: 20 }}
-              />
-            </Button> */}
-          </Right>
-        </Header>
-        <View>
+      <Container>
+        <CustomHeader leftButton={'openDrawer'} title={'Jobs'} />
+
+        <Content>
           <List>
             <SwipeRow
               leftOpenValue={75}
@@ -132,10 +109,14 @@ class JobsListScreen extends Component {
               }
             />
           </List>
-        </View>
-      </View>
+        </Content>
+      </Container>
     );
   }
+
+  openDrawer = () => {
+    this.props.navigation.openDrawer();
+  };
 
   goToJobDetails = () => {
     this.props.navigation.navigate('JobDetails');

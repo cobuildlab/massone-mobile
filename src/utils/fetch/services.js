@@ -21,7 +21,9 @@ export async function postData(url, data, isAuth = true) {
         Accept: 'application/json',
         'Accept-Language': 'en',
         'Content-Type': 'application/json',
-        Authorization: isAuth ? `jwt ${authStore.getState('Login').token}` : '',
+        Authorization: isAuth
+          ? `token ${authStore.getState('Login').token}`
+          : '',
       },
       method: 'POST',
     }),
@@ -47,7 +49,9 @@ export async function putData(url, data, isAuth = true) {
         Accept: 'application/json',
         'Accept-Language': 'en',
         'Content-Type': 'application/json',
-        Authorization: isAuth ? `jwt ${authStore.getState('Login').token}` : '',
+        Authorization: isAuth
+          ? `token ${authStore.getState('Login').token}`
+          : '',
       },
       method: 'PUT',
     }),
@@ -70,7 +74,7 @@ export async function getData(url, isAuth = true) {
     Accept: 'application/json',
     'Accept-Language': 'en',
     'Content-Type': 'application/json',
-    Authorization: isAuth ? `jwt ${authStore.getState('Login').token}` : '',
+    Authorization: isAuth ? `token ${authStore.getState('Login').token}` : '',
   };
 
   return timeout(
@@ -99,7 +103,9 @@ export async function deleteData(url, isAuth = true) {
         Accept: 'application/json',
         'Accept-Language': 'en',
         'Content-Type': 'application/json',
-        Authorization: isAuth ? `jwt ${authStore.getState('Login').token}` : '',
+        Authorization: isAuth
+          ? `token ${authStore.getState('Login').token}`
+          : '',
       },
       method: 'DELETE',
     }),
@@ -122,7 +128,9 @@ export async function downloadData(url, isAuth = true) {
     fetch(`${API_URL}${url}`, {
       method: 'GET',
       headers: {
-        Authorization: isAuth ? `jwt ${authStore.getState('Login').token}` : '',
+        Authorization: isAuth
+          ? `token ${authStore.getState('Login').token}`
+          : '',
       },
     }).then((response) => {
       if (response.status === 401 || response.status === 403) {
@@ -155,7 +163,9 @@ export async function postFormData(url, formData, isAuth = true) {
       headers: {
         Accept: 'application/json',
         'Accept-Language': 'en',
-        Authorization: isAuth ? `jwt ${authStore.getState('Login').token}` : '',
+        Authorization: isAuth
+          ? `token ${authStore.getState('Login').token}`
+          : '',
       },
       method: 'POST',
     }),
