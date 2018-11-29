@@ -128,7 +128,7 @@ class JobsListScreen extends Component {
                       </Text>
                       <Text style={styles.textDate}>{t('JOBS.endDate')}</Text>
                       <Text style={styles.textNumDate}>
-                        {moment(item.date_start)
+                        {moment(item.date_finish)
                           .tz(moment.tz.guess())
                           .format('L')}
                       </Text>
