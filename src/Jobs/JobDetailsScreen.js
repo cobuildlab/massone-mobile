@@ -132,7 +132,7 @@ class JobDetailsScreen extends Component {
                 </Text>
                 <Title>{t('JOBS.endDate')}</Title>
                 <Text style={styles.textData}>
-                  {moment(this.state.job.date_end)
+                  {moment(this.state.job.date_finish)
                     .tz(moment.tz.guess())
                     .format('L LTS')}
                 </Text>
