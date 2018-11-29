@@ -1,33 +1,60 @@
-import { createSwitchNavigator, createStackNavigator, createAppContainer } from 'react-navigation';
+import React from 'react';
+import { Root, StyleProvider } from 'native-base';
+import {
+  createSwitchNavigator,
+  createStackNavigator,
+  createAppContainer,
+  createDrawerNavigator,
+} from 'react-navigation';
 
-// Implementation of HomeScreen, OtherScreen, SignInScreen, AuthLoadingScreen
-// goes here.
-import LoginScreen from './src/Auth/LoginScreen';
-import ForgotScreen from './src/Auth/ForgotScreen';
-import HomeScreen from './src/Home/HomeScreen';
+import getTheme from './native-base-theme/components';
+
+import { LoginScreen, ForgotScreen, RecoverScreen } from './src/Auth';
+import { JobsListScreen, JobDetailsScreen } from './src/Jobs';
 import ProfileScreen from './src/Profile/ProfileScreen';
-import AuthLoadingScreen from './src/AuthloadingScreen'
+import AuthLoadingScreen from './src/AuthloadingScreen';
+import SideBar from './src/SideBar/SideBar';
 
-const AppStack = createStackNavigator({ Home: HomeScreen, Profile: ProfileScreen });
-const AuthStack = createStackNavigator({ Login: LoginScreen, Forgot: ForgotScreen });
+const JobsStack = createStackNavigator({
+  Jobs: JobsListScreen,
+  JobDetails: JobDetailsScreen,
+});
 
-export default createAppContainer(createSwitchNavigator(
+const AuthStack = createStackNavigator({
+  Login: LoginScreen,
+  Forgot: ForgotScreen,
+  Recover: RecoverScreen,
+});
+
+const AppDrawerMenu = createDrawerNavigator(
   {
-    AuthLoading: AuthLoadingScreen,
-    App: AppStack,
-    Auth: AuthStack,
+    Jobs: JobsStack,
+    Profile: ProfileScreen,
   },
   {
-    initialRouteName: 'AuthLoading',
-  }
-));
-// import React, { Component } from 'react'
+    contentComponent: (props) => <SideBar {...props} />,
+  },
+);
 
-// import HomeScreen from './src/Home/HomeScreen'
+const AppNavigator = createAppContainer(
+  createSwitchNavigator(
+    {
+      AuthLoading: AuthLoadingScreen,
+      App: AppDrawerMenu,
+      Auth: AuthStack,
+    },
+    {
+      initialRouteName: 'AuthLoading',
+    },
+  ),
+);
 
-// export default class AuthLoadingScreen extends Component {
+const App = () => (
+  <Root>
+    <StyleProvider style={getTheme()}>
+      <AppNavigator />
+    </StyleProvider>
+  </Root>
+);
 
-//   render() {
-//     return <HomeScreen />
-//   }
-// }
+export default App;

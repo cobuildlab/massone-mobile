@@ -1,44 +1,90 @@
 import React from 'react';
 import {
-  ActivityIndicator,
   AsyncStorage,
-  StatusBar,
   StyleSheet,
+  Image,
   View,
 } from 'react-native';
+import { LOG } from './utils';
+import authStore from './Auth/authStore';
+import * as authActions from './Auth/actions';
+import LOGO_IMG from './assets/image/logoBlue.png';
 
 class AuthLoadingScreen extends React.Component {
   constructor(props) {
     super(props);
-    this._bootstrapAsync();
   }
 
-  // Fetch the token from storage then navigate to our appropriate place
-  _bootstrapAsync = async () => {
-    const userToken = await AsyncStorage.getItem('userToken');
+  componentDidMount() {
+    this.loginSubscription = authStore.subscribe('Login', this.loginHandler);
 
-    // This will switch to the App screen or Auth screen and this loading
-    // screen will be unmounted and thrown away.
-    this.props.navigation.navigate(userToken ? 'App' : 'Auth');
+    setTimeout(() => {
+      this.bootstrapAsync();
+    }, 3000);
+  }
+
+  componentWillUnmount() {
+    this.loginSubscription.unsubscribe();
+  }
+
+  loginHandler = (user) => {
+    let token;
+
+    try {
+      token = user.token;
+    } catch (e) {
+      return LOG(this, e);
+    }
+
+    if (token) {
+      return this.props.navigation.navigate('App');
+    }
+
+    this.props.navigation.navigate('Auth');
+  };
+
+  // Fetch the token from AsycnStorage/FluxState then navigate to our appropriate place
+  bootstrapAsync = async () => {
+    let userData = authStore.getState('Login');
+
+    if (!userData || !userData.token) {
+      const userString = await AsyncStorage.getItem('user');
+
+      try {
+        userData = JSON.parse(userString);
+      } catch (e) {
+        LOG(this, e);
+      }
+    }
+
+    authActions.setStoredUser(userData || {});
   };
 
   // Render any loading content that you like here
   render() {
     return (
       <View style={styles.container}>
-        <ActivityIndicator />
-        <StatusBar barStyle="default" />
+        <Image source={LOGO_IMG} style={styles.imgSplash} />
       </View>
     );
   }
 }
 
-export default AuthLoadingScreen;
-
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center'
-  }
+    justifyContent: 'center',
+    backgroundColor: '#fff',
+  },
+  imgSplash: {
+    width: 201,
+    height: 123,
+    resizeMode: 'center',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 });
+
+export default AuthLoadingScreen;
