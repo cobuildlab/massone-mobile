@@ -110,11 +110,13 @@ class JobsListScreen extends Component {
                     style={styles.listItem}>
                     <View style={{ flexDirection: 'row' }}>
                       <Text style={styles.issueName}>{item.title}</Text>
-                      <Text>{t('JOBS.for')}</Text>
                       {item.customer ? (
-                        <Text style={styles.customerName}>
-                          {item.customer.first_name}
-                        </Text>
+                        <>
+                          <Text>{t('JOBS.for')}</Text>
+                          <Text style={styles.customerName}>
+                            {item.customer.first_name}
+                          </Text>
+                        </>
                       ) : null}
                     </View>
                     <View style={{ flexDirection: 'row' }}>
