@@ -45,10 +45,9 @@ const acceptJob = (jobId) => {
 /**
  * Reject job action
  * @param  {string|number}  jobId
- * @param  {string}         message the reason for rejecting the job
  */
-const rejectJob = (jobId, message) => {
-  putData(`/jobs/${jobId}/accept`, { message })
+const rejectJob = (jobId) => {
+  putData(`/jobs/${jobId}/reject`)
     .then((data) => {
       Flux.dispatchEvent('RejectJob', data);
     })
@@ -57,4 +56,19 @@ const rejectJob = (jobId, message) => {
     });
 };
 
-export { getJobs, getJob, acceptJob, rejectJob };
+/**
+ * Pause job action
+ * @param  {string|number}  jobId
+ * @param  {string}         message the reason why you are pausing the job
+ */
+const pauseJob = (jobId, message) => {
+  putData(`/jobs/${jobId}/pause`, { message })
+    .then((data) => {
+      Flux.dispatchEvent('PauseJob', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+export { getJobs, getJob, acceptJob, rejectJob, pauseJob };

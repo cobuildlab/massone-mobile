@@ -58,5 +58,6 @@ export default {
     jobPaused: 'Job Paused!',
     whyPausing: 'Tell us why you are pausing the job',
     pauseReason: 'Pause reason',
+    pauseJob: 'Pause job',
   },
 };

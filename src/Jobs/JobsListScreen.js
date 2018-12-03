@@ -124,7 +124,7 @@ class JobsListScreen extends Component {
                   </Button>
                 }
                 right={
-                  <Button onPress={this.goToRejectJob} danger>
+                  <Button onPress={() => this.rejectJob(item)} danger>
                     <Icon active type="MaterialIcons" name="close" />
                   </Button>
                 }
@@ -187,9 +187,30 @@ class JobsListScreen extends Component {
     this.props.navigation.navigate('JobDetails', { jobId });
   };
 
-  goToRejectJob = (job) => {
+  rejectJob = (job) => {
     if (!job || !job.title) return;
-    this.natigation.navigate('RejectJob', { job });
+
+    Alert.alert(
+      this.props.t('JOBS.wantToRejectJob'),
+      job.title,
+      [
+        {
+          text: this.props.t('APP.cancel'),
+          onPress: () => {
+            LOG(this, 'Cancel rejectJob');
+          },
+        },
+        {
+          text: this.props.t('JOBS.reject'),
+          onPress: () => {
+            this.setState({ isLoading: true }, () => {
+              jobActions.rejectJob(job.id);
+            });
+          },
+        },
+      ],
+      { cancelable: false },
+    );
   };
 
   acceptJob = (job) => {

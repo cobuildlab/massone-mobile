@@ -39,6 +39,10 @@ class JobDetailsScreen extends Component {
       'AcceptJob',
       this.acceptJobHandler,
     );
+    this.rejectJobSubscription = jobStore.subscribe(
+      'RejectJob',
+      this.rejectJobHandler,
+    );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
     this.getJob();
@@ -47,6 +51,7 @@ class JobDetailsScreen extends Component {
   componentWillUnmount() {
     this.getJobSubscription.unsubscribe();
     this.acceptJobSubscription.unsubscribe();
+    this.rejectJobSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
   }
 
@@ -55,6 +60,10 @@ class JobDetailsScreen extends Component {
   };
 
   acceptJobHandler = () => {
+    this.setState({ isLoading: false });
+  };
+
+  rejectJobHandler = () => {
     this.setState({ isLoading: false });
   };
 
@@ -152,7 +161,7 @@ class JobDetailsScreen extends Component {
                   </View>
                   <View style={styles.viewBtn}>
                     <Button
-                      onPress={this.goToRejectJob}
+                      onPress={this.rejectJob}
                       danger
                       block
                       style={styles.btnRight}>
@@ -168,9 +177,30 @@ class JobDetailsScreen extends Component {
     );
   }
 
-  goToRejectJob = () => {
+  rejectJob = () => {
     if (!this.state.job || !this.state.job.title) return;
-    this.natigation.navigate('RejectJob', { job: this.state.job });
+
+    Alert.alert(
+      this.props.t('JOBS.wantToRejectJob'),
+      this.state.job.title,
+      [
+        {
+          text: this.props.t('APP.cancel'),
+          onPress: () => {
+            LOG(this, 'Cancel rejectJob');
+          },
+        },
+        {
+          text: this.props.t('JOBS.reject'),
+          onPress: () => {
+            this.setState({ isLoading: true }, () => {
+              jobActions.rejectJob(this.state.job.id);
+            });
+          },
+        },
+      ],
+      { cancelable: false },
+    );
   };
 
   acceptJob = () => {
