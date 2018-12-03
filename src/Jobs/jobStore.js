@@ -17,6 +17,8 @@ class JobStore extends Flux.DashStore {
 
     this.addEvent('RejectJob');
 
+    this.addEvent('PauseJob');
+
     this.addEvent('JobStoreError', storeErrorHandler);
   }
 }
