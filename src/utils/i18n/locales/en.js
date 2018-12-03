@@ -50,5 +50,9 @@ export default {
     endDate: 'End date:',
     accept: 'Accept',
     reject: 'Reject',
+    wantToAcceptJob: 'Accept job?',
+    wantToRejectJob: 'Reject job?',
+    jobAccepted: 'Job accepted!',
+    jobRejected: 'Job Rejected',
   },
 };

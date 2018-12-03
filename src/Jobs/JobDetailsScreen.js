@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import {
   Body,
   Card,
@@ -18,6 +18,7 @@ import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
 import moment from 'moment';
+import { LOG } from '../utils';
 
 class JobDetailsScreen extends Component {
   static navigationOptions = {
@@ -138,12 +139,20 @@ class JobDetailsScreen extends Component {
                 </Text>
                 <View style={styles.viewBtnGroup}>
                   <View style={styles.viewBtn}>
-                    <Button primary block style={styles.btnLeft}>
+                    <Button
+                      onPress={this.acceptJob}
+                      primary
+                      block
+                      style={styles.btnLeft}>
                       <Text>{t('JOBS.accept')}</Text>
                     </Button>
                   </View>
                   <View style={styles.viewBtn}>
-                    <Button danger block style={styles.btnRight}>
+                    <Button
+                      onPress={this.goToRejectJob}
+                      danger
+                      block
+                      style={styles.btnRight}>
                       <Text>{t('JOBS.reject')}</Text>
                     </Button>
                   </View>
@@ -155,6 +164,35 @@ class JobDetailsScreen extends Component {
       </Container>
     );
   }
+
+  goToRejectJob = () => {
+    if (!this.state.job || !this.state.job.title) return;
+    this.natigation.navigate('RejectJob', { job: this.state.job });
+  };
+
+  acceptJob = () => {
+    if (!this.state.job || !this.state.job.title) return;
+
+    Alert.alert(
+      this.props.t('JOBS.wantToAcceptJob'),
+      this.state.job.title,
+      [
+        {
+          text: this.props.t('APP.cancel'),
+          onPress: () => {
+            LOG(this, 'Cancel acceptJob');
+          },
+        },
+        {
+          text: this.props.t('JOBS.accept'),
+          onPress: () => {
+            jobActions.acceptJob();
+          },
+        },
+      ],
+      { cancelable: false },
+    );
+  };
 
   getJob = () => {
     this.setState({ isLoading: true }, () => {

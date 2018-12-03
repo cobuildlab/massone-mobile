@@ -13,6 +13,10 @@ class JobStore extends Flux.DashStore {
 
     this.addEvent('GetJob');
 
+    this.addEvent('AcceptJob');
+
+    this.addEvent('RejectJob');
+
     this.addEvent('JobStoreError', storeErrorHandler);
   }
 }

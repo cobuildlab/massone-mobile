@@ -1,5 +1,5 @@
 import Flux from 'flux-state';
-import { getData } from '../utils/fetch';
+import { getData, putData } from '../utils/fetch';
 
 /**
  * Get job list
@@ -28,4 +28,33 @@ const getJob = (jobId) => {
     });
 };
 
-export { getJobs, getJob };
+/**
+ * Accept job action
+ * @param  {string|number} jobId
+ */
+const acceptJob = (jobId) => {
+  putData(`/jobs/${jobId}/accept`)
+    .then((data) => {
+      Flux.dispatchEvent('AcceptJob', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
+ * Reject job action
+ * @param  {string|number}  jobId
+ * @param  {string}         message the reason for rejecting the job
+ */
+const rejectJob = (jobId) => {
+  putData(`/jobs/${jobId}/accept`)
+    .then((data) => {
+      Flux.dispatchEvent('RejectJob', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+export { getJobs, getJob, acceptJob, rejectJob };

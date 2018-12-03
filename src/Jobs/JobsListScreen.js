@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  FlatList,
+  RefreshControl,
+  Alert,
+} from 'react-native';
 import { Button, Icon, Text, SwipeRow, Content, Container } from 'native-base';
-import * as authActions from '../Auth/actions';
-import authStore from '../Auth/authStore';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
 import styles from './JobsListStyle';
@@ -28,10 +32,17 @@ class JobsListScreen extends Component {
   }
 
   componentDidMount() {
-    this.logoutSubscription = authStore.subscribe('Logout', this.logoutHandler);
     this.getJobsSubscription = jobStore.subscribe(
       'GetJobs',
       this.getJobsHandler,
+    );
+    this.acceptJobSubscription = jobStore.subscribe(
+      'AcceptJob',
+      this.acceptJobHandler,
+    );
+    this.rejectJobSubscription = jobStore.subscribe(
+      'RejectJob',
+      this.rejectJobHandler,
     );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
@@ -39,15 +50,11 @@ class JobsListScreen extends Component {
   }
 
   componentWillUnmount() {
-    this.logoutSubscription.unsubscribe();
     this.getJobsSubscription.unsubscribe();
+    this.acceptJobSubscription.unsubscribe();
+    this.rejectJobSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
   }
-
-  logoutHandler = () => {
-    this.setState({ isLoading: false });
-    this.props.navigation.navigate('Auth');
-  };
 
   getJobsHandler = (jobs) => {
     this.setState(
@@ -56,6 +63,18 @@ class JobsListScreen extends Component {
         this.closeAllRows();
       },
     );
+  };
+
+  acceptJobHandler = () => {
+    this.setState({ isLoading: false });
+    this.getJobs();
+    CustomToast(this.props.t('JOBS.jobAccepted'));
+  };
+
+  rejectJobHandler = () => {
+    this.setState({ isLoading: false });
+    this.getJobs();
+    CustomToast(this.props.t('JOBS.jobRejected'));
   };
 
   errorHandler = (err) => {
@@ -100,8 +119,13 @@ class JobsListScreen extends Component {
                 leftOpenValue={75}
                 rightOpenValue={-75}
                 left={
-                  <Button success>
+                  <Button onPress={() => this.acceptJob(item)} success>
                     <Icon active type="MaterialIcons" name="check" />
+                  </Button>
+                }
+                right={
+                  <Button onPress={this.goToRejectJob} danger>
+                    <Icon active type="MaterialIcons" name="close" />
                   </Button>
                 }
                 body={
@@ -135,11 +159,6 @@ class JobsListScreen extends Component {
                     </View>
                   </TouchableOpacity>
                 }
-                right={
-                  <Button danger>
-                    <Icon active type="MaterialIcons" name="close" />
-                  </Button>
-                }
               />
             )}
           />
@@ -168,10 +187,33 @@ class JobsListScreen extends Component {
     this.props.navigation.navigate('JobDetails', { jobId });
   };
 
-  logout = () => {
-    this.setState({ isLoading: true }, () => {
-      authActions.logout();
-    });
+  goToRejectJob = (job) => {
+    if (!job || !job.title) return;
+    this.natigation.navigate('RejectJob', { job });
+  };
+
+  acceptJob = (job) => {
+    if (!job || !job.title) return;
+
+    Alert.alert(
+      this.props.t('JOBS.wantToAcceptJob'),
+      job.title,
+      [
+        {
+          text: this.props.t('APP.cancel'),
+          onPress: () => {
+            LOG(this, 'Cancel acceptJob');
+          },
+        },
+        {
+          text: this.props.t('JOBS.accept'),
+          onPress: () => {
+            jobActions.acceptJob();
+          },
+        },
+      ],
+      { cancelable: false },
+    );
   };
 
   /**
