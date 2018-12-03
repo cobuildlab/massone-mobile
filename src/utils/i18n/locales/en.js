@@ -54,5 +54,7 @@ export default {
     wantToRejectJob: 'Reject job?',
     jobAccepted: 'Job accepted!',
     jobRejected: 'Job Rejected',
+    whyRejecting: 'Tell us why you are rejecting the job',
+    rejectReason: 'Reject reason',
   },
 };

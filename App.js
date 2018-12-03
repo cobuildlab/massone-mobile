@@ -10,7 +10,7 @@ import {
 import getTheme from './native-base-theme/components';
 
 import { LoginScreen, ForgotScreen, RecoverScreen } from './src/Auth';
-import { JobsListScreen, JobDetailsScreen } from './src/Jobs';
+import { JobsListScreen, JobDetailsScreen, RejectJobScreen } from './src/Jobs';
 import ProfileScreen from './src/Profile/ProfileScreen';
 import AuthLoadingScreen from './src/AuthloadingScreen';
 import SideBar from './src/SideBar/SideBar';
@@ -18,6 +18,7 @@ import SideBar from './src/SideBar/SideBar';
 const JobsStack = createStackNavigator({
   Jobs: JobsListScreen,
   JobDetails: JobDetailsScreen,
+  RejectJob: RejectJobScreen,
 });
 
 const AuthStack = createStackNavigator({

@@ -13,7 +13,7 @@ import {
 } from 'native-base';
 import styles from './JobDetailsStyle';
 import { BLUE_MAIN } from '../constants/colorPalette';
-import { CustomHeader, CustomToast, Loading } from '../utils/components';
+import { CustomHeader, Loading } from '../utils/components';
 import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
@@ -50,11 +50,6 @@ class JobDetailsScreen extends Component {
     this.jobStoreError.unsubscribe();
   }
 
-  logoutHandler = () => {
-    this.setState({ isLoading: false });
-    this.props.navigation.navigate('Auth');
-  };
-
   getJobHandler = (job) => {
     this.setState({ isLoading: false, job });
   };
@@ -63,9 +58,8 @@ class JobDetailsScreen extends Component {
     this.setState({ isLoading: false });
   };
 
-  errorHandler = (err) => {
+  errorHandler = () => {
     this.setState({ isLoading: false });
-    CustomToast(err, 'danger');
   };
 
   render() {
@@ -196,7 +190,7 @@ class JobDetailsScreen extends Component {
           text: this.props.t('JOBS.accept'),
           onPress: () => {
             this.setState({ isLoading: true }, () => {
-              jobActions.acceptJob();
+              jobActions.acceptJob(this.state.job.id);
             });
           },
         },

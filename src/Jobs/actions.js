@@ -47,8 +47,8 @@ const acceptJob = (jobId) => {
  * @param  {string|number}  jobId
  * @param  {string}         message the reason for rejecting the job
  */
-const rejectJob = (jobId) => {
-  putData(`/jobs/${jobId}/accept`)
+const rejectJob = (jobId, message) => {
+  putData(`/jobs/${jobId}/accept`, { message })
     .then((data) => {
       Flux.dispatchEvent('RejectJob', data);
     })
