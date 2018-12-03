@@ -208,7 +208,9 @@ class JobsListScreen extends Component {
         {
           text: this.props.t('JOBS.accept'),
           onPress: () => {
-            jobActions.acceptJob();
+            this.setState({ isLoading: true }, () => {
+              jobActions.acceptJob();
+            });
           },
         },
       ],

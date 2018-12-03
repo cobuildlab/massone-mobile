@@ -35,6 +35,10 @@ class JobDetailsScreen extends Component {
 
   componentDidMount() {
     this.getJobSubscription = jobStore.subscribe('GetJob', this.getJobHandler);
+    this.acceptJobSubscription = jobStore.subscribe(
+      'AcceptJob',
+      this.acceptJobHandler,
+    );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
     this.getJob();
@@ -42,6 +46,7 @@ class JobDetailsScreen extends Component {
 
   componentWillUnmount() {
     this.getJobSubscription.unsubscribe();
+    this.acceptJobSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
   }
 
@@ -52,6 +57,10 @@ class JobDetailsScreen extends Component {
 
   getJobHandler = (job) => {
     this.setState({ isLoading: false, job });
+  };
+
+  acceptJobHandler = () => {
+    this.setState({ isLoading: false });
   };
 
   errorHandler = (err) => {
@@ -186,7 +195,9 @@ class JobDetailsScreen extends Component {
         {
           text: this.props.t('JOBS.accept'),
           onPress: () => {
-            jobActions.acceptJob();
+            this.setState({ isLoading: true }, () => {
+              jobActions.acceptJob();
+            });
           },
         },
       ],
