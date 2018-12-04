@@ -22,17 +22,15 @@ class SideBar extends Component {
             if (route.key == 'Jobs') {
               icon = (
                 <Icon
-                  type="FontAwesome"
-                  name="id-badge"
-                  style={{ fontSize: 20, color: '#fff', marginRight: 10 }}
+                  name="ios-clipboard"
+                  style={{ fontSize: 20, color: '#fff' }}
                 />
               );
             }
             if (route.key == 'Profile') {
               icon = (
                 <Icon
-                  type="FontAwesome"
-                  name="user"
+                  name="md-person"
                   style={{ fontSize: 20, color: '#fff' }}
                 />
               );

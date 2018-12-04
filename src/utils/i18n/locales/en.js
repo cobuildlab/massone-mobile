@@ -57,6 +57,7 @@ export default {
     pause: 'Pause',
     wantToAcceptJob: 'Accept job?',
     wantToRejectJob: 'Reject job?',
+    wantToPauseJob: 'Pause job?',
     jobAccepted: 'Job accepted!',
     jobRejected: 'Job Rejected!',
     jobPaused: 'Job Paused!',

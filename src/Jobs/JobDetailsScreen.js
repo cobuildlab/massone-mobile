@@ -37,11 +37,15 @@ class JobDetailsScreen extends Component {
     this.getJobSubscription = jobStore.subscribe('GetJob', this.getJobHandler);
     this.acceptJobSubscription = jobStore.subscribe(
       'AcceptJob',
-      this.acceptJobHandler,
+      this.updateJobHandler,
     );
     this.rejectJobSubscription = jobStore.subscribe(
       'RejectJob',
-      this.rejectJobHandler,
+      this.updateJobHandler,
+    );
+    this.pauseJobSubscription = jobStore.subscribe(
+      'PauseJob',
+      this.updateJobHandler,
     );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
@@ -52,6 +56,7 @@ class JobDetailsScreen extends Component {
     this.getJobSubscription.unsubscribe();
     this.acceptJobSubscription.unsubscribe();
     this.rejectJobSubscription.unsubscribe();
+    this.pauseJobSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
   }
 
@@ -59,12 +64,7 @@ class JobDetailsScreen extends Component {
     this.setState({ isLoading: false, job });
   };
 
-  acceptJobHandler = () => {
-    this.setState({ isLoading: false });
-    this.getJob();
-  };
-
-  rejectJobHandler = () => {
+  updateJobHandler = () => {
     this.setState({ isLoading: false });
     this.getJob();
   };
@@ -83,7 +83,7 @@ class JobDetailsScreen extends Component {
         <CustomHeader
           leftButton={'goBack'}
           title={t('JOBS.jobDetails')}
-          rightButton={{ icon: 'ios-add' /*, handler: this.addComment */ }}
+          rightButton={{ icon: 'md-mail', handler: this.goToComments }}
         />
 
         <Content>
@@ -151,26 +151,41 @@ class JobDetailsScreen extends Component {
                     .tz(moment.tz.guess())
                     .format('L LTS')}
                 </Text>
-                <View style={styles.viewBtnGroup}>
-                  <View style={styles.viewBtn}>
-                    <Button
-                      onPress={this.acceptJob}
-                      primary
-                      block
-                      style={styles.btnLeft}>
-                      <Text>{t('JOBS.accept')}</Text>
-                    </Button>
+
+                {this.state.job.status === 'Open' ? (
+                  <View style={styles.viewBtnGroup}>
+                    <View style={styles.viewBtn}>
+                      <Button
+                        onPress={this.acceptJob}
+                        primary
+                        block
+                        style={styles.btnLeft}>
+                        <Text>{t('JOBS.accept')}</Text>
+                      </Button>
+                    </View>
+                    <View style={styles.viewBtn}>
+                      <Button
+                        onPress={this.rejectJob}
+                        danger
+                        block
+                        style={styles.btnRight}>
+                        <Text>{t('JOBS.reject')}</Text>
+                      </Button>
+                    </View>
                   </View>
-                  <View style={styles.viewBtn}>
-                    <Button
-                      onPress={this.rejectJob}
-                      danger
-                      block
-                      style={styles.btnRight}>
-                      <Text>{t('JOBS.reject')}</Text>
-                    </Button>
-                  </View>
-                </View>
+                ) : null}
+
+                {/* TODO: DON'T DELETE, this must be added when employeeStatus
+                  is ready on the API, to allow the user to pause job
+                  this.state.job.employeeStatus === 'Accepted' ? (
+                  <Button
+                    onPress={this.goToPauseJob}
+                    primary
+                    block
+                    style={styles.buttonPause}>
+                    <Text>{t('JOBS.pauseJob')}</Text>
+                  </Button>
+                ) : null */}
               </Body>
             </CardItem>
           </Card>
@@ -229,6 +244,18 @@ class JobDetailsScreen extends Component {
       ],
       { cancelable: false },
     );
+  };
+
+  goToPauseJob = () => {
+    if (!this.state.job || !this.state.job.id) return;
+
+    this.props.navigation.navigate('PauseJob', { job: this.state.job });
+  };
+
+  goToComments = () => {
+    if (!this.state.job || !this.state.job.id) return;
+
+    this.props.navigation.navigate('JobComments', { jobId: this.state.job.id });
   };
 
   firstLoad = () => {

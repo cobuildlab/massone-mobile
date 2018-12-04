@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { Alert } from 'react-native';
-import { Content, Container, Textarea, Button, Text } from 'native-base';
+import { Content, Container, Textarea, Button, Text, View } from 'native-base';
 import { CustomHeader, CustomToast, Loading } from '../utils/components';
 import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
 import { LOG } from '../utils';
+import styles from './PauseJobStyle';
 
 class PauseJobScreen extends Component {
   static navigationOptions = {
@@ -52,18 +53,26 @@ class PauseJobScreen extends Component {
 
         <CustomHeader leftButton={'goBack'} title={t('JOBS.pauseJob')} />
 
-        <Content>
-          <Text>{t('JOBS.whyPausing')}</Text>
+        <Content contentContainerStyle={styles.content}>
+          <View style={styles.viewText}>
+            <Text style={styles.text}>{`${t('JOBS.whyPausing')}:`}</Text>
+            <Text style={styles.textJob}>{this.state.job.title}</Text>
+          </View>
 
-          <Textarea
-            value={this.state.message}
-            placeholder={t('JOBS.pauseReason')}
-            onChangeText={(text) => this.setState({ message: text })}
-            rowSpan={5}
-            bordered
-          />
+          <View style={styles.viewTextArea}>
+            <Textarea
+              autoFocus
+              value={this.state.message}
+              placeholder={t('JOBS.pauseReason')}
+              onChangeText={(text) => this.setState({ message: text })}
+              rowSpan={5}
+              bordered
+            />
+          </View>
 
-          <Button onPress={this.pauseJob} />
+          <Button primary block onPress={this.pauseJob}>
+            <Text>{t('JOBS.pauseJob')}</Text>
+          </Button>
         </Content>
       </Container>
     );
