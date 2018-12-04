@@ -45,7 +45,7 @@ class JobDetailsScreen extends Component {
     );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
-    this.getJob();
+    this.firstLoad();
   }
 
   componentWillUnmount() {
@@ -61,10 +61,12 @@ class JobDetailsScreen extends Component {
 
   acceptJobHandler = () => {
     this.setState({ isLoading: false });
+    this.getJob();
   };
 
   rejectJobHandler = () => {
     this.setState({ isLoading: false });
+    this.getJob();
   };
 
   errorHandler = () => {
@@ -229,10 +231,14 @@ class JobDetailsScreen extends Component {
     );
   };
 
-  getJob = () => {
+  firstLoad = () => {
     this.setState({ isLoading: true }, () => {
-      jobActions.getJob(this.state.jobId);
+      this.getJob();
     });
+  };
+
+  getJob = () => {
+    jobActions.getJob(this.state.jobId);
   };
 }
 
