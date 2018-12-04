@@ -11,6 +11,8 @@ export default {
     rememberMe: 'Remember me',
     wellcomeBack: 'Welcome back!',
     pleaseLogin: 'Please, login to your account.',
+    firstName: 'First name',
+    lastName: 'Last name',
     username: 'Username',
     password: 'Password',
     email: 'Email',
@@ -34,6 +36,8 @@ export default {
       'You will receive an email with a code to reset your password',
     passwordChanged: 'Password changed!',
     code: 'Code',
+    wantToLogout: 'Logout?',
+    logout: 'Logout',
   },
   JOBS: {
     jobs: 'Jobs',
