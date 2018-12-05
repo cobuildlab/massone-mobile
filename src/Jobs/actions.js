@@ -105,4 +105,25 @@ const commentJob = (jobId, message, files) => {
     });
 };
 
-export { getJobs, getJob, acceptJob, rejectJob, pauseJob, commentJob };
+/**
+ * Get job comments list
+ */
+const getJobComments = (jobId) => {
+  getData(`/comments/?job=${jobId}`)
+    .then((data) => {
+      Flux.dispatchEvent('GetJobComments', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+export {
+  getJobs,
+  getJob,
+  acceptJob,
+  rejectJob,
+  pauseJob,
+  commentJob,
+  getJobComments,
+};

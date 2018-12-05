@@ -42,6 +42,7 @@ export default {
   JOBS: {
     jobs: 'Jobs',
     jobDetails: 'Job details',
+    jobComments: 'Job comments',
     for: 'for',
     issue: 'Issue:',
     description: 'Description:',
@@ -67,5 +68,6 @@ export default {
     invalidJob: 'Invalid job',
     invalidMessage: 'Enter your message',
     invalidFiles: 'Invalid File',
+    message: 'Message',
   },
 };

@@ -255,7 +255,7 @@ class JobDetailsScreen extends Component {
   goToComments = () => {
     if (!this.state.job || !this.state.job.id) return;
 
-    this.props.navigation.navigate('JobComments', { jobId: this.state.job.id });
+    this.props.navigation.navigate('Comments', { jobId: this.state.job.id });
   };
 
   firstLoad = () => {

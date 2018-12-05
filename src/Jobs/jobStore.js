@@ -21,6 +21,8 @@ class JobStore extends Flux.DashStore {
 
     this.addEvent('CommentJob');
 
+    this.addEvent('GetJobComments');
+
     this.addEvent('JobStoreError', storeErrorHandler);
   }
 }

@@ -99,6 +99,7 @@ class JobsListScreen extends Component {
             />
           }>
           <FlatList
+            style={styles.list}
             data={this.state.jobs}
             extraData={this.state}
             keyExtractor={(job) => String(job.id)}
