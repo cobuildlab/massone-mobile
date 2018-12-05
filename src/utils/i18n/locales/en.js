@@ -64,5 +64,8 @@ export default {
     whyPausing: 'Tell us why you are pausing the job',
     pauseReason: 'Pause reason',
     pauseJob: 'Pause job',
+    invalidJob: 'Invalid job',
+    invalidMessage: 'Enter your message',
+    invalidFiles: 'Invalid File',
   },
 };
