@@ -15,6 +15,8 @@ import {
   Footer,
   FooterTab,
   Button,
+  Thumbnail,
+  View,
 } from 'native-base';
 import { CustomHeader, Loading } from '../utils/components';
 import styles from './CommentsStyle';
@@ -22,6 +24,14 @@ import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
 import moment from 'moment';
+import ImagePicker from 'react-native-image-picker';
+import { LOG } from '../utils';
+
+const IMAGE_PICKER_OPTIONS = {
+  mediaType: 'photo',
+  cameraType: 'back',
+  noData: true,
+};
 
 class CommentsScreen extends Component {
   static navigationOptions = {
@@ -33,6 +43,7 @@ class CommentsScreen extends Component {
     this.state = {
       isLoading: false,
       isRefreshing: false,
+      selectedImage: {},
       comments: [],
       message: '',
       jobId: props.navigation.getParam('jobId', null),
@@ -134,10 +145,10 @@ class CommentsScreen extends Component {
 
         <Footer>
           <FooterTab>
-            <Button dark transparent>
+            <Button onPress={this.selectImage} dark transparent>
               <Icon active name="md-image" />
             </Button>
-            <Button dark transparent>
+            <Button onPress={this.openCamera} dark transparent>
               <Icon active name="md-camera" />
             </Button>
             <Button dark transparent>
@@ -157,6 +168,17 @@ class CommentsScreen extends Component {
             <Icon active name="md-send" style={styles.iconBlue} />
           </TouchableOpacity>
         </Item>
+        {this.state.selectedImage.uri ? (
+          <View style={styles.imageView}>
+            <TouchableOpacity onPress={this.deleteImage}>
+              <Thumbnail
+                style={styles.thumbnail}
+                source={this.state.selectedImage}
+              />
+              <Icon name="md-close" style={styles.iconClose} />
+            </TouchableOpacity>
+          </View>
+        ) : null}
       </Container>
     );
   }
@@ -181,6 +203,50 @@ class CommentsScreen extends Component {
     this.setState({ isLoading: true }, () => {
       jobActions.commentJob(this.state.jobId, this.state.message);
     });
+  };
+
+  selectImage = () => {
+    ImagePicker.launchImageLibrary(IMAGE_PICKER_OPTIONS, (response) => {
+      if (response.didCancel) {
+        LOG(this, 'User cancelled image picker');
+      } else if (response.error) {
+        LOG(this, `ImagePicker Error: ${response.error}`);
+      } else if (response.customButton) {
+        LOG(this, `User tapped custom button: ${response.customButton}`);
+      } else {
+        const source = { uri: response.uri };
+
+        this.setImage(source);
+      }
+    });
+  };
+
+  openCamera = () => {
+    ImagePicker.launchCamera(IMAGE_PICKER_OPTIONS, (response) => {
+      if (response.didCancel) {
+        LOG(this, 'User cancelled image picker');
+      } else if (response.error) {
+        LOG(this, `ImagePicker Error: ${response.error}`);
+      } else if (response.customButton) {
+        LOG(this, `User tapped custom button: ${response.customButton}`);
+      } else {
+        const source = { uri: response.uri };
+
+        this.setImage(source);
+      }
+    });
+  };
+
+  /**
+   * To set selected image from library/camera
+   * @params {object} selectedImage the image uri
+   */
+  setImage = (selectedImage) => {
+    this.setState({ selectedImage });
+  };
+
+  deleteImage = () => {
+    this.setState({ selectedImage: {} });
   };
 }
 

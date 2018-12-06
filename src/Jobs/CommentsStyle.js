@@ -10,4 +10,16 @@ export default StyleSheet.create({
   iconBlue: {
     color: BLUE_MAIN,
   },
+  thumbnail: {
+    marginLeft: 5,
+    marginBottom: 5,
+  },
+  imageView: {
+    width: 60,
+  },
+  iconClose: {
+    position: 'absolute',
+    top: 0,
+    right: 0,
+  },
 });
