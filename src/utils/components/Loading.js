@@ -13,6 +13,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#00000040',
     zIndex: 999999,
+    elevation: 3, // to show in top of NativeBase Footer
   },
   activityIndicatorWrapper: {
     backgroundColor: 'white',

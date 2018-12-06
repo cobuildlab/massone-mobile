@@ -6,7 +6,7 @@ import { commentJobValidator, pauseJobValidator } from './validators';
  * Get job list
  */
 const getJobs = () => {
-  getData('/jobs/user/')
+  getData('/job/users/')
     .then((data) => {
       Flux.dispatchEvent('GetJobs', data);
     })
@@ -20,7 +20,7 @@ const getJobs = () => {
  * @param  {number|string} jobId
  */
 const getJob = (jobId) => {
-  getData(`/jobs/${jobId}/`)
+  getData(`/job/users/${jobId}/`)
     .then((data) => {
       Flux.dispatchEvent('GetJob', data);
     })

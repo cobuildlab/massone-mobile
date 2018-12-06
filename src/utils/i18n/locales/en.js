@@ -68,6 +68,6 @@ export default {
     invalidJob: 'Invalid job',
     invalidMessage: 'Enter your message',
     invalidFiles: 'Invalid File',
-    message: 'Message',
+    typeMessage: 'Type your message',
   },
 };

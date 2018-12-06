@@ -12,6 +12,9 @@ import {
   Body,
   Right,
   Text,
+  Footer,
+  FooterTab,
+  Button,
 } from 'native-base';
 import { CustomHeader, Loading } from '../utils/components';
 import styles from './CommentsStyle';
@@ -129,14 +132,29 @@ class CommentsScreen extends Component {
             : null}
         </Content>
 
+        <Footer>
+          <FooterTab>
+            <Button dark transparent>
+              <Icon active name="md-image" />
+            </Button>
+            <Button dark transparent>
+              <Icon active name="md-camera" />
+            </Button>
+            <Button dark transparent>
+              <Icon active name="md-attach" />
+            </Button>
+          </FooterTab>
+        </Footer>
         <Item style={styles.item}>
           <Input
+            multiline
+            returnKeyType={'next'}
             value={this.state.message}
-            placeholder={t('JOBS.message')}
+            placeholder={t('JOBS.typeMessage')}
             onChangeText={(text) => this.setState({ message: text })}
           />
           <TouchableOpacity onPress={this.addComment}>
-            <Icon active name="md-send" style={styles.icon} />
+            <Icon active name="md-send" style={styles.iconBlue} />
           </TouchableOpacity>
         </Item>
       </Container>

@@ -1,12 +1,13 @@
 import { StyleSheet } from 'react-native';
-import { GRAY_MAIN, BLUE_MAIN } from '../constants/colorPalette';
+import { BLUE_MAIN } from '../constants/colorPalette';
 
 export default StyleSheet.create({
   item: {
-    backgroundColor: GRAY_MAIN,
+    marginLeft: 0,
+    borderTopWidth: 0,
+    borderBottomWidth: 0,
   },
-  icon: {
+  iconBlue: {
     color: BLUE_MAIN,
-    fontSize: 24,
   },
 });
