@@ -20,6 +20,7 @@
     "react-native": "0.57.5",
     "react-native-dotenv": "^0.2.0",
     "react-native-gesture-handler": "^1.0.9",
+    "react-native-offline": "^3.15.0",
     "react-navigation": "^3.0.0",
     "rxjs": "^6.3.3"
   },

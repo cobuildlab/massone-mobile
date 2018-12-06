@@ -73,7 +73,7 @@ class CommentsScreen extends Component {
   };
 
   errorHandler = () => {
-    this.setState({ isLoading: false });
+    this.setState({ isLoading: false, isRefreshing: false });
   };
 
   render() {

@@ -16,6 +16,7 @@ class PauseJobScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: false,
       job: props.navigation.getParam('job', {}),
       message: '',
     };

@@ -28,6 +28,7 @@ class JobDetailsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: false,
       job: {},
       jobId: props.navigation.getParam('jobId', null),
     };

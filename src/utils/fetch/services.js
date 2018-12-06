@@ -1,9 +1,8 @@
 import authStore from '../../Auth/authStore';
 import { API_URL } from 'react-native-dotenv';
 import * as authActions from '../../Auth/actions';
-// import {checkInternetConnection} from 'react-native-offline';
-// import {i18next} from '../i18n';
-// import { LOG, WARN, ERROR } from '../utils';
+import { checkInternetConnection } from 'react-native-offline';
+import { i18n } from '../i18n';
 
 /**
  * POST method fetch
@@ -12,7 +11,7 @@ import * as authActions from '../../Auth/actions';
  * @return {Promise}         the data from the endpoint
  */
 export async function postData(url, data, isAuth = true) {
-  // await checkConnection();
+  await checkConnection();
 
   return timeout(
     fetch(`${API_URL}${url}`, {
@@ -40,7 +39,7 @@ export async function postData(url, data, isAuth = true) {
  * @return {Promise}         the data from the endpoint
  */
 export async function putData(url, data, isAuth = true) {
-  // await checkConnection();
+  await checkConnection();
 
   return timeout(
     fetch(`${API_URL}${url}`, {
@@ -68,7 +67,7 @@ export async function putData(url, data, isAuth = true) {
  * @return {Promise}         the data from the endpoint
  */
 export async function getData(url, isAuth = true) {
-  // await checkConnection();
+  await checkConnection();
 
   const headers = {
     Accept: 'application/json',
@@ -95,7 +94,7 @@ export async function getData(url, isAuth = true) {
  * @return {Promise}         the data from the endpoint
  */
 export async function deleteData(url, isAuth = true) {
-  // await checkConnection();
+  await checkConnection();
 
   return timeout(
     fetch(`${API_URL}${url}`, {
@@ -122,7 +121,7 @@ export async function deleteData(url, isAuth = true) {
  * @return {Promise}         the data parsed to blob from the endpoint
  */
 export async function downloadData(url, isAuth = true) {
-  // await checkConnection();
+  await checkConnection();
 
   return timeout(
     fetch(`${API_URL}${url}`, {
@@ -155,7 +154,7 @@ export async function downloadData(url, isAuth = true) {
  * @return {Promise}         the data from the endpoint
  */
 export async function postFormData(url, formData, isAuth = true) {
-  // await checkConnection();
+  await checkConnection();
 
   return timeout(
     fetch(`${API_URL}${url}`, {
@@ -201,13 +200,13 @@ function checkStatus(response) {
 /**
  * check if the device is connected to internet
  */
-// async function checkConnection() {
-//   const isConnected = await checkInternetConnection();
-//
-//   if (!isConnected) {
-//     throw new Error(i18next.t('APP.noInternet'));
-//   }
-// }
+async function checkConnection() {
+  const isConnected = await checkInternetConnection();
+
+  if (!isConnected) {
+    throw new Error(i18n.t('APP.noInternet'));
+  }
+}
 
 /**
  * Timeout for fetch request
@@ -217,7 +216,7 @@ function checkStatus(response) {
 function timeout(promise, ms = 20000) {
   return new Promise(function(resolve, reject) {
     setTimeout(function() {
-      reject(new Error('APP.timeout'));
+      reject(new Error(i18n.t('APP.timeout')));
     }, ms);
     promise.then(resolve, reject);
   });
