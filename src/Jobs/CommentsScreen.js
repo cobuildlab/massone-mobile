@@ -175,7 +175,7 @@ class CommentsScreen extends Component {
                 style={styles.thumbnail}
                 source={this.state.selectedImage}
               />
-              <Icon name="md-close" style={styles.iconClose} />
+              <Icon name="md-close-circle" style={styles.iconClose} />
             </TouchableOpacity>
           </View>
         ) : null}

@@ -1,5 +1,5 @@
 import { StyleSheet } from 'react-native';
-import { BLUE_MAIN } from '../constants/colorPalette';
+import { BLUE_MAIN, GRAY_MAIN } from '../constants/colorPalette';
 
 export default StyleSheet.create({
   item: {
@@ -18,6 +18,7 @@ export default StyleSheet.create({
     width: 60,
   },
   iconClose: {
+    color: GRAY_MAIN,
     position: 'absolute',
     top: 0,
     right: 0,
