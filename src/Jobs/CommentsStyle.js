@@ -9,6 +9,7 @@ export default StyleSheet.create({
   },
   iconBlue: {
     color: BLUE_MAIN,
+    fontSize: 32,
   },
   thumbnail: {
     marginLeft: 5,

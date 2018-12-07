@@ -68,6 +68,7 @@ export default {
     invalidJob: 'Invalid job',
     invalidMessage: 'Enter your message',
     invalidFiles: 'Invalid File',
+    invalidFileType: 'Only jpg, png and pdf files are allowed',
     typeMessage: 'Type your message',
   },
 };

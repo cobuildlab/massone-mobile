@@ -156,19 +156,15 @@ export async function downloadData(url, isAuth = true) {
 export async function postFormData(url, formData, isAuth = true) {
   await checkConnection();
 
-  return timeout(
-    fetch(`${API_URL}${url}`, {
-      body: formData,
-      headers: {
-        Accept: 'application/json',
-        'Accept-Language': 'en',
-        Authorization: isAuth
-          ? `token ${authStore.getState('Login').token}`
-          : '',
-      },
-      method: 'POST',
-    }),
-  )
+  return fetch(`${API_URL}${url}`, {
+    body: formData,
+    headers: {
+      Accept: 'application/json',
+      'Accept-Language': 'en',
+      Authorization: isAuth ? `token ${authStore.getState('Login').token}` : '',
+    },
+    method: 'POST',
+  })
     .then(checkStatus)
     .then((res) => res)
     .catch((err) => Promise.reject(err));
@@ -178,6 +174,8 @@ export async function postFormData(url, formData, isAuth = true) {
 reject or resolve based on status then Parses the response to json
  */
 function checkStatus(response) {
+  console.log(response);
+
   if ((response && response.status === 401) || response.status === 403) {
     authActions.logoutOnUnautorized();
   }

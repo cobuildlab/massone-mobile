@@ -31,6 +31,7 @@ const IMAGE_PICKER_OPTIONS = {
   mediaType: 'photo',
   cameraType: 'back',
   noData: true,
+  skipBackup: true,
 };
 
 class CommentsScreen extends Component {
@@ -71,7 +72,7 @@ class CommentsScreen extends Component {
   }
 
   commentJobHandler = () => {
-    this.setState({ isLoading: false, message: '' });
+    this.setState({ isLoading: false, message: '', selectedImage: {} });
     this.getJobComments();
   };
 
@@ -119,14 +120,16 @@ class CommentsScreen extends Component {
                     </Body>
                   </Left>
                 </CardItem>
-                {comment.image_profile ? (
-                  <CardItem cardBody>
-                    <Image
-                      source={{ uri: comment.image_profile }}
-                      style={{ height: 200, flex: 1 }}
-                    />
-                  </CardItem>
-                ) : null}
+                {Array.isArray(comment.image)
+                  ? comment.image.map((image) => (
+                    <CardItem key={image.id} cardBody>
+                      <Image
+                        source={{ uri: image.image_comment }}
+                        style={{ height: 200, flex: 1 }}
+                      />
+                    </CardItem>
+                  ))
+                  : null}
                 <CardItem>
                   <Left />
                   <Body />
@@ -200,49 +203,57 @@ class CommentsScreen extends Component {
   };
 
   addComment = () => {
+    let files = undefined;
+
+    if (this.state.selectedImage.uri) {
+      files = [this.state.selectedImage];
+    }
+
     this.setState({ isLoading: true }, () => {
-      jobActions.commentJob(this.state.jobId, this.state.message);
+      jobActions.commentJob(this.state.jobId, this.state.message, files);
     });
   };
 
   selectImage = () => {
-    ImagePicker.launchImageLibrary(IMAGE_PICKER_OPTIONS, (response) => {
-      if (response.didCancel) {
-        LOG(this, 'User cancelled image picker');
-      } else if (response.error) {
-        LOG(this, `ImagePicker Error: ${response.error}`);
-      } else if (response.customButton) {
-        LOG(this, `User tapped custom button: ${response.customButton}`);
-      } else {
-        const source = { uri: response.uri };
-
-        this.setImage(source);
-      }
-    });
+    ImagePicker.launchImageLibrary(
+      IMAGE_PICKER_OPTIONS,
+      this.handleImagePickerResponse,
+    );
   };
 
   openCamera = () => {
-    ImagePicker.launchCamera(IMAGE_PICKER_OPTIONS, (response) => {
-      if (response.didCancel) {
-        LOG(this, 'User cancelled image picker');
-      } else if (response.error) {
-        LOG(this, `ImagePicker Error: ${response.error}`);
-      } else if (response.customButton) {
-        LOG(this, `User tapped custom button: ${response.customButton}`);
-      } else {
-        const source = { uri: response.uri };
-
-        this.setImage(source);
-      }
-    });
+    ImagePicker.launchCamera(
+      IMAGE_PICKER_OPTIONS,
+      this.handleImagePickerResponse,
+    );
   };
 
   /**
-   * To set selected image from library/camera
-   * @params {object} selectedImage the image uri
+   * Handle react-native-image-picker response and set the selected image
+   * @param  {object} response A react-native-image-picker response
    */
-  setImage = (selectedImage) => {
-    this.setState({ selectedImage });
+  handleImagePickerResponse = (response) => {
+    if (response.didCancel) {
+      LOG(this, 'User cancelled image picker');
+    } else if (response.error) {
+      LOG(this, `ImagePicker Error: ${response.error}`);
+    } else if (response.customButton) {
+      LOG(this, `User tapped custom button: ${response.customButton}`);
+    } else {
+      const selectedImage = {
+        uri: response.uri /*`data:image/jpeg;base64,${response.data}`*/,
+        type:
+          response.type ||
+          `image/${
+            response.fileName.split('.')[
+              response.fileName.split('.').length - 1
+            ]
+          }`,
+        name: response.fileName,
+      };
+
+      this.setState({ selectedImage });
+    }
   };
 
   deleteImage = () => {

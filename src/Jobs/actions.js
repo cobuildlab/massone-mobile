@@ -34,7 +34,7 @@ const getJob = (jobId) => {
  * @param  {string|number} jobId
  */
 const acceptJob = (jobId) => {
-  putData(`/jobs/${jobId}/accept`)
+  putData(`/jobs/${jobId}/accept/`)
     .then((data) => {
       Flux.dispatchEvent('AcceptJob', data);
     })
@@ -48,7 +48,7 @@ const acceptJob = (jobId) => {
  * @param  {string|number}  jobId
  */
 const rejectJob = (jobId) => {
-  putData(`/jobs/${jobId}/reject`)
+  putData(`/jobs/${jobId}/reject/`)
     .then((data) => {
       Flux.dispatchEvent('RejectJob', data);
     })
@@ -92,7 +92,15 @@ const commentJob = (jobId, message, files) => {
   }
 
   const body = new FormData();
-  if (files) body.append('files', files);
+  if (Array.isArray(files)) {
+    for (const file of files) {
+      body.append('files', {
+        uri: file.uri,
+        name: file.name,
+        type: file.type,
+      });
+    }
+  }
   body.append('job', jobId);
   body.append('message', message);
 
