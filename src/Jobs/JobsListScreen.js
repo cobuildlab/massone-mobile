@@ -197,53 +197,43 @@ class JobsListScreen extends Component {
   rejectJob = (job) => {
     if (!job || !job.title) return;
 
-    Alert.alert(
-      this.props.t('JOBS.wantToRejectJob'),
-      job.title,
-      [
-        {
-          text: this.props.t('APP.cancel'),
-          onPress: () => {
-            LOG(this, 'Cancel rejectJob');
-          },
+    Alert.alert(this.props.t('JOBS.wantToRejectJob'), job.title, [
+      {
+        text: this.props.t('APP.cancel'),
+        onPress: () => {
+          LOG(this, 'Cancel rejectJob');
         },
-        {
-          text: this.props.t('JOBS.reject'),
-          onPress: () => {
-            this.setState({ isLoading: true }, () => {
-              jobActions.rejectJob(job.id);
-            });
-          },
+      },
+      {
+        text: this.props.t('JOBS.reject'),
+        onPress: () => {
+          this.setState({ isLoading: true }, () => {
+            jobActions.rejectJob(job.id);
+          });
         },
-      ],
-      { cancelable: false },
-    );
+      },
+    ]);
   };
 
   acceptJob = (job) => {
     if (!job || !job.title) return;
 
-    Alert.alert(
-      this.props.t('JOBS.wantToAcceptJob'),
-      job.title,
-      [
-        {
-          text: this.props.t('APP.cancel'),
-          onPress: () => {
-            LOG(this, 'Cancel acceptJob');
-          },
+    Alert.alert(this.props.t('JOBS.wantToAcceptJob'), job.title, [
+      {
+        text: this.props.t('APP.cancel'),
+        onPress: () => {
+          LOG(this, 'Cancel acceptJob');
         },
-        {
-          text: this.props.t('JOBS.accept'),
-          onPress: () => {
-            this.setState({ isLoading: true }, () => {
-              jobActions.acceptJob(job.id);
-            });
-          },
+      },
+      {
+        text: this.props.t('JOBS.accept'),
+        onPress: () => {
+          this.setState({ isLoading: true }, () => {
+            jobActions.acceptJob(job.id);
+          });
         },
-      ],
-      { cancelable: false },
-    );
+      },
+    ]);
   };
 
   /**

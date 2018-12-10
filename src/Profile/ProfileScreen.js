@@ -90,27 +90,22 @@ class ProfileScreen extends Component {
   };
 
   logout = () => {
-    Alert.alert(
-      this.props.t('AUTH.wantToLogout'),
-      '',
-      [
-        {
-          text: this.props.t('APP.cancel'),
-          onPress: () => {
-            LOG(this, 'Cancel logout');
-          },
+    Alert.alert(this.props.t('AUTH.wantToLogout'), '', [
+      {
+        text: this.props.t('APP.cancel'),
+        onPress: () => {
+          LOG(this, 'Cancel logout');
         },
-        {
-          text: this.props.t('AUTH.logout'),
-          onPress: () => {
-            this.setState({ isLoading: true }, () => {
-              authActions.logout();
-            });
-          },
+      },
+      {
+        text: this.props.t('AUTH.logout'),
+        onPress: () => {
+          this.setState({ isLoading: true }, () => {
+            authActions.logout();
+          });
         },
-      ],
-      // { cancelable: false },
-    );
+      },
+    ]);
   };
 }
 

@@ -82,27 +82,22 @@ class PauseJobScreen extends Component {
   pauseJob = () => {
     if (!this.state.job || !this.state.job.title) return;
 
-    Alert.alert(
-      this.props.t('JOBS.wantToPauseJob'),
-      this.state.job.title,
-      [
-        {
-          text: this.props.t('APP.cancel'),
-          onPress: () => {
-            LOG(this, 'Cancel pauseJob');
-          },
+    Alert.alert(this.props.t('JOBS.wantToPauseJob'), this.state.job.title, [
+      {
+        text: this.props.t('APP.cancel'),
+        onPress: () => {
+          LOG(this, 'Cancel pauseJob');
         },
-        {
-          text: this.props.t('JOBS.pause'),
-          onPress: () => {
-            this.setState({ isLoading: true }, () => {
-              jobActions.pauseJob(this.state.job.id, this.state.messsage);
-            });
-          },
+      },
+      {
+        text: this.props.t('JOBS.pause'),
+        onPress: () => {
+          this.setState({ isLoading: true }, () => {
+            jobActions.pauseJob(this.state.job.id, this.state.messsage);
+          });
         },
-      ],
-      { cancelable: false },
-    );
+      },
+    ]);
   };
 }
 

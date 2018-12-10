@@ -198,53 +198,43 @@ class JobDetailsScreen extends Component {
   rejectJob = () => {
     if (!this.state.job || !this.state.job.title) return;
 
-    Alert.alert(
-      this.props.t('JOBS.wantToRejectJob'),
-      this.state.job.title,
-      [
-        {
-          text: this.props.t('APP.cancel'),
-          onPress: () => {
-            LOG(this, 'Cancel rejectJob');
-          },
+    Alert.alert(this.props.t('JOBS.wantToRejectJob'), this.state.job.title, [
+      {
+        text: this.props.t('APP.cancel'),
+        onPress: () => {
+          LOG(this, 'Cancel rejectJob');
         },
-        {
-          text: this.props.t('JOBS.reject'),
-          onPress: () => {
-            this.setState({ isLoading: true }, () => {
-              jobActions.rejectJob(this.state.job.id);
-            });
-          },
+      },
+      {
+        text: this.props.t('JOBS.reject'),
+        onPress: () => {
+          this.setState({ isLoading: true }, () => {
+            jobActions.rejectJob(this.state.job.id);
+          });
         },
-      ],
-      { cancelable: false },
-    );
+      },
+    ]);
   };
 
   acceptJob = () => {
     if (!this.state.job || !this.state.job.title) return;
 
-    Alert.alert(
-      this.props.t('JOBS.wantToAcceptJob'),
-      this.state.job.title,
-      [
-        {
-          text: this.props.t('APP.cancel'),
-          onPress: () => {
-            LOG(this, 'Cancel acceptJob');
-          },
+    Alert.alert(this.props.t('JOBS.wantToAcceptJob'), this.state.job.title, [
+      {
+        text: this.props.t('APP.cancel'),
+        onPress: () => {
+          LOG(this, 'Cancel acceptJob');
         },
-        {
-          text: this.props.t('JOBS.accept'),
-          onPress: () => {
-            this.setState({ isLoading: true }, () => {
-              jobActions.acceptJob(this.state.job.id);
-            });
-          },
+      },
+      {
+        text: this.props.t('JOBS.accept'),
+        onPress: () => {
+          this.setState({ isLoading: true }, () => {
+            jobActions.acceptJob(this.state.job.id);
+          });
         },
-      ],
-      { cancelable: false },
-    );
+      },
+    ]);
   };
 
   goToPauseJob = () => {
