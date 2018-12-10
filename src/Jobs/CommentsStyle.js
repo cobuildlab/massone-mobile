@@ -18,6 +18,16 @@ export default StyleSheet.create({
   imageView: {
     width: 60,
   },
+  fileView: {
+    marginHorizontal: 5,
+    marginVertical: 10,
+  },
+  fileButton: {
+    justifyContent: 'space-evenly',
+  },
+  fileText: {
+    marginHorizontal: 20,
+  },
   iconClose: {
     color: GRAY_MAIN,
     position: 'absolute',

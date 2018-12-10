@@ -25,6 +25,10 @@ import * as jobActions from './actions';
 import jobStore from './jobStore';
 import moment from 'moment';
 import ImagePicker from 'react-native-image-picker';
+import {
+  DocumentPicker,
+  DocumentPickerUtil,
+} from 'react-native-document-picker';
 import { LOG } from '../utils';
 
 const IMAGE_PICKER_OPTIONS = {
@@ -45,6 +49,7 @@ class CommentsScreen extends Component {
       isLoading: false,
       isRefreshing: false,
       selectedImage: {},
+      selectedFile: {},
       comments: [],
       message: '',
       jobId: props.navigation.getParam('jobId', null),
@@ -72,7 +77,12 @@ class CommentsScreen extends Component {
   }
 
   commentJobHandler = () => {
-    this.setState({ isLoading: false, message: '', selectedImage: {} });
+    this.setState({
+      isLoading: false,
+      message: '',
+      selectedImage: {},
+      selectedFile: {},
+    });
     this.getJobComments();
   };
 
@@ -132,7 +142,19 @@ class CommentsScreen extends Component {
                   : null}
                 <CardItem>
                   <Left />
-                  <Body />
+                  <Body>
+                    {Array.isArray(comment.file)
+                      ? comment.file.map((file) => (
+                        <Button
+                          style={styles.fileButton}
+                          key={file.id}
+                          transparent
+                          onPress={this.downloadFile}>
+                          <Text>{this.state.selectedFile.fileName}</Text>
+                        </Button>
+                      ))
+                      : null}
+                  </Body>
                   <Right>
                     <Text note>
                       {moment(comment.created)
@@ -154,7 +176,7 @@ class CommentsScreen extends Component {
             <Button onPress={this.openCamera} dark transparent>
               <Icon active name="md-camera" />
             </Button>
-            <Button dark transparent>
+            <Button onPress={this.selectFile} dark transparent>
               <Icon active name="md-attach" />
             </Button>
           </FooterTab>
@@ -180,6 +202,20 @@ class CommentsScreen extends Component {
               />
               <Icon name="md-close-circle" style={styles.iconClose} />
             </TouchableOpacity>
+          </View>
+        ) : null}
+        {this.state.selectedFile.uri ? (
+          <View style={styles.fileView}>
+            <Button
+              style={styles.fileButton}
+              iconRight
+              bordered
+              onPress={this.deleteFile}>
+              <Text style={styles.fileText}>
+                {this.state.selectedFile.name}
+              </Text>
+              <Icon name="md-close-circle" />
+            </Button>
           </View>
         ) : null}
       </Container>
@@ -209,9 +245,28 @@ class CommentsScreen extends Component {
       files = [this.state.selectedImage];
     }
 
+    if (this.state.selectedFile.uri) {
+      files = [this.state.selectedFile];
+    }
+
     this.setState({ isLoading: true }, () => {
       jobActions.commentJob(this.state.jobId, this.state.message, files);
     });
+  };
+
+  selectFile = () => {
+    DocumentPicker.show(
+      {
+        filetype: [DocumentPickerUtil.pdf(), DocumentPickerUtil.images()],
+      },
+      (err, res) => {
+        if (err) return this.errorHandler(err);
+
+        if (res.type === 'application/pdf') return this.handleFile(res);
+
+        this.handleImagePickerResponse(res);
+      },
+    );
   };
 
   selectImage = () => {
@@ -229,19 +284,24 @@ class CommentsScreen extends Component {
   };
 
   /**
-   * Handle react-native-image-picker response and set the selected image
-   * @param  {object} response A react-native-image-picker response
+   * Handle react-native-image-picker or react-native-document-picker
+   * response and set the selected image
+   * @param  {object} response A react-native-image-picker or
+   * react-native-document-picker image response with the uri, type & name
    */
   handleImagePickerResponse = (response) => {
     if (response.didCancel) {
+      // for react-native-image-picker response
       LOG(this, 'User cancelled image picker');
     } else if (response.error) {
+      // for react-native-image-picker response
       LOG(this, `ImagePicker Error: ${response.error}`);
     } else if (response.customButton) {
+      // for react-native-image-picker response
       LOG(this, `User tapped custom button: ${response.customButton}`);
     } else {
       const selectedImage = {
-        uri: response.uri /*`data:image/jpeg;base64,${response.data}`*/,
+        uri: response.uri,
         type:
           response.type ||
           `image/${
@@ -252,12 +312,32 @@ class CommentsScreen extends Component {
         name: response.fileName,
       };
 
-      this.setState({ selectedImage });
+      this.setState({ selectedImage, selectedFile: {} });
     }
+  };
+
+  /**
+   * Handle react-native-document-picker
+   * response and set the selected file only, DONT USE FOR IMAGES
+   * @param  {object} response react-native-document-picker file
+   * response with the uri, type & name
+   */
+  handleFile = (response) => {
+    const selectedFile = {
+      uri: response.uri,
+      type: response.type,
+      name: response.fileName,
+    };
+
+    this.setState({ selectedFile, selectedImage: {} });
   };
 
   deleteImage = () => {
     this.setState({ selectedImage: {} });
+  };
+
+  deleteFile = () => {
+    this.setState({ selectedFile: {} });
   };
 }
 

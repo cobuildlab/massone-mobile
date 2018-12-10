@@ -1,5 +1,5 @@
 import Flux from 'flux-state';
-import { getData, putData, postFormData } from '../utils/fetch';
+import { getData, putData, postData, postFormData } from '../utils/fetch';
 import { commentJobValidator, pauseJobValidator } from './validators';
 
 /**
@@ -34,7 +34,7 @@ const getJob = (jobId) => {
  * @param  {string|number} jobId
  */
 const acceptJob = (jobId) => {
-  putData(`/jobs/${jobId}/accept/`)
+  postData(`/jobs/${jobId}/accept/`)
     .then((data) => {
       Flux.dispatchEvent('AcceptJob', data);
     })
@@ -48,7 +48,7 @@ const acceptJob = (jobId) => {
  * @param  {string|number}  jobId
  */
 const rejectJob = (jobId) => {
-  putData(`/jobs/${jobId}/reject/`)
+  postData(`/jobs/${jobId}/reject/`)
     .then((data) => {
       Flux.dispatchEvent('RejectJob', data);
     })

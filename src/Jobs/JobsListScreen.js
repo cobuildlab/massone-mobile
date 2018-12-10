@@ -9,6 +9,7 @@ import {
 import { Button, Icon, Text, SwipeRow, Content, Container } from 'native-base';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
+import authStore from '../Auth/authStore';
 import styles from './JobsListStyle';
 import { CustomHeader, CustomToast, Loading } from '../utils/components';
 import { LOG } from '../utils';
@@ -32,6 +33,7 @@ class JobsListScreen extends Component {
   }
 
   componentDidMount() {
+    this.logoutSubscription = authStore.subscribe('Logout', this.logoutHandler);
     this.getJobsSubscription = jobStore.subscribe(
       'GetJobs',
       this.getJobsHandler,
@@ -75,6 +77,10 @@ class JobsListScreen extends Component {
     this.setState({ isLoading: false });
     this.getJobs();
     CustomToast(this.props.t('JOBS.jobRejected'));
+  };
+
+  logoutHandler = () => {
+    this.props.navigation.navigate('Auth');
   };
 
   errorHandler = (err) => {
