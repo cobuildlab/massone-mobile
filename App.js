@@ -15,6 +15,7 @@ import {
   JobDetailsScreen,
   PauseJobScreen,
   CommentsScreen,
+  PdfScreen,
 } from './src/Jobs';
 import ProfileScreen from './src/Profile/ProfileScreen';
 import AuthLoadingScreen from './src/AuthloadingScreen';
@@ -25,6 +26,7 @@ const JobsStack = createStackNavigator({
   JobDetails: JobDetailsScreen,
   PauseJob: PauseJobScreen,
   Comments: CommentsScreen,
+  Pdf: PdfScreen,
 });
 
 const AuthStack = createStackNavigator({

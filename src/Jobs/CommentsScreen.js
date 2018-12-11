@@ -141,20 +141,22 @@ class CommentsScreen extends Component {
                   ))
                   : null}
                 <CardItem>
-                  <Left />
-                  <Body>
+                  <Left>
                     {Array.isArray(comment.file)
                       ? comment.file.map((file) => (
                         <Button
-                          style={styles.fileButton}
+                          bordered
+                          iconRight
                           key={file.id}
                           transparent
-                          onPress={this.downloadFile}>
-                          <Text>{this.state.selectedFile.fileName}</Text>
+                          onPress={() => this.goToPdfView(file)}>
+                          <Text>{t('JOBS.viewPdf')}</Text>
+                          <Icon name="md-document" />
                         </Button>
                       ))
                       : null}
-                  </Body>
+                  </Left>
+
                   <Right>
                     <Text note>
                       {moment(comment.created)
@@ -338,6 +340,10 @@ class CommentsScreen extends Component {
 
   deleteFile = () => {
     this.setState({ selectedFile: {} });
+  };
+
+  goToPdfView = (file) => {
+    this.props.navigation.navigate('Pdf', { file });
   };
 }
 

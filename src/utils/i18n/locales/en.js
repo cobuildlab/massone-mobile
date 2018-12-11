@@ -70,5 +70,6 @@ export default {
     invalidFiles: 'Invalid File',
     invalidFileType: 'Only jpg, png and pdf files are allowed',
     typeMessage: 'Type your message',
+    viewPdf: 'View pdf',
   },
 };
