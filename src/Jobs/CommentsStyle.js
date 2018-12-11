@@ -2,6 +2,10 @@ import { StyleSheet } from 'react-native';
 import { BLUE_MAIN, GRAY_MAIN } from '../constants/colorPalette';
 
 export default StyleSheet.create({
+  flatList: {
+    marginHorizontal: 10,
+    marginTop: 10,
+  },
   item: {
     marginLeft: 0,
     borderTopWidth: 0,

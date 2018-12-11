@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, RefreshControl, Image } from 'react-native';
+import { TouchableOpacity, Image, FlatList } from 'react-native';
 import {
   Input,
-  Content,
+  Spinner,
   Container,
   Icon,
   Item,
@@ -29,7 +29,8 @@ import {
   DocumentPicker,
   DocumentPickerUtil,
 } from 'react-native-document-picker';
-import { LOG } from '../utils';
+import { BLUE_MAIN } from '../constants/colorPalette';
+import { LOG, sortByDate } from '../utils';
 
 const IMAGE_PICKER_OPTIONS = {
   mediaType: 'photo',
@@ -48,9 +49,11 @@ class CommentsScreen extends Component {
     this.state = {
       isLoading: false,
       isRefreshing: false,
+      isLoadingPage: false,
       selectedImage: {},
       selectedFile: {},
       comments: [],
+      nextUrl: '',
       message: '',
       jobId: props.navigation.getParam('jobId', null),
     };
@@ -76,26 +79,47 @@ class CommentsScreen extends Component {
     this.jobStoreError.unsubscribe();
   }
 
-  commentJobHandler = () => {
-    this.setState({
-      isLoading: false,
-      message: '',
-      selectedImage: {},
-      selectedFile: {},
-    });
-    this.getJobComments();
+  commentJobHandler = (data) => {
+    const commentsCopy = this.state.comments;
+    // push new comment and sort
+    commentsCopy.push(data);
+    const comments = sortByDate(commentsCopy);
+
+    this.setState(
+      {
+        isLoading: false,
+        message: '',
+        selectedImage: {},
+        selectedFile: {},
+        comments,
+      },
+      () => {
+        this.scrollToIndex();
+      },
+    );
   };
 
   getJobCommentsHandler = (data) => {
+    // remove oldComments if refreshing
+    const oldComments = this.state.isRefreshing ? [] : this.state.comments;
+    // concat oldComments with new ones
+    const comments = sortByDate(oldComments.concat(data.results));
+
     this.setState({
       isLoading: false,
       isRefreshing: false,
-      comments: data.results,
+      isLoadingPage: false,
+      nextUrl: data.next,
+      comments,
     });
   };
 
   errorHandler = () => {
-    this.setState({ isLoading: false, isRefreshing: false });
+    this.setState({
+      isLoading: false,
+      isRefreshing: false,
+      isLoadingPage: false,
+    });
   };
 
   render() {
@@ -107,17 +131,21 @@ class CommentsScreen extends Component {
 
         <CustomHeader leftButton={'goBack'} title={t('JOBS.jobComments')} />
 
-        <Content
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.isRefreshing}
-              onRefresh={this.refreshData}
-            />
-          }
-          padder>
-          {Array.isArray(this.state.comments)
-            ? this.state.comments.map((comment) => (
-              <Card key={comment.id}>
+        {Array.isArray(this.state.comments) ? (
+          <FlatList
+            ref={(flatList) => (this.flatList = flatList)}
+            style={styles.flatList}
+            onRefresh={this.refreshData}
+            refreshing={this.state.isRefreshing}
+            onEndReached={this.getNextPage}
+            data={this.state.comments}
+            extraData={this.state}
+            keyExtractor={(comment) => String(comment.id)}
+            ListFooterComponent={() =>
+              this.state.isLoadingPage ? <Spinner color={BLUE_MAIN} /> : null
+            }
+            renderItem={({ item: comment }) => (
+              <Card>
                 <CardItem>
                   <Left>
                     <Body>
@@ -166,9 +194,9 @@ class CommentsScreen extends Component {
                   </Right>
                 </CardItem>
               </Card>
-            ))
-            : null}
-        </Content>
+            )}
+          />
+        ) : null}
 
         <Footer>
           <FooterTab>
@@ -185,6 +213,7 @@ class CommentsScreen extends Component {
         </Footer>
         <Item style={styles.item}>
           <Input
+            ref={(input) => (this.input = input)}
             multiline
             returnKeyType={'next'}
             value={this.state.message}
@@ -236,12 +265,42 @@ class CommentsScreen extends Component {
     });
   };
 
-  getJobComments = () => {
-    jobActions.getJobComments(this.state.jobId);
+  /**
+   * This will get the url params for next page from the nextUrl
+   * then it will call getJobComments with the nextUrl params
+   */
+  getNextPage = () => {
+    if (!this.state.nextUrl) return;
+
+    let urlParams = '';
+
+    try {
+      urlParams = this.state.nextUrl
+        ? this.state.nextUrl.split('/comments/')[
+          this.state.nextUrl.split('/comments/').length - 1
+        ]
+        : `?job=${this.state.jobId}`;
+
+      if (this.state.nextUrl) this.setState({ isLoadingPage: true });
+    } catch (e) {
+      LOG(this, `getJobComments nextUrl Error: ${e}`);
+    }
+
+    this.getJobComments(urlParams);
+  };
+
+  getJobComments = (urlParams = `?job=${this.state.jobId}`) => {
+    jobActions.getJobComments(urlParams);
   };
 
   addComment = () => {
     let files = undefined;
+
+    try {
+      this.input._root.blur();
+    } catch (err) {
+      LOG(`Error on input blur() ${err}`);
+    }
 
     if (this.state.selectedImage.uri) {
       files = [this.state.selectedImage];
@@ -344,6 +403,14 @@ class CommentsScreen extends Component {
 
   goToPdfView = (file) => {
     this.props.navigation.navigate('Pdf', { file });
+  };
+
+  scrollToIndex = (index = 0) => {
+    try {
+      this.flatList.scrollToIndex({ index });
+    } catch (err) {
+      LOG(`Error on scrollToIndex ${err}`);
+    }
   };
 }
 

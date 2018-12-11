@@ -1,18 +1,13 @@
 import React, { Component } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  FlatList,
-  RefreshControl,
-  Alert,
-} from 'react-native';
-import { Button, Icon, Text, SwipeRow, Content, Container } from 'native-base';
+import { View, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { Button, Icon, Text, SwipeRow, Container, Spinner } from 'native-base';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
 import authStore from '../Auth/authStore';
 import styles from './JobsListStyle';
 import { CustomHeader, CustomToast, Loading } from '../utils/components';
-import { LOG } from '../utils';
+import { BLUE_MAIN } from '../constants/colorPalette';
+import { LOG, sortByDate } from '../utils';
 import moment from 'moment';
 import { withNamespaces } from 'react-i18next';
 
@@ -28,6 +23,8 @@ class JobsListScreen extends Component {
     this.state = {
       isLoading: false,
       isRefreshing: false,
+      isLoadingPage: false,
+      nextUrl: '',
       jobs: [],
     };
   }
@@ -52,15 +49,27 @@ class JobsListScreen extends Component {
   }
 
   componentWillUnmount() {
+    this.logoutSubscription.unsubscribe();
     this.getJobsSubscription.unsubscribe();
     this.acceptJobSubscription.unsubscribe();
     this.rejectJobSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
   }
 
-  getJobsHandler = (jobs) => {
+  getJobsHandler = (data) => {
+    // remove oldJobs if refreshing
+    const oldJobs = this.state.isRefreshing ? [] : this.state.jobs;
+    // concat oldJobs with new ones
+    const jobs = sortByDate(oldJobs.concat(data.results));
+
     this.setState(
-      { isLoading: false, isRefreshing: false, jobs: jobs.results },
+      {
+        isLoading: false,
+        isRefreshing: false,
+        isLoadingPage: false,
+        nextUrl: data.next,
+        jobs,
+      },
       () => {
         this.closeAllRows();
       },
@@ -84,7 +93,11 @@ class JobsListScreen extends Component {
   };
 
   errorHandler = (err) => {
-    this.setState({ isLoading: false, isRefreshing: false });
+    this.setState({
+      isLoading: false,
+      isRefreshing: false,
+      isLoadingPage: false,
+    });
     CustomToast(err, 'danger');
   };
 
@@ -97,18 +110,18 @@ class JobsListScreen extends Component {
 
         <CustomHeader leftButton={'openDrawer'} title={t('JOBS.jobs')} />
 
-        <Content
-          refreshControl={
-            <RefreshControl
-              refreshing={this.state.isRefreshing}
-              onRefresh={this.refreshData}
-            />
-          }>
+        {Array.isArray(this.state.jobs) ? (
           <FlatList
             style={styles.list}
+            onRefresh={this.refreshData}
+            refreshing={this.state.isRefreshing}
+            onEndReached={this.getNextPage}
             data={this.state.jobs}
             extraData={this.state}
             keyExtractor={(job) => String(job.id)}
+            ListFooterComponent={() =>
+              this.state.isLoadingPage ? <Spinner color={BLUE_MAIN} /> : null
+            }
             renderItem={({ item }) => (
               <SwipeRow
                 ref={(c) => {
@@ -169,7 +182,7 @@ class JobsListScreen extends Component {
               />
             )}
           />
-        </Content>
+        ) : null}
       </Container>
     );
   }
@@ -186,8 +199,32 @@ class JobsListScreen extends Component {
     });
   };
 
-  getJobs = () => {
-    jobActions.getJobs();
+  /**
+   * This will get the url params for next page from the next page url
+   * then it will call getJobs with the nextUrl params
+   */
+  getNextPage = () => {
+    if (!this.state.nextUrl) return;
+
+    let urlParams = '';
+
+    try {
+      urlParams = this.state.nextUrl
+        ? this.state.nextUrl.split('/job/users/')[
+          this.state.nextUrl.split('/job/users/').length - 1
+        ]
+        : '';
+
+      if (this.state.nextUrl) this.setState({ isLoadingPage: true });
+    } catch (e) {
+      LOG(this, `getJobs nextUrl Error: ${e}`);
+    }
+
+    this.getJobs(urlParams);
+  };
+
+  getJobs = (urlParams = '') => {
+    jobActions.getJobs(urlParams);
   };
 
   goToJobDetails = (jobId) => {

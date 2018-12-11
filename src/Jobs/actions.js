@@ -5,8 +5,13 @@ import { commentJobValidator, pauseJobValidator } from './validators';
 /**
  * Get job list
  */
-const getJobs = () => {
-  getData('/job/users/')
+
+/**
+ * Job list action
+ * @param  {string} urlParams the params for pagination
+ */
+const getJobs = (urlParams = '') => {
+  getData(`/job/users/${urlParams}`)
     .then((data) => {
       Flux.dispatchEvent('GetJobs', data);
     })
@@ -115,9 +120,10 @@ const commentJob = (jobId, message, files) => {
 
 /**
  * Get job comments list
+ * @param  {string} urlParams MUST contain ?job=
  */
-const getJobComments = (jobId) => {
-  getData(`/comments/?job=${jobId}`)
+const getJobComments = (urlParams = '') => {
+  getData(`/comments/${urlParams}`)
     .then((data) => {
       Flux.dispatchEvent('GetJobComments', data);
     })
