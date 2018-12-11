@@ -44,10 +44,6 @@ class PdfScreen extends Component {
     this.setState({ isLoading: false });
   };
 
-  onPdfLoad = () => {
-    this.setState({ isLoading: false });
-  };
-
   errorHandler = (err) => {
     this.setState({ isLoading: false });
     CustomToast(err);
