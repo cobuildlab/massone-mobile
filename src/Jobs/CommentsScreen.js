@@ -18,7 +18,7 @@ import {
   Thumbnail,
   View,
 } from 'native-base';
-import { CustomHeader, Loading } from '../utils/components';
+import { CustomHeader, Loading, CenteredText } from '../utils/components';
 import styles from './CommentsStyle';
 import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
@@ -105,11 +105,15 @@ class CommentsScreen extends Component {
     // concat oldComments with new ones
     const comments = sortByDate(oldComments.concat(data.results));
 
+    let emptyComments = false;
+    if (!comments.length) emptyComments = true;
+
     this.setState({
       isLoading: false,
       isRefreshing: false,
       isLoadingPage: false,
       nextUrl: data.next,
+      emptyComments,
       comments,
     });
   };
@@ -130,6 +134,10 @@ class CommentsScreen extends Component {
         {this.state.isLoading ? <Loading /> : null}
 
         <CustomHeader leftButton={'goBack'} title={t('JOBS.jobComments')} />
+
+        {this.state.emptyComments ? (
+          <CenteredText text={`${t('JOBS.emptyComments')}`} />
+        ) : null}
 
         {Array.isArray(this.state.comments) ? (
           <FlatList

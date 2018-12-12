@@ -5,7 +5,12 @@ import * as jobActions from './actions';
 import jobStore from './jobStore';
 import authStore from '../Auth/authStore';
 import styles from './JobsListStyle';
-import { CustomHeader, CustomToast, Loading } from '../utils/components';
+import {
+  CustomHeader,
+  CustomToast,
+  Loading,
+  CenteredText,
+} from '../utils/components';
 import { BLUE_MAIN } from '../constants/colorPalette';
 import { LOG, sortByDate } from '../utils';
 import moment from 'moment';
@@ -24,6 +29,7 @@ class JobsListScreen extends Component {
       isLoading: false,
       isRefreshing: false,
       isLoadingPage: false,
+      emptyJobs: false,
       nextUrl: '',
       jobs: [],
     };
@@ -62,12 +68,16 @@ class JobsListScreen extends Component {
     // concat oldJobs with new ones
     const jobs = sortByDate(oldJobs.concat(data.results));
 
+    let emptyJobs = false;
+    if (!jobs.length) emptyJobs = true;
+
     this.setState(
       {
         isLoading: false,
         isRefreshing: false,
         isLoadingPage: false,
         nextUrl: data.next,
+        emptyJobs,
         jobs,
       },
       () => {
@@ -109,6 +119,10 @@ class JobsListScreen extends Component {
         {this.state.isLoading ? <Loading /> : null}
 
         <CustomHeader leftButton={'openDrawer'} title={t('JOBS.jobs')} />
+
+        {this.state.emptyJobs ? (
+          <CenteredText text={`${t('JOBS.emptyJobs')}`} />
+        ) : null}
 
         {Array.isArray(this.state.jobs) ? (
           <FlatList

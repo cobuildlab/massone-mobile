@@ -71,5 +71,7 @@ export default {
     invalidFileType: 'Only jpg, png and pdf files are allowed',
     typeMessage: 'Type your message',
     viewPdf: 'View pdf',
+    emptyJobs: 'You have no pending jobs',
+    emptyComments: 'No comments yet',
   },
 };
