@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import {
   Title,
   Body,
@@ -13,6 +13,8 @@ import styles from './ProfileStyle';
 import * as authActions from '../Auth/actions';
 import authStore from '../Auth/authStore';
 import { CustomHeader } from '../utils/components';
+import { withNamespaces } from 'react-i18next';
+import { LOG } from '../utils';
 
 class ProfileScreen extends Component {
   static navigationOptions = {
@@ -41,6 +43,8 @@ class ProfileScreen extends Component {
   };
 
   render() {
+    const { t } = this.props;
+
     return (
       <Container>
         <CustomHeader
@@ -54,19 +58,19 @@ class ProfileScreen extends Component {
             <Card transparent>
               <CardItem>
                 <Body>
-                  <Title>Username:</Title>
+                  <Title>{`${t('AUTH.username')}:`}</Title>
                   <Text style={styles.textData}>
                     {this.state.user.username}
                   </Text>
-                  <Title>Name:</Title>
+                  <Title>{`${t('AUTH.firstName')}:`}</Title>
                   <Text style={styles.textData}>
                     {this.state.user.first_name}
                   </Text>
-                  <Title>Last Name:</Title>
+                  <Title>{`${t('AUTH.lastName')}:`}</Title>
                   <Text style={styles.textData}>
                     {this.state.user.last_name}
                   </Text>
-                  <Title>Email:</Title>
+                  <Title>{`${t('AUTH.email')}:`}</Title>
                   <Text style={styles.textData}>{this.state.user.email}</Text>
                 </Body>
               </CardItem>
@@ -86,9 +90,23 @@ class ProfileScreen extends Component {
   };
 
   logout = () => {
-    this.setState({ isLoading: true }, () => {
-      authActions.logout();
-    });
+    Alert.alert(this.props.t('AUTH.wantToLogout'), '', [
+      {
+        text: this.props.t('APP.cancel'),
+        onPress: () => {
+          LOG(this, 'Cancel logout');
+        },
+      },
+      {
+        text: this.props.t('AUTH.logout'),
+        onPress: () => {
+          this.setState({ isLoading: true }, () => {
+            authActions.logout();
+          });
+        },
+      },
+    ]);
   };
 }
-export default ProfileScreen;
+
+export default withNamespaces()(ProfileScreen);

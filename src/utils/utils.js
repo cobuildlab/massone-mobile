@@ -86,6 +86,23 @@ const storeErrorHandler = (err) => {
   return err;
 };
 
+/**
+ * Sort an array dy date and remove duplicate dates given a date field
+ * @param  {Array}  [array=[]]
+ * @param  {String} [field='created']
+ * @return {Array}  The sorted array
+ */
+const sortByDate = (array = [], field = 'created') => {
+  return array
+    .sort((a, b) => new Date(b[field]).getTime() - new Date(a[field]).getTime())
+    .filter(
+      (current, index, array) =>
+        index === 0 ||
+        new Date(current[field]).getTime() !==
+          new Date(array[index - 1][field]).getTime(),
+    );
+};
+
 export {
   isValidString,
   isValidNumber,
@@ -94,4 +111,5 @@ export {
   WARN,
   ERROR,
   storeErrorHandler,
+  sortByDate,
 };

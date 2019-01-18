@@ -26,7 +26,7 @@ class CustomHeader extends Component {
                       ? 'ios-menu'
                       : ''
                 }
-                style={{ color: BLUE_MAIN, fontSize: 20 }}
+                style={{ color: BLUE_MAIN }}
               />
             </Button>
           </Left>
@@ -37,10 +37,7 @@ class CustomHeader extends Component {
         <Right>
           {rightButton ? (
             <Button transparent onPress={rightButton.handler}>
-              <Icon
-                name={rightButton.icon}
-                style={{ color: BLUE_MAIN, fontSize: 20 }}
-              />
+              <Icon name={rightButton.icon} style={{ color: BLUE_MAIN }} />
             </Button>
           ) : null}
         </Right>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View } from 'react-native';
+import { View, Alert } from 'react-native';
 import {
   Body,
   Card,
@@ -13,11 +13,12 @@ import {
 } from 'native-base';
 import styles from './JobDetailsStyle';
 import { BLUE_MAIN } from '../constants/colorPalette';
-import { CustomHeader, CustomToast, Loading } from '../utils/components';
+import { CustomHeader, Loading } from '../utils/components';
 import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
 import moment from 'moment';
+import { LOG } from '../utils';
 
 class JobDetailsScreen extends Component {
   static navigationOptions = {
@@ -27,6 +28,7 @@ class JobDetailsScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      isLoading: false,
       job: {},
       jobId: props.navigation.getParam('jobId', null),
     };
@@ -34,28 +36,42 @@ class JobDetailsScreen extends Component {
 
   componentDidMount() {
     this.getJobSubscription = jobStore.subscribe('GetJob', this.getJobHandler);
+    this.acceptJobSubscription = jobStore.subscribe(
+      'AcceptJob',
+      this.updateJobHandler,
+    );
+    this.rejectJobSubscription = jobStore.subscribe(
+      'RejectJob',
+      this.updateJobHandler,
+    );
+    this.pauseJobSubscription = jobStore.subscribe(
+      'PauseJob',
+      this.updateJobHandler,
+    );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
-    this.getJob();
+    this.firstLoad();
   }
 
   componentWillUnmount() {
     this.getJobSubscription.unsubscribe();
+    this.acceptJobSubscription.unsubscribe();
+    this.rejectJobSubscription.unsubscribe();
+    this.pauseJobSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
   }
-
-  logoutHandler = () => {
-    this.setState({ isLoading: false });
-    this.props.navigation.navigate('Auth');
-  };
 
   getJobHandler = (job) => {
     this.setState({ isLoading: false, job });
   };
 
-  errorHandler = (err) => {
+  updateJobHandler = () => {
     this.setState({ isLoading: false });
-    CustomToast(err, 'danger');
+    this.getJob();
+  };
+
+  errorHandler = () => {
+    this.setState({ isLoading: false });
   };
 
   render() {
@@ -68,7 +84,7 @@ class JobDetailsScreen extends Component {
         <CustomHeader
           leftButton={'goBack'}
           title={t('JOBS.jobDetails')}
-          rightButton={{ icon: 'ios-add' /*, handler: this.addComment */ }}
+          rightButton={{ icon: 'md-mail', handler: this.goToComments }}
         />
 
         <Content>
@@ -136,18 +152,41 @@ class JobDetailsScreen extends Component {
                     .tz(moment.tz.guess())
                     .format('L LTS')}
                 </Text>
-                <View style={styles.viewBtnGroup}>
-                  <View style={styles.viewBtn}>
-                    <Button primary block style={styles.btnLeft}>
-                      <Text>{t('JOBS.accept')}</Text>
-                    </Button>
+
+                {this.state.job.status === 'Open' ? (
+                  <View style={styles.viewBtnGroup}>
+                    <View style={styles.viewBtn}>
+                      <Button
+                        onPress={this.acceptJob}
+                        primary
+                        block
+                        style={styles.btnLeft}>
+                        <Text>{t('JOBS.accept')}</Text>
+                      </Button>
+                    </View>
+                    <View style={styles.viewBtn}>
+                      <Button
+                        onPress={this.rejectJob}
+                        danger
+                        block
+                        style={styles.btnRight}>
+                        <Text>{t('JOBS.reject')}</Text>
+                      </Button>
+                    </View>
                   </View>
-                  <View style={styles.viewBtn}>
-                    <Button danger block style={styles.btnRight}>
-                      <Text>{t('JOBS.reject')}</Text>
-                    </Button>
-                  </View>
-                </View>
+                ) : null}
+
+                {/* TODO: DON'T DELETE, this must be added when employeeStatus
+                  is ready on the API, to allow the user to pause job
+                  this.state.job.employeeStatus === 'Accepted' ? (
+                  <Button
+                    onPress={this.goToPauseJob}
+                    primary
+                    block
+                    style={styles.buttonPause}>
+                    <Text>{t('JOBS.pauseJob')}</Text>
+                  </Button>
+                ) : null */}
               </Body>
             </CardItem>
           </Card>
@@ -156,10 +195,68 @@ class JobDetailsScreen extends Component {
     );
   }
 
-  getJob = () => {
+  rejectJob = () => {
+    if (!this.state.job || !this.state.job.title) return;
+
+    Alert.alert(this.props.t('JOBS.wantToRejectJob'), this.state.job.title, [
+      {
+        text: this.props.t('APP.cancel'),
+        onPress: () => {
+          LOG(this, 'Cancel rejectJob');
+        },
+      },
+      {
+        text: this.props.t('JOBS.reject'),
+        onPress: () => {
+          this.setState({ isLoading: true }, () => {
+            jobActions.rejectJob(this.state.job.id);
+          });
+        },
+      },
+    ]);
+  };
+
+  acceptJob = () => {
+    if (!this.state.job || !this.state.job.title) return;
+
+    Alert.alert(this.props.t('JOBS.wantToAcceptJob'), this.state.job.title, [
+      {
+        text: this.props.t('APP.cancel'),
+        onPress: () => {
+          LOG(this, 'Cancel acceptJob');
+        },
+      },
+      {
+        text: this.props.t('JOBS.accept'),
+        onPress: () => {
+          this.setState({ isLoading: true }, () => {
+            jobActions.acceptJob(this.state.job.id);
+          });
+        },
+      },
+    ]);
+  };
+
+  goToPauseJob = () => {
+    if (!this.state.job || !this.state.job.id) return;
+
+    this.props.navigation.navigate('PauseJob', { job: this.state.job });
+  };
+
+  goToComments = () => {
+    if (!this.state.job || !this.state.job.id) return;
+
+    this.props.navigation.navigate('Comments', { jobId: this.state.job.id });
+  };
+
+  firstLoad = () => {
     this.setState({ isLoading: true }, () => {
-      jobActions.getJob(this.state.jobId);
+      this.getJob();
     });
+  };
+
+  getJob = () => {
+    jobActions.getJob(this.state.jobId);
   };
 }
 

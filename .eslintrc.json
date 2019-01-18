@@ -19,7 +19,8 @@
     "plugin:react/recommended"
   ],
   "globals": {
-    "fetch": true
+    "fetch": true,
+    "FormData": true
   },
   "rules": {
     "no-console": 0,

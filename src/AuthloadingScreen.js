@@ -1,10 +1,5 @@
 import React from 'react';
-import {
-  AsyncStorage,
-  StyleSheet,
-  Image,
-  View,
-} from 'react-native';
+import { AsyncStorage, StyleSheet, Image, View } from 'react-native';
 import { LOG } from './utils';
 import authStore from './Auth/authStore';
 import * as authActions from './Auth/actions';
@@ -20,7 +15,7 @@ class AuthLoadingScreen extends React.Component {
 
     setTimeout(() => {
       this.bootstrapAsync();
-    }, 3000);
+    }, 1000);
   }
 
   componentWillUnmount() {

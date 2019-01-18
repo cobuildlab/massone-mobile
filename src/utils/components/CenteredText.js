@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { StyleSheet, View } from 'react-native';
 import { Text } from 'native-base';
+import { BLUE_MAIN } from '../../constants/colorPalette';
 
 const styles = StyleSheet.create({
   centeredView: {
@@ -14,7 +15,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   textCentered: {
-    color: 'blue',
+    color: BLUE_MAIN,
     textAlign: 'center',
   },
 });

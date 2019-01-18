@@ -20,6 +20,9 @@ export default StyleSheet.create({
     marginTop: 15,
     flexDirection: 'row',
   },
+  buttonPause: {
+    marginTop: 15,
+  },
   viewBtn: {
     width: '49%',
   },

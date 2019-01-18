@@ -3,7 +3,7 @@
 import color from 'color';
 
 import { Platform, Dimensions, PixelRatio } from 'react-native';
-import { GRAY_MAIN, BLUE_MAIN } from '../../src/constants/colorPalette';
+import { GRAY_MAIN, BLUE_MAIN, BLACK } from '../../src/constants/colorPalette';
 
 const deviceHeight = Dimensions.get('window').height;
 const deviceWidth = Dimensions.get('window').width;
@@ -111,7 +111,7 @@ export default {
   brandSuccess: '#5cb85c',
   brandDanger: '#d9534f',
   brandWarning: '#f0ad4e',
-  brandDark: '#000',
+  brandDark: BLACK,
   brandLight: '#f4f4f4',
 
   //Container
@@ -136,8 +136,8 @@ export default {
   },
 
   // Footer
-  footerHeight: 55,
-  footerDefaultBg: platform === 'ios' ? '#F8F8F8' : '#3F51B5',
+  footerHeight: 35,
+  footerDefaultBg: '#fff',
   footerPaddingBottom: 0,
 
   // FooterTab

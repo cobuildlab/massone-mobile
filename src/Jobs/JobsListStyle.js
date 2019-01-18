@@ -2,9 +2,9 @@ import { StyleSheet } from 'react-native';
 import { BLUE_MAIN, VIOLET, GRAY_DARK } from '../constants/colorPalette';
 
 export default StyleSheet.create({
-  // bgHeader: {
-  //   backgroundColor: '#e4e4e4',
-  // },
+  list: {
+    marginTop: 10,
+  },
   titleHeader: {
     fontSize: 18,
   },

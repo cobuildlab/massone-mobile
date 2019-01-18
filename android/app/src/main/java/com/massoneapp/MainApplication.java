@@ -3,6 +3,9 @@ package com.massoneapp;
 import android.app.Application;
 
 import com.facebook.react.ReactApplication;
+import com.rumax.reactnative.pdfviewer.PDFViewPackage;
+import com.reactnativedocumentpicker.ReactNativeDocumentPicker;
+import com.imagepicker.ImagePickerPackage;
 import com.swmansion.gesturehandler.react.RNGestureHandlerPackage;
 import com.facebook.react.ReactNativeHost;
 import com.facebook.react.ReactPackage;
@@ -24,6 +27,9 @@ public class MainApplication extends Application implements ReactApplication {
     protected List<ReactPackage> getPackages() {
       return Arrays.<ReactPackage>asList(
           new MainReactPackage(),
+            new PDFViewPackage(),
+            new ReactNativeDocumentPicker(),
+            new ImagePickerPackage(),
             new RNGestureHandlerPackage()
       );
     }
