@@ -13,19 +13,61 @@ import {
 } from 'native-base';
 import styles from './JobDetailsStyle';
 import { BLUE_MAIN } from '../constants/colorPalette';
-import { CustomHeader } from '../utils/components';
+import { CustomHeader, CustomToast, Loading } from '../utils/components';
+import { withNamespaces } from 'react-i18next';
+import * as jobActions from './actions';
+import jobStore from './jobStore';
+import moment from 'moment';
 
 class JobDetailsScreen extends Component {
   static navigationOptions = {
     header: null,
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      job: {},
+      jobId: props.navigation.getParam('jobId', null),
+    };
+  }
+
+  componentDidMount() {
+    this.getJobSubscription = jobStore.subscribe('GetJob', this.getJobHandler);
+    this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
+
+    this.getJob();
+  }
+
+  componentWillUnmount() {
+    this.getJobSubscription.unsubscribe();
+    this.jobStoreError.unsubscribe();
+  }
+
+  logoutHandler = () => {
+    this.setState({ isLoading: false });
+    this.props.navigation.navigate('Auth');
+  };
+
+  getJobHandler = (job) => {
+    this.setState({ isLoading: false, job });
+  };
+
+  errorHandler = (err) => {
+    this.setState({ isLoading: false });
+    CustomToast(err, 'danger');
+  };
+
   render() {
+    const { t } = this.props;
+
     return (
       <Container>
+        {this.state.isLoading ? <Loading /> : null}
+
         <CustomHeader
           leftButton={'goBack'}
-          title={'Job details'}
+          title={t('JOBS.jobDetails')}
           rightButton={{ icon: 'ios-add' /*, handler: this.addComment */ }}
         />
 
@@ -33,49 +75,76 @@ class JobDetailsScreen extends Component {
           <Card transparent>
             <CardItem>
               <Body>
-                <Title>Issue:</Title>
-                <Text style={styles.textData}>Need ice</Text>
-                <Title>Description:</Title>
+                <Title>{t('JOBS.issue')}</Title>
+                <Text style={styles.textData}>{this.state.job.title}</Text>
+                <Title>{t('JOBS.description')}</Title>
                 <Text style={styles.textData}>
-                  Lorem ipsum dolor sit amet, enim tortor, at ac ut, mauris
-                  rhoncus ut. A sollicitudin, tempor varius vitae. Id non, amet
-                  massa. Mauris metus elementum, suspendisse sapien dui, mattis
-                  nisl.
+                  {this.state.job.description}
                 </Text>
-                <Title>Customer:</Title>
-                <Text style={styles.textData}>C.C.C Sambil</Text>
-                <Title>Contact:</Title>
-                <Text style={styles.textDataContact}>
-                  <Text>Robert Smith</Text>
-                  <Text>
-                    {' '}
-                    <Icon
-                      type="MaterialIcons"
-                      name="phone"
-                      style={{ color: BLUE_MAIN, fontSize: 14, marginTop: 5 }}
-                    />{' '}
-                    333-456789
-                  </Text>
+                {this.state.job.customer ? (
+                  <>
+                    <Title>{t('JOBS.customer')}</Title>
+                    <Text style={styles.textData}>
+                      {`${this.state.job.customer.first_name} ${
+                        this.state.job.customer.last_name
+                      }`}
+                    </Text>
+                  </>
+                ) : null}
+                {this.state.job.location ? (
+                  <>
+                    <Title>{t('JOBS.contact')}</Title>
+                    <Text style={styles.textDataContact}>
+                      <Text>{this.state.job.location.name}</Text>
+                      <Text>
+                        {' '}
+                        <Icon
+                          type="MaterialIcons"
+                          name="phone"
+                          style={{
+                            color: BLUE_MAIN,
+                            fontSize: 14,
+                            marginTop: 5,
+                          }}
+                        />{' '}
+                        {this.state.job.location.phone_number}
+                      </Text>
+                    </Text>
+                  </>
+                ) : null}
+                {this.state.job.job_type ? (
+                  <>
+                    <Title>{t('JOBS.type')}</Title>
+                    <Text style={styles.textData}>
+                      {this.state.job.job_type.name}
+                    </Text>
+                  </>
+                ) : null}
+                <Title>{t('JOBS.status')}</Title>
+                <Text style={styles.textData}>{this.state.job.status}</Text>
+                <Title>{t('JOBS.priority')}</Title>
+                <Text style={styles.textData}>{this.state.job.priority}</Text>
+                <Title>{t('JOBS.startDate')}</Title>
+                <Text style={styles.textData}>
+                  {moment(this.state.job.date_start)
+                    .tz(moment.tz.guess())
+                    .format('L LTS')}
                 </Text>
-                <Title>Type:</Title>
-                <Text style={styles.textData}>Maintenance</Text>
-                <Title>Status:</Title>
-                <Text style={styles.textData}>Open</Text>
-                <Title>Priority:</Title>
-                <Text style={styles.textData}>Low</Text>
-                <Title>Start Date:</Title>
-                <Text style={styles.textData}>01/01/18 12:00 AM</Text>
-                <Title>End Date:</Title>
-                <Text style={styles.textData}>02/02/18 12:00 AM</Text>
+                <Title>{t('JOBS.endDate')}</Title>
+                <Text style={styles.textData}>
+                  {moment(this.state.job.date_finish)
+                    .tz(moment.tz.guess())
+                    .format('L LTS')}
+                </Text>
                 <View style={styles.viewBtnGroup}>
                   <View style={styles.viewBtn}>
                     <Button primary block style={styles.btnLeft}>
-                      <Text> Accept </Text>
+                      <Text>{t('JOBS.accept')}</Text>
                     </Button>
                   </View>
                   <View style={styles.viewBtn}>
                     <Button danger block style={styles.btnRight}>
-                      <Text> Reject </Text>
+                      <Text>{t('JOBS.reject')}</Text>
                     </Button>
                   </View>
                 </View>
@@ -87,8 +156,11 @@ class JobDetailsScreen extends Component {
     );
   }
 
-  goBack = () => {
-    this.props.navigation.goBack();
+  getJob = () => {
+    this.setState({ isLoading: true }, () => {
+      jobActions.getJob(this.state.jobId);
+    });
   };
 }
-export default JobDetailsScreen;
+
+export default withNamespaces()(JobDetailsScreen);

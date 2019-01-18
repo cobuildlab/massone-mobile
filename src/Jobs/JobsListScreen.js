@@ -1,18 +1,15 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity } from 'react-native';
-import {
-  Button,
-  Icon,
-  Text,
-  List,
-  SwipeRow,
-  Content,
-  Container,
-} from 'native-base';
+import { View, TouchableOpacity, FlatList, RefreshControl } from 'react-native';
+import { Button, Icon, Text, SwipeRow, Content, Container } from 'native-base';
 import * as authActions from '../Auth/actions';
 import authStore from '../Auth/authStore';
+import * as jobActions from './actions';
+import jobStore from './jobStore';
 import styles from './JobsListStyle';
-import { CustomHeader } from '../utils/components';
+import { CustomHeader, CustomToast, Loading } from '../utils/components';
+import { LOG } from '../utils';
+import moment from 'moment';
+import { withNamespaces } from 'react-i18next';
 
 class JobsListScreen extends Component {
   static navigationOptions = {
@@ -21,17 +18,30 @@ class JobsListScreen extends Component {
 
   constructor(props) {
     super(props);
+    this.rowRefs = [];
+    this.selectedRow;
     this.state = {
       isLoading: false,
+      isRefreshing: false,
+      jobs: [],
     };
   }
 
   componentDidMount() {
     this.logoutSubscription = authStore.subscribe('Logout', this.logoutHandler);
+    this.getJobsSubscription = jobStore.subscribe(
+      'GetJobs',
+      this.getJobsHandler,
+    );
+    this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
+
+    this.loadData();
   }
 
   componentWillUnmount() {
     this.logoutSubscription.unsubscribe();
+    this.getJobsSubscription.unsubscribe();
+    this.jobStoreError.unsubscribe();
   }
 
   logoutHandler = () => {
@@ -39,87 +49,123 @@ class JobsListScreen extends Component {
     this.props.navigation.navigate('Auth');
   };
 
+  getJobsHandler = (jobs) => {
+    this.setState(
+      { isLoading: false, isRefreshing: false, jobs: jobs.results },
+      () => {
+        this.closeAllRows();
+      },
+    );
+  };
+
+  errorHandler = (err) => {
+    this.setState({ isLoading: false, isRefreshing: false });
+    CustomToast(err, 'danger');
+  };
+
   render() {
+    const { t } = this.props;
+
     return (
       <Container>
-        <CustomHeader leftButton={'openDrawer'} title={'Jobs'} />
+        {this.state.isLoading ? <Loading /> : null}
 
-        <Content>
-          <List>
-            <SwipeRow
-              leftOpenValue={75}
-              rightOpenValue={-75}
-              left={
-                <Button success>
-                  <Icon active type="MaterialIcons" name="check" />
-                </Button>
-              }
-              body={
-                <TouchableOpacity
-                  onPress={this.goToJobDetails}
-                  style={styles.listItem}>
-                  <View style={{ flexDirection: 'row' }}>
-                    <Text style={styles.issueName}>Issue Name</Text>
-                    <Text>for</Text>
-                    <Text style={styles.customerName}>Customers Name</Text>
-                  </View>
-                  <View style={{ flexDirection: 'row' }}>
-                    <Text style={styles.textDate}>Start Date:</Text>
-                    <Text style={styles.textNumDate}>01/01/18</Text>
-                    <Text style={styles.textDate}>End Date:</Text>
-                    <Text style={styles.textNumDate}>02/02/18</Text>
-                  </View>
-                </TouchableOpacity>
-              }
-              right={
-                <Button danger>
-                  <Icon active type="MaterialIcons" name="close" />
-                </Button>
-              }
+        <CustomHeader leftButton={'openDrawer'} title={t('JOBS.jobs')} />
+
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={this.refreshData}
             />
-            <SwipeRow
-              leftOpenValue={75}
-              rightOpenValue={-75}
-              left={
-                <Button success>
-                  <Icon active type="MaterialIcons" name="check" />
-                </Button>
-              }
-              body={
-                <TouchableOpacity
-                  onPress={this.goToJobDetails}
-                  style={styles.listItem}>
-                  <View style={{ flexDirection: 'row' }}>
-                    <Text style={styles.issueName}>Issue Name</Text>
-                    <Text>for</Text>
-                    <Text style={styles.customerName}>Customers Name</Text>
-                  </View>
-                  <View style={{ flexDirection: 'row' }}>
-                    <Text style={styles.textDate}>Start Date:</Text>
-                    <Text style={styles.textNumDate}>01/01/18</Text>
-                    <Text style={styles.textDate}>End Date:</Text>
-                    <Text style={styles.textNumDate}>02/02/18</Text>
-                  </View>
-                </TouchableOpacity>
-              }
-              right={
-                <Button danger>
-                  <Icon active type="MaterialIcons" name="close" />
-                </Button>
-              }
-            />
-          </List>
+          }>
+          <FlatList
+            data={this.state.jobs}
+            extraData={this.state}
+            keyExtractor={(job) => String(job.id)}
+            renderItem={({ item }) => (
+              <SwipeRow
+                ref={(c) => {
+                  this.rowRefs[item.id] = c;
+                }}
+                onRowOpen={() => {
+                  if (
+                    this.selectedRow &&
+                    this.selectedRow !== this.rowRefs[item.id]
+                  ) {
+                    this.selectedRow._root.closeRow();
+                  }
+                  this.selectedRow = this.rowRefs[item.id];
+                }}
+                leftOpenValue={75}
+                rightOpenValue={-75}
+                left={
+                  <Button success>
+                    <Icon active type="MaterialIcons" name="check" />
+                  </Button>
+                }
+                body={
+                  <TouchableOpacity
+                    onPress={() => this.goToJobDetails(item.id)}
+                    style={styles.listItem}>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text style={styles.issueName}>{item.title}</Text>
+                      {item.customer ? (
+                        <>
+                          <Text>{t('JOBS.for')}</Text>
+                          <Text style={styles.customerName}>
+                            {item.customer.first_name}
+                          </Text>
+                        </>
+                      ) : null}
+                    </View>
+                    <View style={{ flexDirection: 'row' }}>
+                      <Text style={styles.textDate}>{t('JOBS.startDate')}</Text>
+                      <Text style={styles.textNumDate}>
+                        {moment(item.date_start)
+                          .tz(moment.tz.guess())
+                          .format('L')}
+                      </Text>
+                      <Text style={styles.textDate}>{t('JOBS.endDate')}</Text>
+                      <Text style={styles.textNumDate}>
+                        {moment(item.date_finish)
+                          .tz(moment.tz.guess())
+                          .format('L')}
+                      </Text>
+                    </View>
+                  </TouchableOpacity>
+                }
+                right={
+                  <Button danger>
+                    <Icon active type="MaterialIcons" name="close" />
+                  </Button>
+                }
+              />
+            )}
+          />
         </Content>
       </Container>
     );
   }
 
-  openDrawer = () => {
-    this.props.navigation.openDrawer();
+  loadData = () => {
+    this.setState({ isLoading: true }, () => {
+      this.getJobs();
+    });
   };
 
-  goToJobDetails = () => {
-    this.props.navigation.navigate('JobDetails');
+  refreshData = () => {
+    this.setState({ isRefreshing: true }, () => {
+      this.getJobs();
+    });
+  };
+
+  getJobs = () => {
+    jobActions.getJobs();
+  };
+
+  goToJobDetails = (jobId) => {
+    this.props.navigation.navigate('JobDetails', { jobId });
   };
 
   logout = () => {
@@ -127,6 +173,19 @@ class JobsListScreen extends Component {
       authActions.logout();
     });
   };
+
+  /**
+   * Close all swipes on the FlatList
+   */
+  closeAllRows = () => {
+    for (const row in this.rowRefs) {
+      try {
+        this.rowRefs[row]._root.closeRow();
+      } catch (e) {
+        LOG(`CloseSwipeError: ${e}`);
+      }
+    }
+  };
 }
 
-export default JobsListScreen;
+export default withNamespaces()(JobsListScreen);
