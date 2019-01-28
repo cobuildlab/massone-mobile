@@ -169,7 +169,7 @@ class JobDetailsScreen extends Component {
             </CardItem>
           </Card>
         </Content>
-        {this.state.job.status ? (
+        {this.state.job.status && this.state.job.status !== 'Paused' ? (
           <Footer>
             <FooterTab>
               {this.state.job.status === 'Dispatch' ? (

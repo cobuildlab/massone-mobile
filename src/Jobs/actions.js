@@ -1,10 +1,6 @@
 import Flux from 'flux-state';
-import { getData, putData, postData, postFormData } from '../utils/fetch';
+import { getData, postData, postFormData } from '../utils/fetch';
 import { commentJobValidator, pauseJobValidator } from './validators';
-
-/**
- * Get job list
- */
 
 /**
  * Job list action
@@ -53,16 +49,29 @@ const acceptJob = (jobId) => {
  * @param  {string|number}  jobId
  * @param  {string}         message the reason why you are pausing the job
  */
-const pauseJob = (jobId, message) => {
+const pauseJob = (jobId, message, reasonId) => {
   try {
-    pauseJobValidator(jobId, message);
+    pauseJobValidator(jobId, message, reasonId);
   } catch (err) {
     return Flux.dispatchEvent('JobStoreError', err);
   }
 
-  putData(`/jobs/${jobId}/pause`, { message })
+  postData(`/jobs/${jobId}/paused/`, { message, reason_id: reasonId })
     .then((data) => {
       Flux.dispatchEvent('PauseJob', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
+ * Get pause job reason list
+ */
+const getPauseJobReason = () => {
+  getData(`/reason-paused-job/`)
+    .then((data) => {
+      Flux.dispatchEvent('GetPauseJobReason', data);
     })
     .catch((err) => {
       Flux.dispatchEvent('JobStoreError', err);
@@ -168,6 +177,7 @@ export {
   endDrive,
   startJob,
   pauseJob,
+  getPauseJobReason,
   commentJob,
   getJobComments,
 };

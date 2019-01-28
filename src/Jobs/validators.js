@@ -1,4 +1,4 @@
-import { isValidString, isValidNumber } from '../utils';
+import { isValidString, isValidNumber, isValidInteger } from '../utils';
 import { i18n } from '../utils/i18n';
 
 const validFileTypes = [
@@ -8,12 +8,16 @@ const validFileTypes = [
   'application/pdf',
 ];
 
-const pauseJobValidator = (jobId, message) => {
+const pauseJobValidator = (jobId, message, reasonId) => {
   if (!isValidNumber(jobId)) {
     throw new Error(i18n.t('JOBS.invalidJob'));
   }
 
-  if (!isValidString(message)) {
+  if (!isValidInteger(reasonId)) {
+    throw new Error(i18n.t('JOBS.invalidReason'));
+  }
+
+  if (!isValidString(message, true)) {
     throw new Error(i18n.t('JOBS.invalidMessage'));
   }
 };
