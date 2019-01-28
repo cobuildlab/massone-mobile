@@ -113,6 +113,14 @@ export default (variables /*: * */ = variable) => {
     elevation: 3,
     left: 0,
     right: 0,
+
+    // Custom overrides
+    '.white': {
+      backgroundColor: '#fff',
+      'NativeBase.FooterTab': {
+        backgroundColor: '#fff',
+      }
+    },
   };
   return footerTheme;
 };

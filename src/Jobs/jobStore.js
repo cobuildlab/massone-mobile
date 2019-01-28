@@ -15,7 +15,11 @@ class JobStore extends Flux.DashStore {
 
     this.addEvent('AcceptJob');
 
-    this.addEvent('RejectJob');
+    this.addEvent('StartDrive');
+
+    this.addEvent('EndDrive');
+
+    this.addEvent('StartJob');
 
     this.addEvent('PauseJob');
 
