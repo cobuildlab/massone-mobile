@@ -35,7 +35,7 @@ const commentJobValidator = (jobId, message, files) => {
   }
 
   if (!isValidString(message)) {
-    throw new Error(i18n.t('JOBS.invalidMessage'));
+    throw new Error(i18n.t('JOBS.emptyMessage'));
   }
 
   if (files !== undefined) {

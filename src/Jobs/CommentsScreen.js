@@ -168,7 +168,11 @@ class CommentsScreen extends Component {
                 </CardItem>
                 {Array.isArray(comment.image)
                   ? comment.image.map((image) => (
-                    <CardItem key={image.id} cardBody>
+                    <CardItem
+                      key={image.id}
+                      onPress={() => this.goToImageView(image)}
+                      button
+                      cardBody>
                       <Image
                         source={{ uri: image.image_comment }}
                         style={{ height: 200, flex: 1 }}
@@ -359,6 +363,24 @@ class CommentsScreen extends Component {
    * react-native-document-picker image response with the uri, type & name
    */
   handleImagePickerResponse = (response) => {
+    let type = response.type;
+    if (type === undefined && response.fileName === undefined) {
+      const pos = response.uri.lastIndexOf('.');
+      type = response.uri.substring(pos + 1);
+      if (type) type = `image/${type}`;
+    }
+    if (type === undefined) {
+      const splitted = response.fileName.split('.');
+      type = splitted[splitted.length - 1];
+      if (type) type = `image/${type}`;
+    }
+
+    let name = response.fileName;
+    if (name === undefined) {
+      const pos = response.uri.lastIndexOf('/');
+      name = response.uri.substring(pos + 1);
+    }
+
     if (response.didCancel) {
       // for react-native-image-picker response
       LOG(this, 'User cancelled image picker');
@@ -371,14 +393,8 @@ class CommentsScreen extends Component {
     } else {
       const selectedImage = {
         uri: response.uri,
-        type:
-          response.type ||
-          `image/${
-            response.fileName.split('.')[
-              response.fileName.split('.').length - 1
-            ]
-          }`,
-        name: response.fileName,
+        type: type.toLowerCase(),
+        name,
       };
 
       this.setState({ selectedImage, selectedFile: {} });
@@ -411,6 +427,10 @@ class CommentsScreen extends Component {
 
   goToPdfView = (file) => {
     this.props.navigation.navigate('Pdf', { file });
+  };
+
+  goToImageView = (image) => {
+    this.props.navigation.navigate('Image', { image });
   };
 
   scrollToIndex = (index = 0) => {
