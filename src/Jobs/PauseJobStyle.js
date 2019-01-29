@@ -17,10 +17,14 @@ export default StyleSheet.create({
     textAlign: 'center',
   },
   viewTextArea: {
-    marginTop: 40,
-    marginBottom: 40,
+    marginTop: 30,
+    marginBottom: 30,
   },
   button: {
     alignSelf: 'center',
+  },
+  pauseReasonPicker: {
+    width: undefined,
+    marginTop: 30,
   },
 });

@@ -45,10 +45,6 @@ class JobsListScreen extends Component {
       'AcceptJob',
       this.acceptJobHandler,
     );
-    this.rejectJobSubscription = jobStore.subscribe(
-      'RejectJob',
-      this.rejectJobHandler,
-    );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
     this.loadData();
@@ -58,7 +54,6 @@ class JobsListScreen extends Component {
     this.logoutSubscription.unsubscribe();
     this.getJobsSubscription.unsubscribe();
     this.acceptJobSubscription.unsubscribe();
-    this.rejectJobSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
   }
 
@@ -86,16 +81,10 @@ class JobsListScreen extends Component {
     );
   };
 
-  acceptJobHandler = () => {
+  acceptJobHandler = (data) => {
     this.setState({ isLoading: false });
     this.getJobs();
-    CustomToast(this.props.t('JOBS.jobAccepted'));
-  };
-
-  rejectJobHandler = () => {
-    this.setState({ isLoading: false });
-    this.getJobs();
-    CustomToast(this.props.t('JOBS.jobRejected'));
+    CustomToast(data.detail);
   };
 
   logoutHandler = () => {
@@ -150,31 +139,25 @@ class JobsListScreen extends Component {
                   }
                   this.selectedRow = this.rowRefs[item.id];
                 }}
-                leftOpenValue={75}
                 rightOpenValue={-75}
-                left={
+                right={
                   <Button onPress={() => this.acceptJob(item)} success>
                     <Icon active type="MaterialIcons" name="check" />
-                  </Button>
-                }
-                right={
-                  <Button onPress={() => this.rejectJob(item)} danger>
-                    <Icon active type="MaterialIcons" name="close" />
                   </Button>
                 }
                 body={
                   <TouchableOpacity
                     onPress={() => this.goToJobDetails(item.id)}
                     style={styles.listItem}>
-                    <View style={{ flexDirection: 'row' }}>
+                    <View style={styles.issueView}>
                       <Text style={styles.issueName}>{item.title}</Text>
                       {item.customer ? (
-                        <>
-                          <Text>{t('JOBS.for')}</Text>
+                        <Text>
+                          <Text>{`${t('JOBS.for')} `}</Text>
                           <Text style={styles.customerName}>
                             {item.customer.first_name}
                           </Text>
-                        </>
+                        </Text>
                       ) : null}
                     </View>
                     <View style={{ flexDirection: 'row' }}>
@@ -243,27 +226,6 @@ class JobsListScreen extends Component {
 
   goToJobDetails = (jobId) => {
     this.props.navigation.navigate('JobDetails', { jobId });
-  };
-
-  rejectJob = (job) => {
-    if (!job || !job.title) return;
-
-    Alert.alert(this.props.t('JOBS.wantToRejectJob'), job.title, [
-      {
-        text: this.props.t('APP.cancel'),
-        onPress: () => {
-          LOG(this, 'Cancel rejectJob');
-        },
-      },
-      {
-        text: this.props.t('JOBS.reject'),
-        onPress: () => {
-          this.setState({ isLoading: true }, () => {
-            jobActions.rejectJob(job.id);
-          });
-        },
-      },
-    ]);
   };
 
   acceptJob = (job) => {

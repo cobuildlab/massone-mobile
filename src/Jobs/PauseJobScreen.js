@@ -1,6 +1,15 @@
 import React, { Component } from 'react';
-import { Alert } from 'react-native';
-import { Content, Container, Textarea, Button, Text, View } from 'native-base';
+import { Alert, RefreshControl } from 'react-native';
+import {
+  Content,
+  Container,
+  Textarea,
+  Button,
+  Text,
+  View,
+  Picker,
+  Icon,
+} from 'native-base';
 import { CustomHeader, CustomToast, Loading } from '../utils/components';
 import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
@@ -17,7 +26,10 @@ class PauseJobScreen extends Component {
     super(props);
     this.state = {
       isLoading: false,
+      isRefreshing: false,
       job: props.navigation.getParam('job', {}),
+      pauseJobReason: Object.assign([], jobStore.getState('GetPauseJobReason')),
+      reasonId: null,
       message: '',
     };
   }
@@ -27,22 +39,33 @@ class PauseJobScreen extends Component {
       'PauseJob',
       this.pauseJobHandler,
     );
+    this.getPauseJobReasonSubscription = jobStore.subscribe(
+      'GetPauseJobReason',
+      this.getPauseJobReasonHandler,
+    );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
+
+    this.loadData();
   }
 
   componentWillUnmount() {
     this.pauseJobSubscription.unsubscribe();
+    this.getPauseJobReasonSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
   }
 
-  pauseJobHandler = () => {
-    this.setState({ isLoading: false });
-    CustomToast(this.props.t('JOBS.jobPaused'));
+  pauseJobHandler = (data) => {
+    this.setState({ isLoading: false, isRefreshing: false });
+    CustomToast(data.detail);
     this.props.navigation.goBack();
   };
 
+  getPauseJobReasonHandler = (pauseJobReason) => {
+    this.setState({ pauseJobReason, isLoading: false, isRefreshing: false });
+  };
+
   errorHandler = () => {
-    this.setState({ isLoading: false });
+    this.setState({ isLoading: false, isRefreshing: false });
   };
 
   render() {
@@ -54,17 +77,43 @@ class PauseJobScreen extends Component {
 
         <CustomHeader leftButton={'goBack'} title={t('JOBS.pauseJob')} />
 
-        <Content contentContainerStyle={styles.content}>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={this.refreshData}
+            />
+          }
+          contentContainerStyle={styles.content}>
           <View style={styles.viewText}>
             <Text style={styles.text}>{`${t('JOBS.whyPausing')}:`}</Text>
             <Text style={styles.textJob}>{this.state.job.title}</Text>
           </View>
 
+          {Array.isArray(this.state.pauseJobReason) ? (
+            <Picker
+              headerBackButtonText={t('APP.goBack')}
+              iosHeader={t('JOBS.selectReason')}
+              iosIcon={<Icon name="ios-arrow-down" />}
+              style={styles.pauseReasonPicker}
+              selectedValue={this.state.reasonId}
+              onValueChange={this.onReasonChange}>
+              <Picker.Item label={t('JOBS.selectReason')} value={null} />
+              {this.state.pauseJobReason.map((reason) => (
+                <Picker.Item
+                  key={reason.id}
+                  label={reason.reason}
+                  value={reason.id}
+                />
+              ))}
+            </Picker>
+          ) : null}
+
           <View style={styles.viewTextArea}>
             <Textarea
               autoFocus
               value={this.state.message}
-              placeholder={t('JOBS.pauseReason')}
+              placeholder={t('JOBS.optionalComments')}
               onChangeText={(text) => this.setState({ message: text })}
               rowSpan={5}
               bordered
@@ -78,6 +127,33 @@ class PauseJobScreen extends Component {
       </Container>
     );
   }
+
+  loadData = () => {
+    if (
+      !Array.isArray(this.state.pauseJobReason) ||
+      !this.state.pauseJobReason.length
+    ) {
+      this.setState({ isLoading: true }, () => {
+        this.getPauseJobReason();
+      });
+    }
+  };
+
+  refreshData = () => {
+    this.setState({ isRefreshing: true }, () => {
+      this.getPauseJobReason();
+    });
+  };
+
+  onReasonChange = (id) => {
+    this.setState({
+      reasonId: id,
+    });
+  };
+
+  getPauseJobReason = () => {
+    jobActions.getPauseJobReason();
+  };
 
   pauseJob = () => {
     if (!this.state.job || !this.state.job.title) return;
@@ -93,7 +169,11 @@ class PauseJobScreen extends Component {
         text: this.props.t('JOBS.pause'),
         onPress: () => {
           this.setState({ isLoading: true }, () => {
-            jobActions.pauseJob(this.state.job.id, this.state.messsage);
+            jobActions.pauseJob(
+              this.state.job.id,
+              this.state.messsage || '',
+              this.state.reasonId,
+            );
           });
         },
       },

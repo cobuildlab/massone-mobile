@@ -1,10 +1,6 @@
 import Flux from 'flux-state';
-import { getData, putData, postData, postFormData } from '../utils/fetch';
+import { getData, postData, postFormData } from '../utils/fetch';
 import { commentJobValidator, pauseJobValidator } from './validators';
-
-/**
- * Get job list
- */
 
 /**
  * Job list action
@@ -49,13 +45,20 @@ const acceptJob = (jobId) => {
 };
 
 /**
- * Reject job action
+ * Pause job action
  * @param  {string|number}  jobId
+ * @param  {string}         message the reason why you are pausing the job
  */
-const rejectJob = (jobId) => {
-  postData(`/jobs/${jobId}/reject/`)
+const pauseJob = (jobId, message, reasonId) => {
+  try {
+    pauseJobValidator(jobId, message, reasonId);
+  } catch (err) {
+    return Flux.dispatchEvent('JobStoreError', err);
+  }
+
+  postData(`/jobs/${jobId}/paused/`, { message, reason_id: reasonId })
     .then((data) => {
-      Flux.dispatchEvent('RejectJob', data);
+      Flux.dispatchEvent('PauseJob', data);
     })
     .catch((err) => {
       Flux.dispatchEvent('JobStoreError', err);
@@ -63,20 +66,12 @@ const rejectJob = (jobId) => {
 };
 
 /**
- * Pause job action
- * @param  {string|number}  jobId
- * @param  {string}         message the reason why you are pausing the job
+ * Get pause job reason list
  */
-const pauseJob = (jobId, message) => {
-  try {
-    pauseJobValidator(jobId, message);
-  } catch (err) {
-    return Flux.dispatchEvent('JobStoreError', err);
-  }
-
-  putData(`/jobs/${jobId}/pause`, { message })
+const getPauseJobReason = () => {
+  getData(`/reason-paused-job/`)
     .then((data) => {
-      Flux.dispatchEvent('PauseJob', data);
+      Flux.dispatchEvent('GetPauseJobReason', data);
     })
     .catch((err) => {
       Flux.dispatchEvent('JobStoreError', err);
@@ -132,12 +127,57 @@ const getJobComments = (urlParams = '') => {
     });
 };
 
+/**
+ * Start drive job action
+ * @param  {string|number} jobId
+ */
+const startDrive = (jobId) => {
+  postData(`/jobs/${jobId}/start-drive/`)
+    .then((data) => {
+      Flux.dispatchEvent('StartDrive', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
+ * End drive job action
+ * @param  {string|number} jobId
+ */
+const endDrive = (jobId) => {
+  postData(`/jobs/${jobId}/end-drive/`)
+    .then((data) => {
+      Flux.dispatchEvent('EndDrive', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
+ * start job action
+ * @param  {string|number} jobId
+ */
+const startJob = (jobId) => {
+  postData(`/jobs/${jobId}/start/`)
+    .then((data) => {
+      Flux.dispatchEvent('StartJob', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
 export {
   getJobs,
   getJob,
   acceptJob,
-  rejectJob,
+  startDrive,
+  endDrive,
+  startJob,
   pauseJob,
+  getPauseJobReason,
   commentJob,
   getJobComments,
 };

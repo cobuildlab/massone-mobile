@@ -206,7 +206,7 @@ class CommentsScreen extends Component {
           />
         ) : null}
 
-        <Footer>
+        <Footer white>
           <FooterTab>
             <Button onPress={this.selectImage} dark transparent>
               <Icon active name="md-image" />

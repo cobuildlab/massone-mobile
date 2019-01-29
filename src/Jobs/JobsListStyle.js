@@ -14,19 +14,21 @@ export default StyleSheet.create({
     paddingRight: 15,
     marginLeft: 10,
   },
+  issueView: {
+    flexDirection: 'row',
+    marginBottom: 3,
+  },
   issueName: {
     fontSize: 16,
     fontWeight: '700',
     color: BLUE_MAIN,
     marginRight: 5,
-    marginBottom: 3,
   },
   customerName: {
     fontSize: 16,
     fontWeight: '700',
     color: VIOLET,
     marginLeft: 5,
-    marginBottom: 3,
   },
   textDate: {
     fontSize: 14,

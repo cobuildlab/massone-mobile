@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Alert } from 'react-native';
+import { Alert } from 'react-native';
 import {
   Body,
   Card,
@@ -10,10 +10,12 @@ import {
   Title,
   Content,
   Container,
+  Footer,
+  FooterTab,
 } from 'native-base';
 import styles from './JobDetailsStyle';
 import { BLUE_MAIN } from '../constants/colorPalette';
-import { CustomHeader, Loading } from '../utils/components';
+import { CustomHeader, Loading, CustomToast } from '../utils/components';
 import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
@@ -40,12 +42,20 @@ class JobDetailsScreen extends Component {
       'AcceptJob',
       this.updateJobHandler,
     );
-    this.rejectJobSubscription = jobStore.subscribe(
-      'RejectJob',
-      this.updateJobHandler,
-    );
     this.pauseJobSubscription = jobStore.subscribe(
       'PauseJob',
+      this.updateJobHandler,
+    );
+    this.startDriveSubscription = jobStore.subscribe(
+      'StartDrive',
+      this.updateJobHandler,
+    );
+    this.endDriveSubscription = jobStore.subscribe(
+      'EndDrive',
+      this.updateJobHandler,
+    );
+    this.startJobSubscription = jobStore.subscribe(
+      'StartJob',
       this.updateJobHandler,
     );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
@@ -56,8 +66,10 @@ class JobDetailsScreen extends Component {
   componentWillUnmount() {
     this.getJobSubscription.unsubscribe();
     this.acceptJobSubscription.unsubscribe();
-    this.rejectJobSubscription.unsubscribe();
     this.pauseJobSubscription.unsubscribe();
+    this.startDriveSubscription.unsubscribe();
+    this.endDriveSubscription.unsubscribe();
+    this.startJobSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
   }
 
@@ -65,8 +77,9 @@ class JobDetailsScreen extends Component {
     this.setState({ isLoading: false, job });
   };
 
-  updateJobHandler = () => {
+  updateJobHandler = (data) => {
     this.setState({ isLoading: false });
+    CustomToast(data.detail);
     this.getJob();
   };
 
@@ -152,69 +165,49 @@ class JobDetailsScreen extends Component {
                     .tz(moment.tz.guess())
                     .format('L LTS')}
                 </Text>
-
-                {this.state.job.status === 'Open' ? (
-                  <View style={styles.viewBtnGroup}>
-                    <View style={styles.viewBtn}>
-                      <Button
-                        onPress={this.acceptJob}
-                        primary
-                        block
-                        style={styles.btnLeft}>
-                        <Text>{t('JOBS.accept')}</Text>
-                      </Button>
-                    </View>
-                    <View style={styles.viewBtn}>
-                      <Button
-                        onPress={this.rejectJob}
-                        danger
-                        block
-                        style={styles.btnRight}>
-                        <Text>{t('JOBS.reject')}</Text>
-                      </Button>
-                    </View>
-                  </View>
-                ) : null}
-
-                {/* TODO: DON'T DELETE, this must be added when employeeStatus
-                  is ready on the API, to allow the user to pause job
-                  this.state.job.employeeStatus === 'Accepted' ? (
-                  <Button
-                    onPress={this.goToPauseJob}
-                    primary
-                    block
-                    style={styles.buttonPause}>
-                    <Text>{t('JOBS.pauseJob')}</Text>
-                  </Button>
-                ) : null */}
               </Body>
             </CardItem>
           </Card>
         </Content>
+        {this.state.job.status && this.state.job.status !== 'Paused' ? (
+          <Footer>
+            <FooterTab>
+              {this.state.job.status === 'Dispatch' ? (
+                <Button onPress={this.acceptJob} primary transparent>
+                  <Text>{t('JOBS.acceptJob')}</Text>
+                </Button>
+              ) : null}
+              {this.state.job.status === 'Accept' ? (
+                <Button onPress={this.startDrive} primary transparent>
+                  <Text>{t('JOBS.startDrive')}</Text>
+                </Button>
+              ) : null}
+              {this.state.job.status === 'Start Drive Time' ? (
+                <Button onPress={this.endDrive} primary transparent>
+                  <Text>{t('JOBS.endDrive')}</Text>
+                </Button>
+              ) : null}
+              {this.state.job.status === 'End Drive Time' ? (
+                <Button onPress={this.startJob} primary transparent>
+                  <Text>{t('JOBS.startJob')}</Text>
+                </Button>
+              ) : null}
+              {this.state.job.status === 'Start' ? (
+                <Button onPress={this.goToPauseJob} danger transparent>
+                  <Text>{t('JOBS.pauseJob')}</Text>
+                </Button>
+              ) : null}
+              {this.state.job.status === 'Start' ? (
+                <Button onPress={this.goToCloseJob} primary transparent>
+                  <Text>{t('JOBS.closeJob')}</Text>
+                </Button>
+              ) : null}
+            </FooterTab>
+          </Footer>
+        ) : null}
       </Container>
     );
   }
-
-  rejectJob = () => {
-    if (!this.state.job || !this.state.job.title) return;
-
-    Alert.alert(this.props.t('JOBS.wantToRejectJob'), this.state.job.title, [
-      {
-        text: this.props.t('APP.cancel'),
-        onPress: () => {
-          LOG(this, 'Cancel rejectJob');
-        },
-      },
-      {
-        text: this.props.t('JOBS.reject'),
-        onPress: () => {
-          this.setState({ isLoading: true }, () => {
-            jobActions.rejectJob(this.state.job.id);
-          });
-        },
-      },
-    ]);
-  };
 
   acceptJob = () => {
     if (!this.state.job || !this.state.job.title) return;
@@ -237,10 +230,80 @@ class JobDetailsScreen extends Component {
     ]);
   };
 
+  startDrive = () => {
+    if (!this.state.job || !this.state.job.title) return;
+
+    Alert.alert(this.props.t('JOBS.wantToStartDrive'), this.state.job.title, [
+      {
+        text: this.props.t('APP.cancel'),
+        onPress: () => {
+          LOG(this, 'Cancel startDrive');
+        },
+      },
+      {
+        text: this.props.t('JOBS.startDrive'),
+        onPress: () => {
+          this.setState({ isLoading: true }, () => {
+            jobActions.startDrive(this.state.job.id);
+          });
+        },
+      },
+    ]);
+  };
+
+  endDrive = () => {
+    if (!this.state.job || !this.state.job.title) return;
+
+    Alert.alert(this.props.t('JOBS.wantToEndDrive'), this.state.job.title, [
+      {
+        text: this.props.t('APP.cancel'),
+        onPress: () => {
+          LOG(this, 'Cancel endDrive');
+        },
+      },
+      {
+        text: this.props.t('JOBS.endDrive'),
+        onPress: () => {
+          this.setState({ isLoading: true }, () => {
+            jobActions.endDrive(this.state.job.id);
+          });
+        },
+      },
+    ]);
+  };
+
+  startJob = () => {
+    if (!this.state.job || !this.state.job.title) return;
+
+    Alert.alert(this.props.t('JOBS.wantToStartJob'), this.state.job.title, [
+      {
+        text: this.props.t('APP.cancel'),
+        onPress: () => {
+          LOG(this, 'Cancel startJob');
+        },
+      },
+      {
+        text: this.props.t('JOBS.start'),
+        onPress: () => {
+          this.setState({ isLoading: true }, () => {
+            jobActions.startJob(this.state.job.id);
+          });
+        },
+      },
+    ]);
+  };
+
   goToPauseJob = () => {
     if (!this.state.job || !this.state.job.id) return;
 
     this.props.navigation.navigate('PauseJob', { job: this.state.job });
+  };
+
+  goToCloseJob = () => {
+    // TODO: CloseJob ROUTE
+    // if (!this.state.job || !this.state.job.id) return;
+    //
+    // this.props.navigation.navigate('CloseJob', { job: this.state.job });
   };
 
   goToComments = () => {
