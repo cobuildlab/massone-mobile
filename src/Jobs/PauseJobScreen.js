@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert } from 'react-native';
+import { Alert, RefreshControl } from 'react-native';
 import {
   Content,
   Container,
@@ -26,6 +26,7 @@ class PauseJobScreen extends Component {
     super(props);
     this.state = {
       isLoading: false,
+      isRefreshing: false,
       job: props.navigation.getParam('job', {}),
       pauseJobReason: Object.assign([], jobStore.getState('GetPauseJobReason')),
       reasonId: null,
@@ -54,17 +55,17 @@ class PauseJobScreen extends Component {
   }
 
   pauseJobHandler = (data) => {
-    this.setState({ isLoading: false });
+    this.setState({ isLoading: false, isRefreshing: false });
     CustomToast(data.detail);
     this.props.navigation.goBack();
   };
 
   getPauseJobReasonHandler = (pauseJobReason) => {
-    this.setState({ pauseJobReason, isLoading: false });
+    this.setState({ pauseJobReason, isLoading: false, isRefreshing: false });
   };
 
   errorHandler = () => {
-    this.setState({ isLoading: false });
+    this.setState({ isLoading: false, isRefreshing: false });
   };
 
   render() {
@@ -76,7 +77,14 @@ class PauseJobScreen extends Component {
 
         <CustomHeader leftButton={'goBack'} title={t('JOBS.pauseJob')} />
 
-        <Content contentContainerStyle={styles.content}>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={this.refreshData}
+            />
+          }
+          contentContainerStyle={styles.content}>
           <View style={styles.viewText}>
             <Text style={styles.text}>{`${t('JOBS.whyPausing')}:`}</Text>
             <Text style={styles.textJob}>{this.state.job.title}</Text>
@@ -105,7 +113,7 @@ class PauseJobScreen extends Component {
             <Textarea
               autoFocus
               value={this.state.message}
-              placeholder={t('JOBS.pauseReason')}
+              placeholder={t('JOBS.optionalComments')}
               onChangeText={(text) => this.setState({ message: text })}
               rowSpan={5}
               bordered
@@ -129,6 +137,12 @@ class PauseJobScreen extends Component {
         this.getPauseJobReason();
       });
     }
+  };
+
+  refreshData = () => {
+    this.setState({ isRefreshing: true }, () => {
+      this.getPauseJobReason();
+    });
   };
 
   onReasonChange = (id) => {

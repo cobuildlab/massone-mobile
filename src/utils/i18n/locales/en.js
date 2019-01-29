@@ -83,5 +83,6 @@ export default {
     selectReason: 'Select a reason',
     invalidMessage: 'Invalid message',
     invalidReason: 'You must specify a reason',
+    optionalComments: 'Optional comments',
   },
 };
