@@ -31,6 +31,20 @@ const getJob = (jobId) => {
 };
 
 /**
+ * Job history list action
+ * @param  {string} urlParams the params for pagination
+ */
+const getJobHistory = (jobId, urlParams = '') => {
+  getData(`/job-history/${jobId}/${urlParams}`)
+    .then((data) => {
+      Flux.dispatchEvent('GetJobHistory', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
  * Accept job action
  * @param  {string|number} jobId
  */
@@ -172,6 +186,7 @@ const startJob = (jobId) => {
 export {
   getJobs,
   getJob,
+  getJobHistory,
   acceptJob,
   startDrive,
   endDrive,

@@ -165,6 +165,10 @@ class JobDetailsScreen extends Component {
                     .tz(moment.tz.guess())
                     .format('L LTS')}
                 </Text>
+                <Button onPress={this.goToJobHistory} iconRight block primary>
+                  <Text>{t('JOBS.goToJobHistory')}</Text>
+                  <Icon name="ios-list" />
+                </Button>
               </Body>
             </CardItem>
           </Card>
@@ -297,6 +301,12 @@ class JobDetailsScreen extends Component {
     if (!this.state.job || !this.state.job.id) return;
 
     this.props.navigation.navigate('PauseJob', { job: this.state.job });
+  };
+
+  goToJobHistory = () => {
+    if (!this.state.job || !this.state.job.id) return;
+
+    this.props.navigation.navigate('JobHistory', { job: this.state.job });
   };
 
   goToCloseJob = () => {

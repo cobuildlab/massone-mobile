@@ -30,7 +30,7 @@ import {
   DocumentPickerUtil,
 } from 'react-native-document-picker';
 import { BLUE_MAIN } from '../constants/colorPalette';
-import { LOG, sortByDate } from '../utils';
+import { LOG, WARN, sortByDate } from '../utils';
 
 const IMAGE_PICKER_OPTIONS = {
   mediaType: 'photo',
@@ -284,21 +284,19 @@ class CommentsScreen extends Component {
   getNextPage = () => {
     if (!this.state.nextUrl) return;
 
-    let urlParams = '';
-
     try {
-      urlParams = this.state.nextUrl
+      const urlParams = this.state.nextUrl
         ? this.state.nextUrl.split('/comments/')[
           this.state.nextUrl.split('/comments/').length - 1
         ]
         : `?job=${this.state.jobId}`;
 
-      if (this.state.nextUrl) this.setState({ isLoadingPage: true });
+      this.setState({ isLoadingPage: true }, () => {
+        this.getJobComments(urlParams);
+      });
     } catch (e) {
-      LOG(this, `getJobComments nextUrl Error: ${e}`);
+      WARN(this, `getJobComments nextUrl Error: ${e}`);
     }
-
-    this.getJobComments(urlParams);
   };
 
   getJobComments = (urlParams = `?job=${this.state.jobId}`) => {

@@ -13,6 +13,8 @@ class JobStore extends Flux.DashStore {
 
     this.addEvent('GetJob');
 
+    this.addEvent('GetJobHistory');
+
     this.addEvent('AcceptJob');
 
     this.addEvent('StartDrive');
