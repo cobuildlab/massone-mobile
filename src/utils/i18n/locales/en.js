@@ -87,5 +87,8 @@ export default {
     typeMessage: 'Type your message',
     invalidReason: 'You must specify a reason',
     optionalComments: 'Optional comments',
+    jobHistory: 'Job history',
+    emptyJobHistory: 'The job history is empty',
+    goToJobHistory: 'Go to job history',
   },
 };

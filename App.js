@@ -13,6 +13,7 @@ import { LoginScreen, ForgotScreen, RecoverScreen } from './src/Auth';
 import {
   JobsListScreen,
   JobDetailsScreen,
+  JobHistoryScreen,
   PauseJobScreen,
   CommentsScreen,
   PdfScreen,
@@ -25,6 +26,7 @@ import SideBar from './src/SideBar/SideBar';
 const JobsStack = createStackNavigator({
   Jobs: JobsListScreen,
   JobDetails: JobDetailsScreen,
+  JobHistory: JobHistoryScreen,
   PauseJob: PauseJobScreen,
   Comments: CommentsScreen,
   Pdf: PdfScreen,

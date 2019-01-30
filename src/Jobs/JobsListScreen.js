@@ -12,7 +12,7 @@ import {
   CenteredText,
 } from '../utils/components';
 import { BLUE_MAIN } from '../constants/colorPalette';
-import { LOG, sortByDate } from '../utils';
+import { LOG, WARN, sortByDate } from '../utils';
 import moment from 'moment';
 import { withNamespaces } from 'react-i18next';
 
@@ -150,7 +150,7 @@ class JobsListScreen extends Component {
                     onPress={() => this.goToJobDetails(item.id)}
                     style={styles.listItem}>
                     <View style={styles.issueView}>
-                      <Text style={styles.issueName}>{item.title}</Text>
+                      <Text style={styles.issueName}>{`${item.title} `}</Text>
                       {item.customer ? (
                         <Text>
                           <Text>{`${t('JOBS.for')} `}</Text>
@@ -161,13 +161,17 @@ class JobsListScreen extends Component {
                       ) : null}
                     </View>
                     <View style={{ flexDirection: 'row' }}>
-                      <Text style={styles.textDate}>{t('JOBS.startDate')}</Text>
+                      <Text style={styles.textDate}>{`${t(
+                        'JOBS.startDate',
+                      )} `}</Text>
                       <Text style={styles.textNumDate}>
                         {moment(item.date_start)
                           .tz(moment.tz.guess())
                           .format('L')}
                       </Text>
-                      <Text style={styles.textDate}>{t('JOBS.endDate')}</Text>
+                      <Text style={styles.textDate}>{` ${t(
+                        'JOBS.endDate',
+                      )} `}</Text>
                       <Text style={styles.textNumDate}>
                         {moment(item.date_finish)
                           .tz(moment.tz.guess())
@@ -203,21 +207,19 @@ class JobsListScreen extends Component {
   getNextPage = () => {
     if (!this.state.nextUrl) return;
 
-    let urlParams = '';
-
     try {
-      urlParams = this.state.nextUrl
+      const urlParams = this.state.nextUrl
         ? this.state.nextUrl.split('/job/users/')[
           this.state.nextUrl.split('/job/users/').length - 1
         ]
         : '';
 
-      if (this.state.nextUrl) this.setState({ isLoadingPage: true });
+      this.setState({ isLoadingPage: true }, () => {
+        this.getJobs(urlParams);
+      });
     } catch (e) {
-      LOG(this, `getJobs nextUrl Error: ${e}`);
+      WARN(this, `getJobs nextUrl Error: ${e}`);
     }
-
-    this.getJobs(urlParams);
   };
 
   getJobs = (urlParams = '') => {
