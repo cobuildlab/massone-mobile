@@ -310,10 +310,9 @@ class JobDetailsScreen extends Component {
   };
 
   goToCloseJob = () => {
-    // TODO: CloseJob ROUTE
-    // if (!this.state.job || !this.state.job.id) return;
-    //
-    // this.props.navigation.navigate('CloseJob', { job: this.state.job });
+    if (!this.state.job || !this.state.job.id) return;
+
+    this.props.navigation.navigate('CloseJob', { job: this.state.job });
   };
 
   goToComments = () => {

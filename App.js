@@ -16,6 +16,7 @@ import {
   JobHistoryScreen,
   PauseJobScreen,
   CommentsScreen,
+  CloseJobScreen,
   PdfScreen,
   ImageScreen,
 } from './src/Jobs';
@@ -29,6 +30,7 @@ const JobsStack = createStackNavigator({
   JobHistory: JobHistoryScreen,
   PauseJob: PauseJobScreen,
   Comments: CommentsScreen,
+  CloseJob: CloseJobScreen,
   Pdf: PdfScreen,
   Image: ImageScreen,
 });
