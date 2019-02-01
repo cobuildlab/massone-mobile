@@ -2,9 +2,12 @@
  * Validate if a string is valid or not
  * @param stringToTest The string to validate
  * @param allowEmpty If a empty string is valid or no
+ * @param allowNull If null is valid or no
  * @return {boolean} If the string is valid
  */
-const isValidString = (stringToTest, allowEmpty = false) => {
+const isValidString = (stringToTest, allowEmpty = false, allowNull = false) => {
+  if (stringToTest === null && allowNull === true) return true;
+
   if (typeof stringToTest !== 'string') return false;
 
   if (stringToTest.length === 0 && allowEmpty === false) return false;
@@ -103,6 +106,26 @@ const sortByDate = (array = [], field = 'created') => {
     );
 };
 
+/*
+to set input onChange delay
+ */
+function debounce(func, wait, c) {
+  var d, e;
+  return function() {
+    function h() {
+      (d = null), c || (e = func.apply(f, g));
+    }
+    var f = this,
+      g = arguments;
+    return (
+      clearTimeout(d),
+      (d = setTimeout(h, wait)),
+      c && !d && (e = func.apply(f, g)),
+      e
+    );
+  };
+}
+
 export {
   isValidString,
   isValidNumber,
@@ -112,4 +135,5 @@ export {
   ERROR,
   storeErrorHandler,
   sortByDate,
+  debounce,
 };

@@ -25,11 +25,22 @@ class JobStore extends Flux.DashStore {
 
     this.addEvent('PauseJob');
 
+    /*
+    Create service order event to close the job
+     */
+    this.addEvent('CloseJob');
+
+    this.addEvent('GetParts');
+
     this.addEvent('GetPauseJobReason');
 
     this.addEvent('CommentJob');
 
     this.addEvent('GetJobComments');
+
+    this.addEvent('Signature');
+
+    this.addEvent('SelectPart');
 
     this.addEvent('JobStoreError', storeErrorHandler);
   }

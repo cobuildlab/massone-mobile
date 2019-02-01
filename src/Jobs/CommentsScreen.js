@@ -17,6 +17,7 @@ import {
   Button,
   Thumbnail,
   View,
+  Badge,
 } from 'native-base';
 import { CustomHeader, Loading, CenteredText } from '../utils/components';
 import styles from './CommentsStyle';
@@ -162,7 +163,28 @@ class CommentsScreen extends Component {
                           comment.owner.last_name
                         }`}</Text>
                       ) : null}
+
                       <Text note>{comment.message}</Text>
+
+                      {comment.owner &&
+                      Array.isArray(comment.owner.user_types) &&
+                      comment.owner.user_types.length ? (
+                          <View style={styles.rolesView}>
+                            {comment.owner.user_types.map((role) => (
+                            <>
+                              <Badge
+                                primary={
+                                  role === 'Massone' || role === 'Employee'
+                                }
+                                danger={role === 'Admin' || role === 'Customer'}
+                                key={role}>
+                                <Text>{role}</Text>
+                              </Badge>
+                              <Text>{'  '}</Text>
+                            </>
+                            ))}
+                          </View>
+                        ) : null}
                     </Body>
                   </Left>
                 </CardItem>

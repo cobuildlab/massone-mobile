@@ -1,6 +1,10 @@
 import Flux from 'flux-state';
 import { getData, postData, postFormData } from '../utils/fetch';
-import { commentJobValidator, pauseJobValidator } from './validators';
+import {
+  commentJobValidator,
+  pauseJobValidator,
+  closeJobValidator,
+} from './validators';
 
 /**
  * Job list action
@@ -183,6 +187,110 @@ const startJob = (jobId) => {
     });
 };
 
+/**
+ * Create service order to close job
+ * @param {number} jobId
+ * @param {string} equipment
+ * @param {string} completionNotes
+ * @param {boolean} workCompleted
+ * @param {string} workPerformed
+ * @param {Array of number} parts
+ * @param {int} laborHours
+ * @param {int} laborOvertime
+ * @param {string} materials
+ * @param {string} equipmentUsed
+ * @param {string} refrigerantInventory
+ * @param {base64} signature
+ */
+const closeJob = (
+  jobId,
+  equipment,
+  completionNotes,
+  workCompleted,
+  workPerformed,
+  parts,
+  laborHours,
+  laborOvertime,
+  materials,
+  equipmentUsed,
+  refrigerantInventory,
+  signature,
+) => {
+  try {
+    closeJobValidator(
+      jobId,
+      equipment,
+      completionNotes,
+      workCompleted,
+      workPerformed,
+      parts,
+      laborHours,
+      laborOvertime,
+      materials,
+      equipmentUsed,
+      refrigerantInventory,
+      signature,
+    );
+  } catch (err) {
+    return Flux.dispatchEvent('JobStoreError', err);
+  }
+
+  postData(`/service-order/`, {
+    job: jobId,
+    equipment,
+    completion_notes: completionNotes,
+    work_completed: workCompleted,
+    work_performed: workPerformed,
+    parts,
+    labor_hours: laborHours,
+    labor_overtime: laborOvertime,
+    materials,
+    equipment_used: equipmentUsed,
+    refrigerant_inventory: refrigerantInventory,
+    signature: signature,
+  })
+    .then((data) => {
+      Flux.dispatchEvent('CloseJob', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
+ * Get parts
+ * @param  {string} search
+ */
+const getParts = (search = '') => {
+  getData(`/parts/?search=${search}`)
+    .then((data) => {
+      Flux.dispatchEvent('GetParts', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
+ * To pass the signature from SignatureScreen to parent route
+ * @param  {base64} signature
+ */
+const signature = (signature) => {
+  setTimeout(() => {
+    Flux.dispatchEvent('Signature', signature);
+  });
+};
+
+/**
+ * To pass the part from SearchPartsScreen to parent route
+ * @param  {Object} part
+ */
+const selectPart = (part) => {
+  setTimeout(() => {
+    Flux.dispatchEvent('SelectPart', part);
+  });
+};
+
 export {
   getJobs,
   getJob,
@@ -193,6 +301,10 @@ export {
   startJob,
   pauseJob,
   getPauseJobReason,
+  closeJob,
+  getParts,
   commentJob,
   getJobComments,
+  signature,
+  selectPart,
 };
