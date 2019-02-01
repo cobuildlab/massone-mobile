@@ -271,6 +271,26 @@ const getParts = (search = '') => {
     });
 };
 
+/**
+ * To pass the signature from SignatureScreen to parent route
+ * @param  {base64} signature
+ */
+const signature = (signature) => {
+  setTimeout(() => {
+    Flux.dispatchEvent('Signature', signature);
+  });
+};
+
+/**
+ * To pass the part from SearchPartsScreen to parent route
+ * @param  {Object} part
+ */
+const selectPart = (part) => {
+  setTimeout(() => {
+    Flux.dispatchEvent('SelectPart', part);
+  });
+};
+
 export {
   getJobs,
   getJob,
@@ -285,4 +305,6 @@ export {
   getParts,
   commentJob,
   getJobComments,
+  signature,
+  selectPart,
 };

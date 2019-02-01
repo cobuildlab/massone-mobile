@@ -55,6 +55,7 @@
 		E6EC85C3977B4F66A98FAECC /* libRNImagePicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EAAAFCA8E654E0A8839404D /* libRNImagePicker.a */; };
 		D64E0E82C64D4223AD5E85D6 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B255E5A2EF34E74BD195168 /* libRNDocumentPicker.a */; };
 		0255128A6C7349A0A4F7B207 /* libReactNativeViewPDF.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E0C841FD22840BB80C5F025 /* libReactNativeViewPDF.a */; };
+		A1F41135C2784877863BE686 /* libRSSignatureCapture.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 0B95E3CB89BC434EBC3E0158 /* libRSSignatureCapture.a */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -382,6 +383,8 @@
 		6B255E5A2EF34E74BD195168 /* libRNDocumentPicker.a */ = {isa = PBXFileReference; name = "libRNDocumentPicker.a"; path = "libRNDocumentPicker.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 		E79560EE0DD0448CA902F7B6 /* ReactNativeViewPDF.xcodeproj */ = {isa = PBXFileReference; name = "ReactNativeViewPDF.xcodeproj"; path = "../node_modules/react-native-view-pdf/ReactNativeViewPDF.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
 		6E0C841FD22840BB80C5F025 /* libReactNativeViewPDF.a */ = {isa = PBXFileReference; name = "libReactNativeViewPDF.a"; path = "libReactNativeViewPDF.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
+		1E394813AF1A4F8DB39A0BA0 /* RSSignatureCapture.xcodeproj */ = {isa = PBXFileReference; name = "RSSignatureCapture.xcodeproj"; path = "../node_modules/react-native-signature-capture/ios/RSSignatureCapture.xcodeproj"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = wrapper.pb-project; explicitFileType = undefined; includeInIndex = 0; };
+		0B95E3CB89BC434EBC3E0158 /* libRSSignatureCapture.a */ = {isa = PBXFileReference; name = "libRSSignatureCapture.a"; path = "libRSSignatureCapture.a"; sourceTree = "<group>"; fileEncoding = undefined; lastKnownFileType = archive.ar; explicitFileType = undefined; includeInIndex = 0; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -413,6 +416,7 @@
 				E6EC85C3977B4F66A98FAECC /* libRNImagePicker.a in Frameworks */,
 				D64E0E82C64D4223AD5E85D6 /* libRNDocumentPicker.a in Frameworks */,
 				0255128A6C7349A0A4F7B207 /* libReactNativeViewPDF.a in Frameworks */,
+				A1F41135C2784877863BE686 /* libRSSignatureCapture.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -603,6 +607,7 @@
 				25F687FA552149208BA5C226 /* RNImagePicker.xcodeproj */,
 				3ADBAE29147048B7A8136FC1 /* RNDocumentPicker.xcodeproj */,
 				E79560EE0DD0448CA902F7B6 /* ReactNativeViewPDF.xcodeproj */,
+				1E394813AF1A4F8DB39A0BA0 /* RSSignatureCapture.xcodeproj */,
 			);
 			name = Libraries;
 			sourceTree = "<group>";
@@ -1271,6 +1276,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1278,6 +1284,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-document-picker\ios\RNDocumentPicker",
 					"$(SRCROOT)\..\node_modules\react-native-view-pdf\ReactNativeViewPDF",
+					"$(SRCROOT)\..\node_modules\react-native-signature-capture\ios/**",
 				);
 			};
 			name = Debug;
@@ -1303,6 +1310,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1310,6 +1318,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-document-picker\ios\RNDocumentPicker",
 					"$(SRCROOT)\..\node_modules\react-native-view-pdf\ReactNativeViewPDF",
+					"$(SRCROOT)\..\node_modules\react-native-signature-capture\ios/**",
 				);
 			};
 			name = Release;
@@ -1336,6 +1345,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-document-picker\ios\RNDocumentPicker",
 					"$(SRCROOT)\..\node_modules\react-native-view-pdf\ReactNativeViewPDF",
+					"$(SRCROOT)\..\node_modules\react-native-signature-capture\ios/**",
 				);
 			};
 			name = Debug;
@@ -1361,6 +1371,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-document-picker\ios\RNDocumentPicker",
 					"$(SRCROOT)\..\node_modules\react-native-view-pdf\ReactNativeViewPDF",
+					"$(SRCROOT)\..\node_modules\react-native-signature-capture\ios/**",
 				);
 			};
 			name = Release;
@@ -1394,6 +1405,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1401,6 +1413,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-document-picker\ios\RNDocumentPicker",
 					"$(SRCROOT)\..\node_modules\react-native-view-pdf\ReactNativeViewPDF",
+					"$(SRCROOT)\..\node_modules\react-native-signature-capture\ios/**",
 				);
 			};
 			name = Debug;
@@ -1434,6 +1447,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1441,6 +1455,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-document-picker\ios\RNDocumentPicker",
 					"$(SRCROOT)\..\node_modules\react-native-view-pdf\ReactNativeViewPDF",
+					"$(SRCROOT)\..\node_modules\react-native-signature-capture\ios/**",
 				);
 			};
 			name = Release;
@@ -1473,6 +1488,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1480,6 +1496,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-document-picker\ios\RNDocumentPicker",
 					"$(SRCROOT)\..\node_modules\react-native-view-pdf\ReactNativeViewPDF",
+					"$(SRCROOT)\..\node_modules\react-native-signature-capture\ios/**",
 				);
 			};
 			name = Debug;
@@ -1512,6 +1529,7 @@
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 					"\"$(SRCROOT)/$(TARGET_NAME)\"",
+					"\"$(SRCROOT)/$(TARGET_NAME)\"",
 				);
 				HEADER_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1519,6 +1537,7 @@
 					"$(SRCROOT)\..\node_modules\react-native-image-picker\ios",
 					"$(SRCROOT)\..\node_modules\react-native-document-picker\ios\RNDocumentPicker",
 					"$(SRCROOT)\..\node_modules\react-native-view-pdf\ReactNativeViewPDF",
+					"$(SRCROOT)\..\node_modules\react-native-signature-capture\ios/**",
 				);
 			};
 			name = Release;

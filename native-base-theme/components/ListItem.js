@@ -438,6 +438,17 @@ export default (variables /*: * */ = variable) => {
     borderBottomWidth: 1 / PixelRatio.getPixelSizeForLayoutSize(1),
     backgroundColor: variables.listBg,
     borderColor: variables.listBorderColor,
+
+    /**
+     * Custom overrides
+     */
+     '.noIndentBodyText': {
+       'NativeBase.Body': {
+         'NativeBase.Text': {
+           marginLeft: null,
+         },
+       },
+     },
   };
 
   return listItemTheme;

@@ -14,13 +14,15 @@ import {
   ListItem,
   CheckBox,
   Body,
+  View,
+  Icon,
 } from 'native-base';
 import { BLUE_MAIN } from '../constants/colorPalette';
-import { CustomHeader, CustomToast, Loading } from '../utils/components';
+import { CustomHeader, Loading } from '../utils/components';
 import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
-import { LOG, debounce } from '../utils';
+import { LOG } from '../utils';
 import styles from './CloseJobStyle';
 
 class CloseJobScreen extends Component {
@@ -33,7 +35,6 @@ class CloseJobScreen extends Component {
     this.state = {
       isLoading: false,
       isLoadingParts: false,
-      partsList: undefined,
       job: props.navigation.getParam('job', {}),
       /*
       Service order form
@@ -60,27 +61,35 @@ class CloseJobScreen extends Component {
       'CloseJob',
       this.closeJobHandler,
     );
-    this.getPartsSubscription = jobStore.subscribe(
-      'GetParts',
-      this.getPartsHandler,
+    this.selectPartSubscription = jobStore.subscribe(
+      'SelectPart',
+      this.selectPartHandler,
+    );
+    this.signatureSubscription = jobStore.subscribe(
+      'Signature',
+      this.signatureHandler,
     );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
   }
 
   componentWillUnmount() {
     this.closeJobSubscription.unsubscribe();
-    this.getPartsSubscription.unsubscribe();
+    this.selectPartSubscription.unsubscribe();
+    this.signatureSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
   }
 
-  closeJobHandler = (data) => {
+  closeJobHandler = () => {
     this.setState({ isLoading: false });
-    CustomToast(data.detail);
     this.props.navigation.goBack();
   };
 
-  getPartsHandler = (data) => {
-    this.setState({ partsList: data.results, isLoadingParts: false });
+  selectPartHandler = (part) => {
+    this.selectPart(part);
+  };
+
+  signatureHandler = (signature) => {
+    this.setState({ signature });
   };
 
   errorHandler = () => {
@@ -122,7 +131,7 @@ class CloseJobScreen extends Component {
                 this.setState({ workCompleted: !this.state.workCompleted })
               }>
               <CheckBox
-                style={styles.checkBox}
+                style={styles.listItemMargin}
                 checked={this.state.workCompleted}
                 color={BLUE_MAIN}
               />
@@ -140,16 +149,31 @@ class CloseJobScreen extends Component {
                 }
               />
             </Item>
-            <Item stackedLabel>
-              <Label>{t('JOBS.parts')}</Label>
-              <Input
-                onChangeText={this.getParts}
-                placeholder={t('JOBS.partsPlaceholder')}
-              />
-              {Array.isArray(this.state.partsList) ? (
-                <Text>{this.state.partsList.length}</Text>
-              ) : null}
-            </Item>
+            <ListItem button noIndentBodyText onPress={this.goToSearchParts}>
+              <Body>
+                <Text>{t('JOBS.partsPlaceholder')}</Text>
+                {Array.isArray(this.state.parts)
+                  ? this.state.parts.map((part) => (
+                    <Button
+                      key={part.id}
+                      onPress={() => this.deletePart(part)}
+                      style={styles.partButton}
+                      primary
+                      iconRight
+                      transparent>
+                      <Text>{part.item}</Text>
+                      <Icon name="md-close" />
+                    </Button>
+                  ))
+                  : null}
+              </Body>
+              <Button
+                onPress={this.goToSearchParts}
+                style={styles.listItemMargin}
+                primary>
+                <Text>{t('JOBS.search')}</Text>
+              </Button>
+            </ListItem>
             <Item stackedLabel>
               <Label>{t('JOBS.laborHours')}</Label>
               <Input
@@ -198,6 +222,33 @@ class CloseJobScreen extends Component {
                 }
               />
             </Item>
+            <ListItem
+              style={styles.signatureItem}
+              button
+              noBorder
+              noIndentBodyText
+              onPress={this.goToSignature}>
+              <Body>
+                <Text>{t('JOBS.signature')}</Text>
+              </Body>
+              {this.state.signature ? (
+                <View style={styles.signatureButtons}>
+                  <Button onPress={this.goToSignature} danger>
+                    <Text>{t('JOBS.edit')}</Text>
+                  </Button>
+                  <Button
+                    style={styles.buttonMargin}
+                    onPress={this.goToViewImage}
+                    primary>
+                    <Text>{t('JOBS.view')}</Text>
+                  </Button>
+                </View>
+              ) : (
+                <Button onPress={this.goToSignature} primary>
+                  <Text>{t('JOBS.add')}</Text>
+                </Button>
+              )}
+            </ListItem>
           </Form>
         </Content>
 
@@ -212,11 +263,48 @@ class CloseJobScreen extends Component {
     );
   }
 
-  getParts = debounce((search) => {
-    this.setState({ isLoadingParts: true }, () => {
-      jobActions.getParts(search);
+  goToSignature = () => {
+    this.props.navigation.navigate('Signature');
+  };
+
+  selectPart = (part) => {
+    if (!part) return;
+
+    let alreadyIn = false;
+    for (const partIn of this.state.parts) {
+      if (part.id === partIn.id) {
+        alreadyIn = true;
+        break;
+      }
+    }
+
+    if (!alreadyIn) {
+      const parts = this.state.parts;
+      parts.push(part);
+      this.setState({ parts });
+    }
+  };
+
+  deletePart = (part) => {
+    if (!part) return;
+
+    const parts = this.state.parts.filter((partIn) => part.id !== partIn.id);
+
+    this.setState({ parts });
+  };
+
+  goToSearchParts = () => {
+    this.props.navigation.navigate('SearchParts');
+  };
+
+  goToViewImage = () => {
+    if (!this.state.signature) return;
+    this.props.navigation.navigate('Image', {
+      image: {
+        image_comment: `data:image/jpeg;base64,${this.state.signature}`,
+      },
     });
-  }, 400);
+  };
 
   closeJob = () => {
     if (!this.state.job || !this.state.job.title) return;
@@ -238,7 +326,7 @@ class CloseJobScreen extends Component {
               this.state.completionNotes || null,
               this.state.workCompleted,
               this.state.workPerformed,
-              this.state.parts,
+              this.state.parts.map((part) => part.id),
               Number(this.state.laborHours),
               Number(this.state.laborOvertime) || 0,
               this.state.materials || null,

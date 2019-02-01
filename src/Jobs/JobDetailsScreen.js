@@ -58,6 +58,10 @@ class JobDetailsScreen extends Component {
       'StartJob',
       this.updateJobHandler,
     );
+    this.closeJobSubscription = jobStore.subscribe(
+      'CloseJob',
+      this.updateJobHandler,
+    );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
     this.firstLoad();
@@ -70,6 +74,7 @@ class JobDetailsScreen extends Component {
     this.startDriveSubscription.unsubscribe();
     this.endDriveSubscription.unsubscribe();
     this.startJobSubscription.unsubscribe();
+    this.closeJobSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
   }
 
@@ -155,15 +160,19 @@ class JobDetailsScreen extends Component {
                 <Text style={styles.textData}>{this.state.job.priority}</Text>
                 <Title>{t('JOBS.startDate')}</Title>
                 <Text style={styles.textData}>
-                  {moment(this.state.job.date_start)
-                    .tz(moment.tz.guess())
-                    .format('L LTS')}
+                  {this.state.job.date_start
+                    ? moment(this.state.job.date_start)
+                      .tz(moment.tz.guess())
+                      .format('L LTS')
+                    : t('JOBS.notProvided')}
                 </Text>
                 <Title>{t('JOBS.endDate')}</Title>
                 <Text style={styles.textData}>
-                  {moment(this.state.job.date_finish)
-                    .tz(moment.tz.guess())
-                    .format('L LTS')}
+                  {this.state.job.date_finish
+                    ? moment(this.state.job.date_finish)
+                      .tz(moment.tz.guess())
+                      .format('L LTS')
+                    : t('JOBS.notProvided')}
                 </Text>
                 <Button onPress={this.goToJobHistory} iconRight block primary>
                   <Text>{t('JOBS.goToJobHistory')}</Text>
@@ -173,42 +182,44 @@ class JobDetailsScreen extends Component {
             </CardItem>
           </Card>
         </Content>
-        {this.state.job.status && this.state.job.status !== 'Paused' ? (
-          <Footer>
-            <FooterTab>
-              {this.state.job.status === 'Dispatch' ? (
-                <Button onPress={this.acceptJob} primary transparent>
-                  <Text>{t('JOBS.acceptJob')}</Text>
-                </Button>
-              ) : null}
-              {this.state.job.status === 'Accept' ? (
-                <Button onPress={this.startDrive} primary transparent>
-                  <Text>{t('JOBS.startDrive')}</Text>
-                </Button>
-              ) : null}
-              {this.state.job.status === 'Start Drive Time' ? (
-                <Button onPress={this.endDrive} primary transparent>
-                  <Text>{t('JOBS.endDrive')}</Text>
-                </Button>
-              ) : null}
-              {this.state.job.status === 'End Drive Time' ? (
-                <Button onPress={this.startJob} primary transparent>
-                  <Text>{t('JOBS.startJob')}</Text>
-                </Button>
-              ) : null}
-              {this.state.job.status === 'Start' ? (
-                <Button onPress={this.goToPauseJob} danger transparent>
-                  <Text>{t('JOBS.pauseJob')}</Text>
-                </Button>
-              ) : null}
-              {this.state.job.status === 'Start' ? (
-                <Button onPress={this.goToCloseJob} primary transparent>
-                  <Text>{t('JOBS.closeJob')}</Text>
-                </Button>
-              ) : null}
-            </FooterTab>
-          </Footer>
-        ) : null}
+        {this.state.job.status &&
+        this.state.job.status !== 'Paused' &&
+        this.state.job.status !== 'Closed' ? (
+            <Footer>
+              <FooterTab>
+                {this.state.job.status === 'Dispatch' ? (
+                  <Button onPress={this.acceptJob} primary transparent>
+                    <Text>{t('JOBS.acceptJob')}</Text>
+                  </Button>
+                ) : null}
+                {this.state.job.status === 'Accept' ? (
+                  <Button onPress={this.startDrive} primary transparent>
+                    <Text>{t('JOBS.startDrive')}</Text>
+                  </Button>
+                ) : null}
+                {this.state.job.status === 'Start Drive Time' ? (
+                  <Button onPress={this.endDrive} primary transparent>
+                    <Text>{t('JOBS.endDrive')}</Text>
+                  </Button>
+                ) : null}
+                {this.state.job.status === 'End Drive Time' ? (
+                  <Button onPress={this.startJob} primary transparent>
+                    <Text>{t('JOBS.startJob')}</Text>
+                  </Button>
+                ) : null}
+                {this.state.job.status === 'Start' ? (
+                  <Button onPress={this.goToPauseJob} danger transparent>
+                    <Text>{t('JOBS.pauseJob')}</Text>
+                  </Button>
+                ) : null}
+                {this.state.job.status === 'Start' ? (
+                  <Button onPress={this.goToCloseJob} primary transparent>
+                    <Text>{t('JOBS.closeJob')}</Text>
+                  </Button>
+                ) : null}
+              </FooterTab>
+            </Footer>
+          ) : null}
       </Container>
     );
   }

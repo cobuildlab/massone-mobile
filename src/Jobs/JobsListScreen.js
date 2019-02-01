@@ -165,17 +165,21 @@ class JobsListScreen extends Component {
                         'JOBS.startDate',
                       )} `}</Text>
                       <Text style={styles.textNumDate}>
-                        {moment(item.date_start)
-                          .tz(moment.tz.guess())
-                          .format('L')}
+                        {item.date_start
+                          ? moment(item.date_start)
+                            .tz(moment.tz.guess())
+                            .format('L')
+                          : t('JOBS.notProvided')}
                       </Text>
                       <Text style={styles.textDate}>{` ${t(
                         'JOBS.endDate',
                       )} `}</Text>
                       <Text style={styles.textNumDate}>
-                        {moment(item.date_finish)
-                          .tz(moment.tz.guess())
-                          .format('L')}
+                        {item.date_finish
+                          ? moment(item.date_finish)
+                            .tz(moment.tz.guess())
+                            .format('L')
+                          : t('JOBS.notProvided')}
                       </Text>
                     </View>
                   </TouchableOpacity>

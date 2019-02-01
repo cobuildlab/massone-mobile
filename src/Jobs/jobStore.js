@@ -38,6 +38,10 @@ class JobStore extends Flux.DashStore {
 
     this.addEvent('GetJobComments');
 
+    this.addEvent('Signature');
+
+    this.addEvent('SelectPart');
+
     this.addEvent('JobStoreError', storeErrorHandler);
   }
 }

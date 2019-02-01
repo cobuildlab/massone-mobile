@@ -19,6 +19,8 @@ import {
   CloseJobScreen,
   PdfScreen,
   ImageScreen,
+  SignatureScreen,
+  SearchPartsScreen,
 } from './src/Jobs';
 import ProfileScreen from './src/Profile/ProfileScreen';
 import AuthLoadingScreen from './src/AuthloadingScreen';
@@ -33,6 +35,8 @@ const JobsStack = createStackNavigator({
   CloseJob: CloseJobScreen,
   Pdf: PdfScreen,
   Image: ImageScreen,
+  Signature: SignatureScreen,
+  SearchParts: SearchPartsScreen,
 });
 
 const AuthStack = createStackNavigator({
