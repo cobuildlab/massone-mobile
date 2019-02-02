@@ -1,4 +1,4 @@
-package com.massoneapp;
+package com.massonemechanical.fieldworker;
 
 import android.app.Application;
 
