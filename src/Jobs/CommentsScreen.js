@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { TouchableOpacity, Image, FlatList } from 'react-native';
 import {
   Input,
@@ -171,17 +171,18 @@ class CommentsScreen extends Component {
                       comment.owner.user_types.length ? (
                           <View style={styles.rolesView}>
                             {comment.owner.user_types.map((role) => (
-                            <>
-                              <Badge
-                                primary={
-                                  role === 'Massone' || role === 'Employee'
-                                }
-                                danger={role === 'Admin' || role === 'Customer'}
-                                key={role}>
-                                <Text>{role}</Text>
-                              </Badge>
-                              <Text>{'  '}</Text>
-                            </>
+                              <Fragment key={role}>
+                                <Badge
+                                  primary={
+                                    role === 'Massone' || role === 'Employee'
+                                  }
+                                  danger={
+                                    role === 'Admin' || role === 'Customer'
+                                  }>
+                                  <Text>{role}</Text>
+                                </Badge>
+                                <Text>{'  '}</Text>
+                              </Fragment>
                             ))}
                           </View>
                         ) : null}
