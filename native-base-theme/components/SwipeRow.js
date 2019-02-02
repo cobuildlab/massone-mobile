@@ -42,6 +42,18 @@ export default (variables /*: * */ = variable) => {
       alignSelf: 'stretch',
       borderRadius: 0,
     },
+    /*
+    Custom overrides
+     */
+
+    borderTopWidth: null,
+    borderTopColor: 'transparent',
+    borderBottomWidth: variables.borderWidth,
+    borderBottomColor: variables.listBorderColor,
+    '.noBorder': {
+      borderBottomWidth: null,
+      borderBottomColor: 'transparent',
+    }
   };
 
   return swipeRowTheme;

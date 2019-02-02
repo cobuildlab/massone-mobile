@@ -115,7 +115,6 @@ class JobsListScreen extends Component {
 
         {Array.isArray(this.state.jobs) ? (
           <FlatList
-            style={styles.list}
             onRefresh={this.refreshData}
             refreshing={this.state.isRefreshing}
             onEndReached={this.getNextPage}
