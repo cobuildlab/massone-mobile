@@ -14,11 +14,12 @@ import styles from './style';
 import ButtomComponet from '../componets/ButtomBlue';
 import * as authActions from './actions';
 import authStore from './authStore';
-import { LOG } from '../utils';
+import { LOG, WARN } from '../utils';
 import { CustomToast, Loading } from '../utils/components';
 import { BG_MOBILE_IMG, LOGO_WHITE } from '../assets/image/';
 import { withNamespaces } from 'react-i18next';
 import { BLUE_MAIN } from '../constants/colorPalette';
+import firebase from 'react-native-firebase';
 
 class LoginScreen extends Component {
   static navigationOptions = {
@@ -147,7 +148,14 @@ class LoginScreen extends Component {
 
   login = () => {
     this.setState({ isLoading: true }, () => {
-      authActions.login(this.state.username, this.state.password);
+      firebase
+        .messaging()
+        .getToken()
+        .then((fcmToken) => {
+          if (fcmToken) LOG(this, `fcmToken: ${fcmToken}`);
+          else WARN(this, `No token to login`);
+          authActions.login(this.state.username, this.state.password, fcmToken);
+        });
     });
   };
 }

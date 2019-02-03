@@ -1,9 +1,12 @@
 import React, { Component } from 'react';
 import { View, TouchableOpacity, FlatList, Alert } from 'react-native';
 import { Button, Icon, Text, SwipeRow, Container, Spinner } from 'native-base';
-import * as jobActions from './actions';
 import jobStore from './jobStore';
 import authStore from '../Auth/authStore';
+import fcmStore from './fcmStore';
+import * as jobActions from './actions';
+import * as authActions from '../Auth/actions';
+import * as fcmActions from './fcmActions';
 import styles from './JobsListStyle';
 import {
   CustomHeader,
@@ -15,11 +18,106 @@ import { BLUE_MAIN } from '../constants/colorPalette';
 import { LOG, WARN, sortByDate } from '../utils';
 import moment from 'moment';
 import { withNamespaces } from 'react-i18next';
+import firebase from 'react-native-firebase';
 
 class JobsListScreen extends Component {
   static navigationOptions = {
     header: null,
   };
+
+  /**
+   *
+   * FIREBASE methods
+   *
+   */
+  hasFcmMessagePermission = () => {
+    firebase
+      .messaging()
+      .hasPermission()
+      .then((enabled) => {
+        if (enabled) {
+          LOG(this, 'firebase has permission');
+        } else {
+          this.requestFcmMessagePersmissions();
+        }
+      });
+  };
+
+  requestFcmMessagePersmissions = () => {
+    firebase
+      .messaging()
+      .requestPermission()
+      .then(() => {
+        LOG(this, 'User has authorised');
+      })
+      .catch((err) => {
+        LOG(this, err);
+      });
+  };
+
+  getFcmToken = () => {
+    let fcmTokenStored;
+
+    try {
+      fcmTokenStored = authStore.getState('Login').fcmToken;
+    } catch (e) {
+      return WARN(this, 'failed to get fcmToken from Store');
+    }
+
+    if (!fcmTokenStored) return WARN(this, 'No Token on state');
+
+    firebase
+      .messaging()
+      .getToken()
+      .then((fcmToken) => {
+        if (fcmToken) {
+          if (fcmTokenStored !== fcmToken) {
+            return this.updateFcmToken(fcmTokenStored, fcmToken);
+          }
+        } else {
+          WARN(this, 'NoFcmTokenYet');
+        }
+      });
+  };
+
+  onTokenRefreshHandler = (fcmToken) => {
+    let fcmTokenStored;
+
+    try {
+      fcmTokenStored = authStore.getState('Login').fcmToken;
+    } catch (e) {
+      return WARN(this, 'failed to get fcmToken from Store');
+    }
+
+    if (!fcmTokenStored) return WARN(this, 'No Token on state');
+
+    this.updateFcmToken(fcmTokenStored, fcmToken);
+  };
+
+  onNotificationOpenedHandler = (notificationOpen) => {
+    if (!notificationOpen) return;
+    const notification = notificationOpen.notification;
+    const notificationData = notification.data;
+    LOG(this, `Notification data: ${notificationData}`);
+    // TODO: handle notificationData
+  };
+
+  updateFcmTokenHandler = (data) => {
+    // TODO: check fcmToken properties from endpoint
+    const session = authStore.getState('Login') || {};
+    session.fcmToken = data.fcmToken;
+    authActions.setStoredUser(session);
+    LOG(this, `fcmToken updated ${data.fcmToken}`);
+  };
+
+  updateFcmToken = (fcmTokenStored, fcmToken) => {
+    fcmActions.updateFcmToken(fcmTokenStored, fcmToken);
+  };
+  /**
+   *
+   * FIREBASE methods
+   *
+   */
 
   constructor(props) {
     super(props);
@@ -47,7 +145,29 @@ class JobsListScreen extends Component {
     );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
+    this.updateTokenSubscription = fcmStore.subscribe(
+      'UpdateFcmToken',
+      this.updateFcmTokenHandler,
+    );
+
+    this.fcmStoreError = fcmStore.subscribe('FcmStoreError', this.errorHandler);
+
+    this.notificationOpenedListener = firebase
+      .notifications()
+      .onNotificationOpened(this.onNotificationOpenedHandler);
+
+    firebase
+      .notifications()
+      .getInitialNotification()
+      .then(this.onNotificationOpenedHandler);
+
+    this.onTokenRefreshListener = firebase
+      .messaging()
+      .onTokenRefresh(this.onTokenRefreshHandler);
+
     this.loadData();
+    this.hasFcmMessagePermission();
+    this.getFcmToken();
   }
 
   componentWillUnmount() {
@@ -55,6 +175,10 @@ class JobsListScreen extends Component {
     this.getJobsSubscription.unsubscribe();
     this.acceptJobSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
+    this.updateTokenSubscription.unsubscribe();
+    this.fcmStoreError.unsubscribe();
+    this.notificationOpenedListener();
+    this.onTokenRefreshListener();
   }
 
   getJobsHandler = (data) => {
