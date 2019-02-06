@@ -1,14 +1,12 @@
 import Flux from 'flux-state';
-import { putData } from '../utils/fetch';
+import { putData, postData } from '../utils/fetch';
 
 /**
- * Update FcmToken  action
+ * Add FcmToken  action
  * @param  {string} fcmToken
- * @param  {string} fcmTokenStored the previous fcmToken stored
  */
-const updateFcmToken = (fcmTokenStored, fcmToken) => {
-  // TODO: Change the url & object properties to match the API
-  putData(`/update-fcm-token/`, { fcmTokenStored, fcmToken })
+const addFcmToken = (fcmToken) => {
+  postData(`/firebase/`, { fire_base_token: fcmToken })
     .then((data) => {
       Flux.dispatchEvent('UpdateFcmToken', data);
     })
@@ -17,4 +15,19 @@ const updateFcmToken = (fcmTokenStored, fcmToken) => {
     });
 };
 
-export { updateFcmToken };
+/**
+ * Update FcmToken  action
+ * @param  {string} fcmTokenStoredId the previous fcmToken stored Id
+ * @param  {string} fcmToken
+ */
+const updateFcmToken = (fcmTokenStoredId, fcmToken) => {
+  putData(`/firebase/${fcmTokenStoredId}/`, { fire_base_token: fcmToken })
+    .then((data) => {
+      Flux.dispatchEvent('UpdateFcmToken', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('FcmStoreError', err);
+    });
+};
+
+export { addFcmToken, updateFcmToken };

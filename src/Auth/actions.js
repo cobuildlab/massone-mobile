@@ -11,18 +11,16 @@ import { postData, deleteData } from '../utils/fetch';
  * Login action
  * @param  {string} username
  * @param  {string} password
- * @param  {string} fcmToken
  */
-const login = (username, password, fcmToken) => {
+const login = (username, password) => {
   try {
     loginValidator(username, password);
   } catch (err) {
     return Flux.dispatchEvent('AuthStoreError', err);
   }
 
-  postData('/accounts/signin/', { username, password, fcmToken }, false)
+  postData('/accounts/signin/', { username, password }, false)
     .then((data) => {
-      data.fcmToken = fcmToken;
       Flux.dispatchEvent('Login', data);
     })
     .catch((err) => {
@@ -44,21 +42,20 @@ const clearStoresAndLogout = () => {
  * // YOU MUST use logoutOnUnautorized For unautorized API error (401/403)
  */
 const logout = () => {
-  let fcmTokenStored;
+  let fcmTokenStoredId;
 
   try {
-    authStore.getState('Login').fcmToken;
+    fcmTokenStoredId = authStore.getState('Login').fcmTokenId;
   } catch (e) {
     console.warn('failed to get fcmToken from Store');
   }
 
-  if (!fcmTokenStored) {
+  if (!fcmTokenStoredId) {
     console.warn('No Token on state');
     return clearStoresAndLogout();
   }
 
-  // TODO: change API url
-  deleteData(`/fcm-token/${fcmTokenStored}`)
+  deleteData(`/firebase/${fcmTokenStoredId}/`)
     .then(() => {
       clearStoresAndLogout();
     })

@@ -57,22 +57,26 @@ class JobsListScreen extends Component {
 
   getFcmToken = () => {
     let fcmTokenStored;
+    let fcmTokenStoredId;
 
     try {
       fcmTokenStored = authStore.getState('Login').fcmToken;
+      fcmTokenStoredId = authStore.getState('Login').fcmTokenId;
     } catch (e) {
       return WARN(this, 'failed to get fcmToken from Store');
     }
-
-    if (!fcmTokenStored) return WARN(this, 'No Token on state');
 
     firebase
       .messaging()
       .getToken()
       .then((fcmToken) => {
         if (fcmToken) {
+          if (!fcmTokenStored || !fcmTokenStoredId) {
+            return this.addFcmToken(fcmToken);
+          }
+
           if (fcmTokenStored !== fcmToken) {
-            return this.updateFcmToken(fcmTokenStored, fcmToken);
+            return this.updateFcmToken(fcmTokenStoredId, fcmToken);
           }
         } else {
           WARN(this, 'NoFcmTokenYet');
@@ -82,14 +86,16 @@ class JobsListScreen extends Component {
 
   onTokenRefreshHandler = (fcmToken) => {
     let fcmTokenStored;
+    let fcmTokenStoredId;
 
     try {
       fcmTokenStored = authStore.getState('Login').fcmToken;
+      fcmTokenStoredId = authStore.getState('Login').fcmTokenId;
     } catch (e) {
       return WARN(this, 'failed to get fcmToken from Store');
     }
 
-    if (!fcmTokenStored) return WARN(this, 'No Token on state');
+    if (!fcmTokenStored || !fcmTokenStoredId) return this.addFcmToken(fcmToken);
 
     this.updateFcmToken(fcmTokenStored, fcmToken);
   };
@@ -98,20 +104,35 @@ class JobsListScreen extends Component {
     if (!notificationOpen) return;
     const notification = notificationOpen.notification;
     const notificationData = notification.data;
-    LOG(this, `Notification data: ${notificationData}`);
-    // TODO: handle notificationData
+    const type = notificationData.type_notification;
+    const jobId = notificationData.job_id;
+    const { navigation } = this.props;
+
+    LOG(this, ['Notification data:', notificationData]);
+
+    if (type === 'MS') {
+      return navigation.navigate('Comments', { jobId });
+    }
+
+    if (type === 'JB' || type === 'RJ') {
+      return navigation.navigate('JobDetails', { jobId });
+    }
   };
 
   updateFcmTokenHandler = (data) => {
-    // TODO: check fcmToken properties from endpoint
     const session = authStore.getState('Login') || {};
-    session.fcmToken = data.fcmToken;
+    session.fcmToken = data.fire_base_token;
+    session.fcmTokenId = data.id;
     authActions.setStoredUser(session);
-    LOG(this, `fcmToken updated ${data.fcmToken}`);
+    LOG(this, [`fcmToken updated: Id:${session.fcmTokenId}`, session.fcmToken]);
   };
 
-  updateFcmToken = (fcmTokenStored, fcmToken) => {
-    fcmActions.updateFcmToken(fcmTokenStored, fcmToken);
+  addFcmToken = (fcmToken) => {
+    fcmActions.addFcmToken(fcmToken);
+  };
+
+  updateFcmToken = (fcmTokenStoredId, fcmToken) => {
+    fcmActions.updateFcmToken(fcmTokenStoredId, fcmToken);
   };
   /**
    *
@@ -149,7 +170,10 @@ class JobsListScreen extends Component {
       'UpdateFcmToken',
       this.updateFcmTokenHandler,
     );
-
+    this.updateTokenSubscription = fcmStore.subscribe(
+      'AddFcmToken',
+      this.updateFcmTokenHandler,
+    );
     this.fcmStoreError = fcmStore.subscribe('FcmStoreError', this.errorHandler);
 
     this.notificationOpenedListener = firebase

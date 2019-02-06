@@ -5,6 +5,8 @@ class FcmStore extends Flux.DashStore {
   constructor() {
     super();
 
+    this.addEvent('AddFcmToken');
+
     this.addEvent('UpdateFcmToken');
 
     this.addEvent('FcmStoreError', storeErrorHandler);
