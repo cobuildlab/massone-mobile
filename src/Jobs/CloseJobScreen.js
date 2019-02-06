@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Alert } from 'react-native';
+import { Alert, RefreshControl } from 'react-native';
 import {
   Content,
   Container,
@@ -24,6 +24,7 @@ import * as jobActions from './actions';
 import jobStore from './jobStore';
 import { LOG } from '../utils';
 import styles from './CloseJobStyle';
+import moment from 'moment';
 
 class CloseJobScreen extends Component {
   static navigationOptions = {
@@ -34,7 +35,7 @@ class CloseJobScreen extends Component {
     super(props);
     this.state = {
       isLoading: false,
-      isLoadingParts: false,
+      isRefreshing: false,
       job: props.navigation.getParam('job', {}),
       /*
       Service order form
@@ -50,6 +51,7 @@ class CloseJobScreen extends Component {
       equipmentUsed: '',
       refrigerantInventory: '',
       signature: '',
+      jobTimes: {},
       /*
       Service order form
        */
@@ -61,6 +63,10 @@ class CloseJobScreen extends Component {
       'CloseJob',
       this.closeJobHandler,
     );
+    this.getJobTimesSubscription = jobStore.subscribe(
+      'GetJobTimes',
+      this.getJobTimesHandler,
+    );
     this.selectPartSubscription = jobStore.subscribe(
       'SelectPart',
       this.selectPartHandler,
@@ -70,10 +76,13 @@ class CloseJobScreen extends Component {
       this.signatureHandler,
     );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
+
+    this.loadData();
   }
 
   componentWillUnmount() {
     this.closeJobSubscription.unsubscribe();
+    this.getJobTimesSubscription.unsubscribe();
     this.selectPartSubscription.unsubscribe();
     this.signatureSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
@@ -82,6 +91,10 @@ class CloseJobScreen extends Component {
   closeJobHandler = () => {
     this.setState({ isLoading: false });
     this.props.navigation.goBack();
+  };
+
+  getJobTimesHandler = (jobTimes) => {
+    this.setState({ jobTimes, isRefreshing: false });
   };
 
   selectPartHandler = (part) => {
@@ -93,7 +106,7 @@ class CloseJobScreen extends Component {
   };
 
   errorHandler = () => {
-    this.setState({ isLoading: false, isLoadingParts: false });
+    this.setState({ isLoading: false, isRefreshing: false });
   };
 
   render() {
@@ -105,7 +118,13 @@ class CloseJobScreen extends Component {
 
         <CustomHeader leftButton={'goBack'} title={t('JOBS.closeJob')} />
 
-        <Content>
+        <Content
+          refreshControl={
+            <RefreshControl
+              refreshing={this.state.isRefreshing}
+              onRefresh={this.refreshData}
+            />
+          }>
           <Form>
             <Item stackedLabel>
               <Label>{t('JOBS.equipment')}</Label>
@@ -175,7 +194,52 @@ class CloseJobScreen extends Component {
               </Button>
             </ListItem>
             <Item stackedLabel>
-              <Label>{t('JOBS.laborHours')}</Label>
+              {this.showTimes() ? (
+                <Text style={styles.mainTextTimes}>
+                  {this.state.jobTimes.start_drive_time ? (
+                    <Text style={styles.textTimes} note>
+                      {`${t('JOBS.driveStarted')}: `}
+                      {moment
+                        .duration(
+                          moment
+                            .utc(this.state.jobTimes.start_drive_time)
+                            .diff(moment.utc(), 'seconds'),
+                          'seconds',
+                        )
+                        .humanize(true)}
+                    </Text>
+                  ) : null}
+                  {this.state.jobTimes.end_drive_time ? (
+                    <Text style={styles.textTimes} note>
+                      {this.state.jobTimes.start_drive_time ? ', ' : ''}
+                      {`${t('JOBS.driveEnded')}: `}
+                      {moment
+                        .duration(
+                          moment
+                            .utc(this.state.jobTimes.end_drive_time)
+                            .diff(moment.utc(), 'seconds'),
+                          'seconds',
+                        )
+                        .humanize(true)}
+                    </Text>
+                  ) : null}
+                  {this.state.jobTimes.start_time ? (
+                    <Text style={styles.textTimes} note>
+                      {this.state.jobTimes.end_drive_time ? ', ' : ''}
+                      {`${t('JOBS.jobStarted')}: `}
+                      {moment
+                        .duration(
+                          moment
+                            .utc(this.state.jobTimes.start_time)
+                            .diff(moment.utc(), 'seconds'),
+                          'seconds',
+                        )
+                        .humanize(true)}
+                    </Text>
+                  ) : null}
+                </Text>
+              ) : null}
+              <Label>{t('JOBS.laborHoursLabel')}</Label>
               <Input
                 value={this.state.laborHours}
                 keyboardType={'numeric'}
@@ -262,6 +326,30 @@ class CloseJobScreen extends Component {
       </Container>
     );
   }
+
+  loadData = () => {
+    this.getJobTimes();
+  };
+
+  refreshData = () => {
+    this.setState({ isRefreshing: true }, () => {
+      this.getJobTimes();
+    });
+  };
+
+  showTimes = () => {
+    return (
+      this.state.jobTimes &&
+      (this.state.jobTimes.start_drive_time ||
+        this.state.jobTimes.end_drive_time ||
+        this.state.jobTimes.start_time)
+    );
+  };
+
+  getJobTimes = () => {
+    if (!this.state.job || !this.state.job.id) return;
+    jobActions.getJobTimes(this.state.job.id);
+  };
 
   goToSignature = () => {
     this.props.navigation.navigate('Signature');

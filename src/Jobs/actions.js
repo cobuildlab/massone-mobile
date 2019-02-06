@@ -291,6 +291,20 @@ const selectPart = (part) => {
   });
 };
 
+/**
+ * Action to get the Job start-drive, end-drive & start-job times
+ * @param  {number} jobId
+ */
+const getJobTimes = (jobId) => {
+  getData(`/job-time/${jobId}`)
+    .then((data) => {
+      Flux.dispatchEvent('GetJobTimes', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
 export {
   getJobs,
   getJob,
@@ -299,6 +313,7 @@ export {
   startDrive,
   endDrive,
   startJob,
+  getJobTimes,
   pauseJob,
   getPauseJobReason,
   closeJob,

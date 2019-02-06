@@ -30,6 +30,11 @@ class JobStore extends Flux.DashStore {
      */
     this.addEvent('CloseJob');
 
+    /*
+    start-drive, end-drive & start-job times
+     */
+    this.addEvent('GetJobTimes');
+
     this.addEvent('GetParts');
 
     this.addEvent('GetPauseJobReason');
