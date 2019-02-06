@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { BLUE_MAIN } from '../constants/colorPalette';
 
 export default StyleSheet.create({
   list: {
@@ -21,5 +22,8 @@ export default StyleSheet.create({
     marginTop: 5,
     textAlign: 'right',
     alignSelf: 'flex-end',
+  },
+  rolesText: {
+    color: BLUE_MAIN,
   },
 });

@@ -38,9 +38,7 @@ export default StyleSheet.create({
     top: 0,
     right: 0,
   },
-  rolesView: {
-    marginTop: 5,
-    flexDirection: 'row',
-    justifyContent: 'flex-start',
+  rolesText: {
+    color: BLUE_MAIN,
   },
 });

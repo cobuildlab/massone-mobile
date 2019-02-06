@@ -17,7 +17,6 @@ import {
   Button,
   Thumbnail,
   View,
-  Badge,
 } from 'native-base';
 import { CustomHeader, Loading, CenteredText } from '../utils/components';
 import styles from './CommentsStyle';
@@ -164,28 +163,28 @@ class CommentsScreen extends Component {
                         }`}</Text>
                       ) : null}
 
-                      <Text note>{comment.message}</Text>
-
                       {comment.owner &&
                       Array.isArray(comment.owner.user_types) &&
                       comment.owner.user_types.length ? (
-                          <View style={styles.rolesView}>
-                            {comment.owner.user_types.map((role) => (
-                              <Fragment key={role}>
-                                <Badge
-                                  primary={
-                                    role === 'Massone' || role === 'Employee'
-                                  }
-                                  danger={
-                                    role === 'Admin' || role === 'Customer'
-                                  }>
-                                  <Text>{role}</Text>
-                                </Badge>
-                                <Text>{'  '}</Text>
-                              </Fragment>
-                            ))}
-                          </View>
+                          <Text>
+                            {comment.owner.user_types.map(
+                              (role, index, array) => {
+                                const isLast = index === array.length - 1;
+
+                                return (
+                                  <Fragment key={role}>
+                                    <Text small style={styles.rolesText}>
+                                      {role}
+                                      {!isLast ? ', ' : ''}
+                                    </Text>
+                                  </Fragment>
+                                );
+                              },
+                            )}
+                          </Text>
                         ) : null}
+
+                      <Text note>{comment.message}</Text>
                     </Body>
                   </Left>
                 </CardItem>
