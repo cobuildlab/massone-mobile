@@ -112,7 +112,7 @@ export default {
     searchParts: 'Search parts',
     laborHours: 'Labor hours',
     laborOvertime: 'Labor overtime',
-    materials: 'Meterials',
+    materials: 'Materials',
     equipmentUsed: 'Equipment used',
     refrigerantInventory: 'Refrigerant inventory',
     signature: 'Signature',
