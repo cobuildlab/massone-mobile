@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { BLUE_MAIN } from '../constants/colorPalette';
 
 export default StyleSheet.create({
   listItemMargin: {
@@ -17,5 +18,13 @@ export default StyleSheet.create({
   },
   partButton: {
     marginTop: 10,
+  },
+  mainTextTimes: {
+    marginTop: 10,
+  },
+  textTimes: {
+    textAlign: 'left',
+    alignSelf: 'flex-start',
+    color: BLUE_MAIN,
   },
 });

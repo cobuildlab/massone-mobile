@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { View, FlatList } from 'react-native';
 import { Text, Container, Spinner, ListItem } from 'native-base';
 import * as jobActions from './actions';
@@ -107,9 +107,31 @@ class JobsHistoryScreen extends Component {
               <ListItem style={styles.listItem}>
                 <View style={styles.viewListItem}>
                   {history.owner ? (
-                    <Text style={styles.textOwner}>{`${
-                      history.owner.first_name
-                    } ${history.owner.last_name}`}</Text>
+                    <>
+                      <Text style={styles.textOwner}>{`${
+                        history.owner.first_name
+                      } ${history.owner.last_name}`}</Text>
+
+                      {Array.isArray(history.owner.user_types) &&
+                      history.owner.user_types.length ? (
+                          <Text>
+                            {history.owner.user_types.map(
+                              (role, index, array) => {
+                                const isLast = index === array.length - 1;
+
+                                return (
+                                  <Fragment key={role}>
+                                    <Text small style={styles.rolesText}>
+                                      {role}
+                                      {!isLast ? ', ' : ''}
+                                    </Text>
+                                  </Fragment>
+                                );
+                              },
+                            )}
+                          </Text>
+                        ) : null}
+                    </>
                   ) : null}
                   <Text note>{history.action}</Text>
                   <Text style={styles.textCreated}>

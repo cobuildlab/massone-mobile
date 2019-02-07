@@ -1,7 +1,11 @@
 import Flux from 'flux-state';
 import authStore from './authStore';
-import { loginValidator, forgotPasswordValidator, resetPasswordValidator } from './validators';
-import { postData } from '../utils/fetch';
+import {
+  loginValidator,
+  forgotPasswordValidator,
+  resetPasswordValidator,
+} from './validators';
+import { postData, deleteData } from '../utils/fetch';
 
 /**
  * Login action
@@ -25,15 +29,40 @@ const login = (username, password) => {
 };
 
 /**
- * Action for logOut, YOU MUST CLEAR ALL flux stores you need here
- * // YOU MUST use logoutOnUnautorized For unautorized API error
- * (status 401/403)
+ * To clear all necesary stores when logout or logoutOnUnautorized
+ * then call Logout event
+ */
+const clearStoresAndLogout = () => {
+  authStore.clearState();
+  Flux.dispatchEvent('Logout', {});
+};
+
+/**
+ * Action for logOut
+ * // YOU MUST use logoutOnUnautorized For unautorized API error (401/403)
  */
 const logout = () => {
-  // TODO: Call API endpoints to logout
+  let fcmTokenStoredId;
 
-  authStore.clearState();
-  return Flux.dispatchEvent('Logout', {});
+  try {
+    fcmTokenStoredId = authStore.getState('Login').fcmTokenId;
+  } catch (e) {
+    console.warn('failed to get fcmToken from Store');
+  }
+
+  if (!fcmTokenStoredId) {
+    console.warn('No Token on state');
+    return clearStoresAndLogout();
+  }
+
+  deleteData(`/firebase/${fcmTokenStoredId}/`)
+    .then(() => {
+      clearStoresAndLogout();
+    })
+    .catch((err) => {
+      clearStoresAndLogout();
+      Flux.dispatchEvent('AccountStoreError', err);
+    });
 };
 
 /**
@@ -41,8 +70,7 @@ const logout = () => {
  * YOU MUST use this for unautorized API error
  */
 const logoutOnUnautorized = () => {
-  authStore.clearState();
-  return Flux.dispatchEvent('Logout', {});
+  clearStoresAndLogout();
 };
 
 /**

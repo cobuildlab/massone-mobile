@@ -3,7 +3,7 @@ import { BLUE_MAIN, VIOLET, GRAY_DARK } from '../constants/colorPalette';
 
 export default StyleSheet.create({
   list: {
-    marginTop: 10,
+    marginTop: 1,
   },
   titleHeader: {
     fontSize: 18,

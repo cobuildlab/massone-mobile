@@ -18,6 +18,7 @@ class AuthStore extends Flux.DashStore {
       AsyncStorage.setItem('user', JSON.stringify(nextState))
         .then(() => {
           LOG(this, 'user saved to local storage');
+          LOG(this, nextState);
         })
         .catch((err) => {
           ERROR(this, err);

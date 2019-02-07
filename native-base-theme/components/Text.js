@@ -11,6 +11,10 @@ export default (variables /*: * */ = variable) => {
       color: '#a7a7a7',
       fontSize: variables.noteFontSize,
     },
+    // Custom overrides
+    '.small': {
+      fontSize: variables.smallFontSize,
+    }
   };
 
   return textTheme;
