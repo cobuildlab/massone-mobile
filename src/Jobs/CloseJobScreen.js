@@ -150,6 +150,9 @@ class CloseJobScreen extends Component {
                 this.setState({ workCompleted: !this.state.workCompleted })
               }>
               <CheckBox
+                onPress={() =>
+                  this.setState({ workCompleted: !this.state.workCompleted })
+                }
                 style={styles.listItemMargin}
                 checked={this.state.workCompleted}
                 color={BLUE_MAIN}

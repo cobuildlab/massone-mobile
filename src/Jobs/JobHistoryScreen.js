@@ -114,7 +114,7 @@ class JobsHistoryScreen extends Component {
 
                       {Array.isArray(history.owner.user_types) &&
                       history.owner.user_types.length ? (
-                          <Text>
+                          <Text style={styles.rolesMainText}>
                             {history.owner.user_types.map(
                               (role, index, array) => {
                                 const isLast = index === array.length - 1;
