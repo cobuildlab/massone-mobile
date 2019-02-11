@@ -88,7 +88,10 @@ class SearchPartsScreen extends Component {
                     <Text note>{part.description}</Text>
                   </Body>
                   <Right>
-                    <Button transparent primary>
+                    <Button
+                      onPress={() => this.selectPart(part)}
+                      transparent
+                      primary>
                       <Icon name="md-add" />
                     </Button>
                   </Right>

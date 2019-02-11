@@ -23,6 +23,11 @@ export default StyleSheet.create({
     textAlign: 'right',
     alignSelf: 'flex-end',
   },
+  rolesMainText: {
+    marginBottom: 5,
+    textAlign: 'left',
+    alignSelf: 'flex-start',
+  },
   rolesText: {
     color: BLUE_MAIN,
   },

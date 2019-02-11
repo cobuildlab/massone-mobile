@@ -111,7 +111,6 @@ class PauseJobScreen extends Component {
 
           <View style={styles.viewTextArea}>
             <Textarea
-              autoFocus
               value={this.state.message}
               placeholder={t('JOBS.optionalComments')}
               onChangeText={(text) => this.setState({ message: text })}
