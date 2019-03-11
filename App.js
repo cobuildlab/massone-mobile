@@ -6,9 +6,7 @@ import {
   createAppContainer,
   createDrawerNavigator,
 } from 'react-navigation';
-
 import getTheme from './native-base-theme/components';
-
 import { LoginScreen, ForgotScreen, RecoverScreen } from './src/Auth';
 import {
   JobsListScreen,
@@ -24,6 +22,7 @@ import {
 } from './src/Jobs';
 import ProfileScreen from './src/Profile/ProfileScreen';
 import AuthLoadingScreen from './src/AuthloadingScreen';
+import JobAdminListScreen from './src/modules/admin/JobAdminListScreen';
 import SideBar from './src/SideBar/SideBar';
 
 const JobsStack = createStackNavigator({
@@ -49,6 +48,7 @@ const AppDrawerMenu = createDrawerNavigator(
   {
     Jobs: JobsStack,
     Profile: ProfileScreen,
+    Admin: JobAdminListScreen,
   },
   {
     contentComponent: (props) => <SideBar {...props} />,
