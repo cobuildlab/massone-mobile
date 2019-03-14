@@ -48,7 +48,7 @@ const AppDrawerMenu = createDrawerNavigator(
   {
     Jobs: JobsStack,
     Profile: ProfileScreen,
-    // Admin: JobAdminListScreen,
+    Admin: JobAdminListScreen,
   },
   {
     contentComponent: (props) => <SideBar {...props} />,
