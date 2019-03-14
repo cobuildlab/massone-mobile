@@ -1,6 +1,8 @@
 export default {
   APP: {
     cancel: 'Cancel',
+    save: 'Save',
+    success: 'Success',
     goBack: 'Go back',
     noInternet: 'Please check your internet connection and try again',
     timeout: 'The server has taken a long time to respond',
@@ -47,6 +49,7 @@ export default {
     issue: 'Issue:',
     description: 'Description:',
     customer: 'Customer:',
+    fieldworker: 'Fieldworker',
     contact: 'Contact:',
     type: 'Type:',
     status: 'Status:',
@@ -95,6 +98,7 @@ export default {
     jobHistory: 'Job history',
     emptyJobHistory: 'The job history is empty',
     goToJobHistory: 'Go to job history',
+    history: 'History',
     invalidEquipment: 'Invalid equipment',
     invalidCompletionNotes: 'Invalid completion notes',
     invalidWorkCompleted: 'Invalid work completed',

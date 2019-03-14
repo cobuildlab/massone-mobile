@@ -24,10 +24,12 @@ import ProfileScreen from './src/Profile/ProfileScreen';
 import AuthLoadingScreen from './src/AuthloadingScreen';
 import JobAdminListScreen from './src/modules/admin/JobAdminListScreen';
 import SideBar from './src/SideBar/SideBar';
+import JobEditScreen from './src/Jobs/edit/JobEditScreen';
 
 const JobsStack = createStackNavigator({
   Jobs: JobsListScreen,
   JobDetails: JobDetailsScreen,
+  JobEdit: JobEditScreen,
   JobHistory: JobHistoryScreen,
   PauseJob: PauseJobScreen,
   Comments: CommentsScreen,

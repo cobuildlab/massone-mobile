@@ -1,10 +1,33 @@
 import Flux from 'flux-state';
-import { getData, postData, postFormData } from '../utils/fetch';
+import { getData, postData, postFormData, putData } from '../utils/fetch';
 import {
   commentJobValidator,
   pauseJobValidator,
   closeJobValidator,
 } from './validators';
+
+export const editJob = (jobId, data) => {
+  putData(`/jobs/${jobId}/`, data)
+    .then((data) => {
+      Flux.dispatchEvent('EditJob', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
+ * Get the Employees List of the System
+ */
+export const getEmployees = () => {
+  getData(`/user/employees/`)
+    .then((data) => {
+      Flux.dispatchEvent('Employees', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
 
 /**
  * Get the Jobs for the Admin View

@@ -11,6 +11,8 @@ import {
   Content,
   Container,
   Footer,
+  Grid,
+  Col,
   FooterTab,
 } from 'native-base';
 import styles from './JobDetailsStyle';
@@ -94,6 +96,7 @@ class JobDetailsScreen extends Component {
 
   render() {
     const { t } = this.props;
+    const { employee } = this.state.job;
 
     return (
       <Container>
@@ -174,10 +177,28 @@ class JobDetailsScreen extends Component {
                       .format('L LTS')
                     : t('JOBS.notProvided')}
                 </Text>
-                <Button onPress={this.goToJobHistory} iconRight block primary>
-                  <Text>{t('JOBS.goToJobHistory')}</Text>
-                  <Icon name="ios-list" />
-                </Button>
+                <Title>{t('JOBS.fieldworker')}:</Title>
+                <Text style={styles.textData}>
+                  {employee ? (
+                    <>{`${employee.first_name} ${employee.last_name}`}</>
+                  ) : (
+                    'Not assigned'
+                  )}
+                </Text>
+
+                <Grid>
+                  <Col size={4}>
+                    <Button bordered block onPress={this.goToJobEdit}>
+                      <Text>{t('JOBS.edit')}</Text>
+                    </Button>
+                  </Col>
+                  <Col size={1} />
+                  <Col size={4}>
+                    <Button bordered block onPress={this.goToJobHistory}>
+                      <Text>{t('JOBS.history')}</Text>
+                    </Button>
+                  </Col>
+                </Grid>
               </Body>
             </CardItem>
           </Card>
@@ -318,6 +339,11 @@ class JobDetailsScreen extends Component {
     if (!this.state.job || !this.state.job.id) return;
 
     this.props.navigation.navigate('JobHistory', { job: this.state.job });
+  };
+
+  goToJobEdit = () => {
+    if (!this.state.job || !this.state.job.id) return;
+    this.props.navigation.navigate('JobEdit', { jobId: this.state.job.id });
   };
 
   goToCloseJob = () => {
