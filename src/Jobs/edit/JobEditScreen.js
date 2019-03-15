@@ -82,6 +82,9 @@ class JobDetailsScreen extends Component {
   }
 
   getJobHandler = (job) => {
+    job.alert_employee = true;
+    job.email_customer = true;
+    (job.job_type = job.job_type ? job.job_type.id : null),
     this.setState({ isLoading: false, job });
   };
 
@@ -114,10 +117,10 @@ class JobDetailsScreen extends Component {
         date_finish: job.date_finish || null,
         date_start: job.date_start || null,
         employee: this.getId('employee', job),
-        job_type: this.getId('job_type', job),
         location: this.getId('location', job),
         description: job.description,
         priority: job.priority,
+        job_type: job.job_type,
         status: job.status,
         title: job.title,
       });
@@ -155,6 +158,12 @@ class JobDetailsScreen extends Component {
     this.setState({ job });
   };
 
+  onChangeBoolean = (name) => {
+    const { job } = this.state;
+    job[name] = !job[name];
+    this.setState({ job });
+  };
+
   goToSearchEmployee = () => {
     this.props.navigation.navigate('SearchEmployee');
   };
@@ -173,7 +182,7 @@ class JobDetailsScreen extends Component {
     const { employee } = job;
     const fieldworkerText = employee
       ? `${employee.first_name} ${employee.last_name}`
-      : t('JOBS.notAsigned');
+      : t('JOB_EDIT.selectEmployee');
 
     return (
       <Container>
@@ -203,6 +212,9 @@ class JobDetailsScreen extends Component {
             <ListItem noIndentBodyText>
               <Body style={{ marginVertical: 10 }}>
                 <Text>
+                  <Text style={{ color: '#575757' }}>{`${t(
+                    'JOBS.startDate',
+                  )} `}</Text>
                   {job.date_start
                     ? moment(job.date_start)
                       .tz(moment.tz.guess())
@@ -214,6 +226,9 @@ class JobDetailsScreen extends Component {
             <ListItem noIndentBodyText>
               <Body style={{ marginVertical: 10 }}>
                 <Text>
+                  <Text style={{ color: '#575757' }}>{`${t(
+                    'JOBS.endDate',
+                  )} `}</Text>
                   {job.date_finish
                     ? moment(job.date_finish)
                       .tz(moment.tz.guess())
@@ -225,6 +240,7 @@ class JobDetailsScreen extends Component {
             {Array.isArray(priorityList) ? (
               <Item>
                 <Picker
+                  placeholder={t('JOB_EDIT.selectPriority')}
                   headerBackButtonText={t('APP.goBack')}
                   iosHeader={t('JOB_EDIT.selectPriority')}
                   iosIcon={<Icon name="ios-arrow-down" />}
@@ -246,6 +262,7 @@ class JobDetailsScreen extends Component {
             {Array.isArray(statusList) ? (
               <Item>
                 <Picker
+                  placeholder={t('JOB_EDIT.selectStatus')}
                   headerBackButtonText={t('APP.goBack')}
                   iosHeader={t('JOBS.selectStatus')}
                   iosIcon={<Icon name="ios-arrow-down" />}
@@ -261,6 +278,7 @@ class JobDetailsScreen extends Component {
             {Array.isArray(jobTypeList) ? (
               <Item>
                 <Picker
+                  placeholder={t('JOB_EDIT.selectJobType')}
                   headerBackButtonText={t('APP.goBack')}
                   iosHeader={t('JOBS.selectJobType')}
                   iosIcon={<Icon name="ios-arrow-down" />}
@@ -282,7 +300,9 @@ class JobDetailsScreen extends Component {
             <ListItem button noIndentBodyText onPress={this.goToSearchLocation}>
               <Body style={{ marginVertical: 10 }}>
                 <Text>
-                  {job.location ? job.location.name : t('JOBS.notAsigned')}
+                  {job.location
+                    ? job.location.name
+                    : t('JOB_EDIT.selectLocation')}
                 </Text>
               </Body>
               {job.location && job.location.id ? (
@@ -311,36 +331,28 @@ class JobDetailsScreen extends Component {
             </ListItem>
             <ListItem
               button
-              onPress={() =>
-                this.setState({ alert_employee: !job.alert_employee })
-              }>
+              onPress={() => this.onChangeBoolean('alert_employee')}>
               <CheckBox
                 style={{ marginVertical: 10 }}
-                onPress={() =>
-                  this.setState({ alert_employee: !job.alert_employee })
-                }
+                onPress={() => this.onChangeBoolean('alert_employee')}
                 checked={job.alert_employee}
                 color={BLUE_MAIN}
               />
               <Body>
-                <Text>{t('JOBS.alertEmployee')}</Text>
+                <Text>{t('JOB_EDIT.alertEmployee')}</Text>
               </Body>
             </ListItem>
             <ListItem
               button
-              onPress={() =>
-                this.setState({ email_customer: !job.email_customer })
-              }>
+              onPress={() => this.onChangeBoolean('email_customer')}>
               <CheckBox
                 style={{ marginVertical: 10 }}
-                onPress={() =>
-                  this.setState({ email_customer: !job.email_customer })
-                }
+                onPress={() => this.onChangeBoolean('email_customer')}
                 checked={job.email_customer}
                 color={BLUE_MAIN}
               />
               <Body>
-                <Text>{t('JOBS.emailCustomer')}</Text>
+                <Text>{t('JOB_EDIT.emailCustomer')}</Text>
               </Body>
             </ListItem>
           </Form>
@@ -348,14 +360,14 @@ class JobDetailsScreen extends Component {
           <Grid style={{ marginVertical: 10 }}>
             <Col size={1} />
             <Col size={4}>
-              <Button block primary onPress={this.onSave}>
-                <Text>{t('APP.save')}</Text>
+              <Button block danger onPress={this.goBack}>
+                <Text>{t('APP.cancel')}</Text>
               </Button>
             </Col>
             <Col size={1} />
             <Col size={4}>
-              <Button block danger onPress={this.goBack}>
-                <Text>{t('APP.cancel')}</Text>
+              <Button block primary onPress={this.onSave}>
+                <Text>{t('APP.save')}</Text>
               </Button>
             </Col>
             <Col size={1} />

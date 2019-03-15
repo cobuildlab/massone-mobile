@@ -22,7 +22,7 @@ import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
 import moment from 'moment';
-import { LOG } from '../utils';
+import { LOG, validateRoles } from '../utils';
 
 class JobDetailsScreen extends Component {
   static navigationOptions = {
@@ -62,6 +62,10 @@ class JobDetailsScreen extends Component {
     );
     this.closeJobSubscription = jobStore.subscribe(
       'CloseJob',
+      this.updateJobHandler,
+    );
+    this.editJobSubscription = jobStore.subscribe(
+      'EditJob',
       this.updateJobHandler,
     );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
@@ -187,14 +191,23 @@ class JobDetailsScreen extends Component {
                 </Text>
 
                 <Grid>
-                  <Col size={4}>
-                    <Button bordered block onPress={this.goToJobEdit}>
-                      <Text>{t('JOBS.edit')}</Text>
-                    </Button>
-                  </Col>
-                  <Col size={1} />
-                  <Col size={4}>
-                    <Button bordered block onPress={this.goToJobHistory}>
+                  {validateRoles(['Admin', 'Massone']) ? (
+                    <Col>
+                      <Button
+                        style={{ marginHorizontal: 10 }}
+                        bordered
+                        block
+                        onPress={this.goToJobEdit}>
+                        <Text>{t('JOBS.edit')}</Text>
+                      </Button>
+                    </Col>
+                  ) : null}
+                  <Col>
+                    <Button
+                      style={{ marginHorizontal: 10 }}
+                      bordered
+                      block
+                      onPress={this.goToJobHistory}>
                       <Text>{t('JOBS.history')}</Text>
                     </Button>
                   </Col>

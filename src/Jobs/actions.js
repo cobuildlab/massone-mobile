@@ -5,8 +5,15 @@ import {
   pauseJobValidator,
   closeJobValidator,
 } from './validators';
+import { createJobValidator } from './edit/validators';
 
 export const editJob = (jobId, data) => {
+  try {
+    createJobValidator(data);
+  } catch (e) {
+    return Flux.dispatchEvent('JobStoreError', e);
+  }
+
   putData(`/jobs/${jobId}/`, data)
     .then((data) => {
       Flux.dispatchEvent('EditJob', data);

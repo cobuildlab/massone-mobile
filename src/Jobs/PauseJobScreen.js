@@ -92,13 +92,13 @@ class PauseJobScreen extends Component {
 
           {Array.isArray(this.state.pauseJobReason) ? (
             <Picker
+              placeholder={t('JOBS.selectReason')}
               headerBackButtonText={t('APP.goBack')}
               iosHeader={t('JOBS.selectReason')}
               iosIcon={<Icon name="ios-arrow-down" />}
               style={styles.pauseReasonPicker}
               selectedValue={this.state.reasonId}
               onValueChange={this.onReasonChange}>
-              <Picker.Item label={t('JOBS.selectReason')} value={null} />
               {this.state.pauseJobReason.map((reason) => (
                 <Picker.Item
                   key={reason.id}

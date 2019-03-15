@@ -53,7 +53,7 @@ export default {
     startDate: 'Start date',
     endDate: 'End date',
     jobUpdated: 'Job updated',
-    emailCustomer: 'Email customer?',
+    emailCustomer: 'Email customer',
     alertEmployee: 'Alert employee',
     invalidLocation: 'Invalid location',
     invalidJobType: 'Invalid job type',
@@ -68,6 +68,8 @@ export default {
     selectPriority: 'Select priority',
     selectStatus: 'Select status',
     selectJobType: 'Select job type',
+    selectEmployee: 'Select fieldworker',
+    selectLocation: 'Select location',
   },
   JOBS: {
     jobs: 'Jobs',
