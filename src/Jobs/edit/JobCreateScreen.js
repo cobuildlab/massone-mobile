@@ -24,11 +24,16 @@ import jobStore from '../jobStore';
 import moment from 'moment';
 // import { LOG } from '../../utils';
 import { withNavigation } from 'react-navigation';
-import { JOB_STATUS_LIST, JOB_CLOSED, JOB_DISPATCH } from './jobStatus';
+import {
+  JOB_STATUS_LIST,
+  JOB_CLOSED,
+  JOB_DISPATCH,
+  JOB_OPEN,
+} from './jobStatus';
 import { JOB_PRIORITY_LIST } from './jobPriority';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
-class JobEditScreen extends Component {
+class JobCreateScreen extends Component {
   static navigationOptions = {
     header: null,
   };
@@ -36,9 +41,20 @@ class JobEditScreen extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      isLoading: true,
-      job: {},
-      jobId: props.navigation.getParam('jobId', null),
+      isLoading: false,
+      job: {
+        title: '',
+        description: '',
+        location: null,
+        employee: null,
+        date_start: null,
+        date_finish: null,
+        job_type: null,
+        priority: null,
+        status: JOB_OPEN,
+        email_customer: true,
+        alert_employee: true,
+      },
       employees: [],
       statusList: JOB_STATUS_LIST.filter((status) => status !== JOB_CLOSED),
       priorityList: JOB_PRIORITY_LIST,
@@ -49,7 +65,6 @@ class JobEditScreen extends Component {
   }
 
   componentDidMount() {
-    this.getJobSubscription = jobStore.subscribe('GetJob', this.getJobHandler);
     this.selectEmployeesSubscription = jobStore.subscribe(
       'SelectEmployee',
       this.selectEmployee,
@@ -58,9 +73,9 @@ class JobEditScreen extends Component {
       'SelectLocation',
       this.selectLocation,
     );
-    this.editJobSubscription = jobStore.subscribe('EditJob', () => {
+    this.createJobSubscription = jobStore.subscribe('CreateJob', () => {
       this.setState({ isLoading: false }, () => {
-        CustomToast(this.props.t('JOB_EDIT.jobUpdated'));
+        CustomToast(this.props.t('JOB_EDIT.jobCreated'));
         this.goBack();
       });
     });
@@ -71,25 +86,16 @@ class JobEditScreen extends Component {
       },
     );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
-    jobActions.getJob(this.state.jobId);
     this.getJobTypes();
   }
 
   componentWillUnmount() {
-    this.editJobSubscription.unsubscribe();
+    this.createJobSubscription.unsubscribe();
     this.selectEmployeesSubscription.unsubscribe();
     this.selectLocationSubscription.unsubscribe();
-    this.getJobSubscription.unsubscribe();
     this.getJobTypesSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
   }
-
-  getJobHandler = (job) => {
-    job.alert_employee = true;
-    job.email_customer = true;
-    (job.job_type = job.job_type ? job.job_type.id : null),
-    this.setState({ isLoading: false, job });
-  };
 
   errorHandler = () => {
     this.setState({ isLoading: false });
@@ -114,7 +120,7 @@ class JobEditScreen extends Component {
     this.setState({ isLoading: true }, () => {
       const { job } = this.state;
 
-      jobActions.editJob(this.state.jobId, {
+      jobActions.createJob({
         alert_employee: job.alert_employee,
         email_customer: job.email_customer,
         date_finish: job.date_finish || null,
@@ -140,6 +146,7 @@ class JobEditScreen extends Component {
   deleteEmployee = () => {
     const { job } = this.state;
     job.employee = null;
+    job.status = JOB_OPEN;
     this.setState({ job });
   };
 
@@ -213,7 +220,7 @@ class JobEditScreen extends Component {
     return (
       <Container>
         {this.state.isLoading ? <Loading /> : null}
-        <CustomHeader leftButton={'goBack'} title={t('JOB_EDIT.editJob')} />
+        <CustomHeader leftButton={'goBack'} title={t('JOB_EDIT.createJob')} />
         <Content>
           <DateTimePicker
             mode={'datetime'}
@@ -309,6 +316,7 @@ class JobEditScreen extends Component {
             {Array.isArray(statusList) ? (
               <Item>
                 <Picker
+                  enabled={false}
                   placeholder={t('JOB_EDIT.selectStatus')}
                   headerBackButtonText={t('APP.goBack')}
                   iosHeader={t('JOBS.selectStatus')}
@@ -316,10 +324,6 @@ class JobEditScreen extends Component {
                   style={{ width: undefined, marginVertical: 10 }}
                   selectedValue={job.status}
                   onValueChange={(value) => this.onChangeText('status', value)}>
-                  <Picker.Item
-                    label={t('JOB_EDIT.selectStatus')}
-                    value={null}
-                  />
                   {statusList.map((status) => (
                     <Picker.Item key={status} label={status} value={status} />
                   ))}
@@ -433,4 +437,4 @@ class JobEditScreen extends Component {
   }
 }
 
-export default withNamespaces()(withNavigation(JobEditScreen));
+export default withNamespaces()(withNavigation(JobCreateScreen));

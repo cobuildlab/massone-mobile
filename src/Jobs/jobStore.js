@@ -23,6 +23,8 @@ class JobStore extends Flux.DashStore {
      */
     this.addEvent('EditJob');
 
+    this.addEvent('CreateJob');
+
     this.addEvent('GetJobs');
 
     this.addEvent('GetJob');

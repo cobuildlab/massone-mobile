@@ -255,7 +255,11 @@ class JobsListScreen extends Component {
       <Container>
         {this.state.isLoading ? <Loading /> : null}
 
-        <CustomHeader leftButton={'openDrawer'} title={t('JOBS.jobs')} />
+        <CustomHeader
+          leftButton={'openDrawer'}
+          title={t('JOBS.jobs')}
+          rightButton={{ icon: 'md-add', handler: this.goToCreateJob }}
+        />
 
         {this.state.emptyJobs ? (
           <CenteredText text={`${t('JOBS.emptyJobs')}`} />
@@ -379,6 +383,10 @@ class JobsListScreen extends Component {
 
   goToJobDetails = (jobId) => {
     this.props.navigation.navigate('JobDetails', { jobId });
+  };
+
+  goToCreateJob = () => {
+    this.props.navigation.navigate('JobCreate');
   };
 
   acceptJob = (job) => {
