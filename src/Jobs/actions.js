@@ -7,6 +7,19 @@ import {
 } from './validators';
 
 /**
+ * Get the Jobs for the Admin View
+ */
+export const getJobsForAdmin = () => {
+  getData(`/job-admin/`)
+    .then((data) => {
+      Flux.dispatchEvent('GetJobsForAdmin', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
  * Job list action
  * @param  {string} urlParams the params for pagination
  */

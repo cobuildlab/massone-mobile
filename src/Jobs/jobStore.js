@@ -8,6 +8,10 @@ import { storeErrorHandler } from '../utils';
 class JobStore extends Flux.DashStore {
   constructor() {
     super();
+    /**
+     * List of Jobs for the admin
+     */
+    this.addEvent('GetJobsForAdmin');
 
     this.addEvent('GetJobs');
 
