@@ -24,10 +24,14 @@ import ProfileScreen from './src/Profile/ProfileScreen';
 import AuthLoadingScreen from './src/AuthloadingScreen';
 import JobAdminListScreen from './src/modules/admin/JobAdminListScreen';
 import SideBar from './src/SideBar/SideBar';
+import JobEditScreen from './src/Jobs/edit/JobEditScreen';
+import SearchEmployeeScreen from './src/Jobs/edit/SearchEmployeeScreen';
+import SearchLocationScreen from './src/Jobs/edit/SearchLocationScreen';
 
 const JobsStack = createStackNavigator({
   Jobs: JobsListScreen,
   JobDetails: JobDetailsScreen,
+  JobEdit: JobEditScreen,
   JobHistory: JobHistoryScreen,
   PauseJob: PauseJobScreen,
   Comments: CommentsScreen,
@@ -36,6 +40,8 @@ const JobsStack = createStackNavigator({
   Image: ImageScreen,
   Signature: SignatureScreen,
   SearchParts: SearchPartsScreen,
+  SearchEmployee: SearchEmployeeScreen,
+  SearchLocation: SearchLocationScreen,
 });
 
 const AuthStack = createStackNavigator({

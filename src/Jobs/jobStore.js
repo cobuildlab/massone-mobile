@@ -13,6 +13,16 @@ class JobStore extends Flux.DashStore {
      */
     this.addEvent('GetJobsForAdmin');
 
+    /**
+     * List of employees
+     */
+    this.addEvent('Employees');
+
+    /**
+     * Edit a Job Event
+     */
+    this.addEvent('EditJob');
+
     this.addEvent('GetJobs');
 
     this.addEvent('GetJob');
@@ -50,6 +60,16 @@ class JobStore extends Flux.DashStore {
     this.addEvent('Signature');
 
     this.addEvent('SelectPart');
+
+    this.addEvent('SearchEmployees');
+
+    this.addEvent('SelectEmployee');
+
+    this.addEvent('GetJobTypes');
+
+    this.addEvent('SearchLocations');
+
+    this.addEvent('SelectLocation');
 
     this.addEvent('JobStoreError', storeErrorHandler);
   }

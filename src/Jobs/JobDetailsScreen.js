@@ -11,6 +11,8 @@ import {
   Content,
   Container,
   Footer,
+  Grid,
+  Col,
   FooterTab,
 } from 'native-base';
 import styles from './JobDetailsStyle';
@@ -20,7 +22,7 @@ import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
 import moment from 'moment';
-import { LOG } from '../utils';
+import { LOG, validateRoles } from '../utils';
 
 class JobDetailsScreen extends Component {
   static navigationOptions = {
@@ -62,6 +64,10 @@ class JobDetailsScreen extends Component {
       'CloseJob',
       this.updateJobHandler,
     );
+    this.editJobSubscription = jobStore.subscribe(
+      'EditJob',
+      this.updateJobHandler,
+    );
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
     this.firstLoad();
@@ -94,6 +100,7 @@ class JobDetailsScreen extends Component {
 
   render() {
     const { t } = this.props;
+    const { employee } = this.state.job;
 
     return (
       <Container>
@@ -174,10 +181,37 @@ class JobDetailsScreen extends Component {
                       .format('L LTS')
                     : t('JOBS.notProvided')}
                 </Text>
-                <Button onPress={this.goToJobHistory} iconRight block primary>
-                  <Text>{t('JOBS.goToJobHistory')}</Text>
-                  <Icon name="ios-list" />
-                </Button>
+                <Title>{t('JOBS.fieldworker')}:</Title>
+                <Text style={styles.textData}>
+                  {employee ? (
+                    <>{`${employee.first_name} ${employee.last_name}`}</>
+                  ) : (
+                    'Not assigned'
+                  )}
+                </Text>
+
+                <Grid>
+                  {validateRoles(['Admin', 'Massone']) ? (
+                    <Col>
+                      <Button
+                        style={{ marginHorizontal: 10 }}
+                        bordered
+                        block
+                        onPress={this.goToJobEdit}>
+                        <Text>{t('JOBS.edit')}</Text>
+                      </Button>
+                    </Col>
+                  ) : null}
+                  <Col>
+                    <Button
+                      style={{ marginHorizontal: 10 }}
+                      bordered
+                      block
+                      onPress={this.goToJobHistory}>
+                      <Text>{t('JOBS.history')}</Text>
+                    </Button>
+                  </Col>
+                </Grid>
               </Body>
             </CardItem>
           </Card>
@@ -318,6 +352,11 @@ class JobDetailsScreen extends Component {
     if (!this.state.job || !this.state.job.id) return;
 
     this.props.navigation.navigate('JobHistory', { job: this.state.job });
+  };
+
+  goToJobEdit = () => {
+    if (!this.state.job || !this.state.job.id) return;
+    this.props.navigation.navigate('JobEdit', { jobId: this.state.job.id });
   };
 
   goToCloseJob = () => {

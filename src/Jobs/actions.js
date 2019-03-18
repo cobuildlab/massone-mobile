@@ -1,10 +1,40 @@
 import Flux from 'flux-state';
-import { getData, postData, postFormData } from '../utils/fetch';
+import { getData, postData, postFormData, putData } from '../utils/fetch';
 import {
   commentJobValidator,
   pauseJobValidator,
   closeJobValidator,
 } from './validators';
+import { createJobValidator } from './edit/validators';
+
+export const editJob = (jobId, data) => {
+  try {
+    createJobValidator(data);
+  } catch (e) {
+    return Flux.dispatchEvent('JobStoreError', e);
+  }
+
+  putData(`/jobs/${jobId}/`, data)
+    .then((data) => {
+      Flux.dispatchEvent('EditJob', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
+ * Get the Employees List of the System
+ */
+export const getEmployees = () => {
+  getData(`/user/employees/`)
+    .then((data) => {
+      Flux.dispatchEvent('Employees', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
 
 /**
  * Get the Jobs for the Admin View
@@ -305,6 +335,30 @@ const selectPart = (part) => {
 };
 
 /**
+ * Search employees
+ * @param  {string} search
+ */
+const searchEmployees = (search = '') => {
+  getData(`/user/employee/?search=${search}`)
+    .then((data) => {
+      Flux.dispatchEvent('SearchEmployees', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
+ * To pass the employee from SearchEmployeeScreen to parent route
+ * @param  {Object} employee
+ */
+const selectEmployee = (employee) => {
+  setTimeout(() => {
+    Flux.dispatchEvent('SelectEmployee', employee);
+  });
+};
+
+/**
  * Action to get the Job start-drive, end-drive & start-job times
  * @param  {number} jobId
  */
@@ -312,6 +366,33 @@ const getJobTimes = (jobId) => {
   getData(`/job-time/${jobId}`)
     .then((data) => {
       Flux.dispatchEvent('GetJobTimes', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
+ * Action to perfom a location search
+ * @param {String} search the search term
+ */
+export const searchLocations = (search) => {
+  getData(`/locations/search/?q=${search}`)
+    .then((locations) => {
+      Flux.dispatchEvent('SearchLocations', locations);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
+ * Action to get the job types
+ */
+export const getJobTypes = () => {
+  getData(`/job-types/`)
+    .then((types) => {
+      Flux.dispatchEvent('GetJobTypes', types);
     })
     .catch((err) => {
       Flux.dispatchEvent('JobStoreError', err);
@@ -335,4 +416,6 @@ export {
   getJobComments,
   signature,
   selectPart,
+  selectEmployee,
+  searchEmployees,
 };

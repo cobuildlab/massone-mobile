@@ -3,6 +3,7 @@ import { View, TouchableOpacity, Image } from 'react-native';
 import styles from './style';
 import { Text, Icon } from 'native-base';
 import { BG_MOBILE_IMG, LOGO_WHITE } from '../assets/image/';
+import { validateRoles } from '../utils';
 
 class SideBar extends Component {
   render() {
@@ -35,7 +36,7 @@ class SideBar extends Component {
                 />
               );
             }
-            if (route.key == 'Admin') {
+            if (route.key == 'Admin' && validateRoles(['Admin'])) {
               icon = (
                 <Icon
                   name="md-person"
