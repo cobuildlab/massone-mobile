@@ -174,6 +174,15 @@ class JobsListScreen extends Component {
       'AddFcmToken',
       this.updateFcmTokenHandler,
     );
+    this.createJobSubscription = jobStore.subscribe(
+      'CreateJob',
+      this.refreshData,
+    );
+    this.deleteJobSubscription = jobStore.subscribe(
+      'DeleteJob',
+      this.refreshData,
+    );
+    this.editJobSubscription = jobStore.subscribe('EditJob', this.refreshData);
     this.fcmStoreError = fcmStore.subscribe('FcmStoreError', this.errorHandler);
 
     this.notificationOpenedListener = firebase
@@ -198,6 +207,9 @@ class JobsListScreen extends Component {
     this.logoutSubscription.unsubscribe();
     this.getJobsSubscription.unsubscribe();
     this.acceptJobSubscription.unsubscribe();
+    this.createJobSubscription.unsubscribe();
+    this.editJobSubscription.unsubscribe();
+    this.deleteJobSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
     this.updateTokenSubscription.unsubscribe();
     this.fcmStoreError.unsubscribe();

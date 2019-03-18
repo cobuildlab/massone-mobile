@@ -68,6 +68,10 @@ class JobDetailsScreen extends Component {
       'EditJob',
       this.updateJobHandler,
     );
+    this.deleteJobSubscription = jobStore.subscribe('DeleteJob', () => {
+      CustomToast(this.props.t('JOBS.jobDeleted'));
+      this.props.navigation.goBack();
+    });
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
     this.firstLoad();
@@ -81,6 +85,7 @@ class JobDetailsScreen extends Component {
     this.endDriveSubscription.unsubscribe();
     this.startJobSubscription.unsubscribe();
     this.closeJobSubscription.unsubscribe();
+    this.deleteJobSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
   }
 
@@ -211,6 +216,18 @@ class JobDetailsScreen extends Component {
                       <Text>{t('JOBS.history')}</Text>
                     </Button>
                   </Col>
+                  {validateRoles(['Admin']) ? (
+                    <Col>
+                      <Button
+                        style={{ marginHorizontal: 10 }}
+                        bordered
+                        block
+                        danger
+                        onPress={this.deleteJob}>
+                        <Text>{t('JOBS.delete')}</Text>
+                      </Button>
+                    </Col>
+                  ) : null}
                 </Grid>
               </Body>
             </CardItem>
@@ -257,6 +274,27 @@ class JobDetailsScreen extends Component {
       </Container>
     );
   }
+
+  deleteJob = () => {
+    if (!this.state.job || !this.state.job.title) return;
+
+    Alert.alert(this.props.t('JOBS.wantToDeleteJob'), this.state.job.title, [
+      {
+        text: this.props.t('APP.cancel'),
+        onPress: () => {
+          LOG(this, 'Cancel deleteJob');
+        },
+      },
+      {
+        text: this.props.t('JOBS.delete'),
+        onPress: () => {
+          this.setState({ isLoading: true }, () => {
+            jobActions.deleteJob(this.state.job.id);
+          });
+        },
+      },
+    ]);
+  };
 
   acceptJob = () => {
     if (!this.state.job || !this.state.job.title) return;
