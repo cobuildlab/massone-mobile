@@ -6,7 +6,13 @@ import {
   closeJobValidator,
 } from './validators';
 import { createJobValidator } from './edit/validators';
+import moment from 'moment';
 
+/**
+ * Edit job action
+ * @param  {number} jobId job id
+ * @param  {Job} data the job
+ */
 export const editJob = (jobId, data) => {
   try {
     createJobValidator(data);
@@ -14,9 +20,43 @@ export const editJob = (jobId, data) => {
     return Flux.dispatchEvent('JobStoreError', e);
   }
 
+  if (data.date_start !== null) {
+    data.date_start = moment(data.date_start).format('YYYY-MM-DD HH:mm');
+  }
+  if (data.date_finish !== null) {
+    data.date_finish = moment(data.date_finish).format('YYYY-MM-DD HH:mm');
+  }
+
   putData(`/jobs/${jobId}/`, data)
     .then((data) => {
       Flux.dispatchEvent('EditJob', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
+ * Create job action
+ * @param  {Job} data the job
+ */
+export const createJob = (data) => {
+  try {
+    createJobValidator(data);
+  } catch (e) {
+    return Flux.dispatchEvent('JobStoreError', e);
+  }
+
+  if (data.date_start !== null) {
+    data.date_start = moment(data.date_start).format('YYYY-MM-DD HH:mm');
+  }
+  if (data.date_finish !== null) {
+    data.date_finish = moment(data.date_finish).format('YYYY-MM-DD HH:mm');
+  }
+
+  postData(`/jobs/`, data)
+    .then((data) => {
+      Flux.dispatchEvent('CreateJob', data);
     })
     .catch((err) => {
       Flux.dispatchEvent('JobStoreError', err);
@@ -384,6 +424,16 @@ export const searchLocations = (search) => {
     .catch((err) => {
       Flux.dispatchEvent('JobStoreError', err);
     });
+};
+
+/**
+ * To pass the location from SearchLocationScreen to parent route
+ * @param  {Object} location
+ */
+export const selectLocation = (location) => {
+  setTimeout(() => {
+    Flux.dispatchEvent('SelectLocation', location);
+  });
 };
 
 /**

@@ -42,6 +42,8 @@ export default {
     logout: 'Logout',
   },
   JOB_EDIT: {
+    editJob: 'Edit job',
+    createJob: 'Create job',
     issue: 'Issue',
     description: 'Description',
     customer: 'Customer',
@@ -52,7 +54,8 @@ export default {
     priority: 'Priority',
     startDate: 'Start date',
     endDate: 'End date',
-    jobUpdated: 'Job updated',
+    jobUpdated: 'Job updated!',
+    jobCreated: 'Job created!',
     emailCustomer: 'Email customer',
     alertEmployee: 'Alert employee',
     invalidLocation: 'Invalid location',

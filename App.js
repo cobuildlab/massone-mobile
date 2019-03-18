@@ -25,6 +25,7 @@ import AuthLoadingScreen from './src/AuthloadingScreen';
 import JobAdminListScreen from './src/modules/admin/JobAdminListScreen';
 import SideBar from './src/SideBar/SideBar';
 import JobEditScreen from './src/Jobs/edit/JobEditScreen';
+import JobCreateScreen from './src/Jobs/edit/JobCreateScreen';
 import SearchEmployeeScreen from './src/Jobs/edit/SearchEmployeeScreen';
 import SearchLocationScreen from './src/Jobs/edit/SearchLocationScreen';
 
@@ -32,6 +33,7 @@ const JobsStack = createStackNavigator({
   Jobs: JobsListScreen,
   JobDetails: JobDetailsScreen,
   JobEdit: JobEditScreen,
+  JobCreate: JobCreateScreen,
   JobHistory: JobHistoryScreen,
   PauseJob: PauseJobScreen,
   Comments: CommentsScreen,

@@ -99,6 +99,7 @@ class PauseJobScreen extends Component {
               style={styles.pauseReasonPicker}
               selectedValue={this.state.reasonId}
               onValueChange={this.onReasonChange}>
+              <Picker.Item label={t('JOBS.selectReason')} value={null} />
               {this.state.pauseJobReason.map((reason) => (
                 <Picker.Item
                   key={reason.id}

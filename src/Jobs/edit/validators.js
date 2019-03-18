@@ -17,14 +17,6 @@ import moment from 'moment';
  * @param {boolean} email_customer a boolean asking if it should email the client
  */
 export const createJobValidator = (job) => {
-  if (!utils.isValidNumber(job.location)) {
-    throw new Error(i18n.t('JOB_EDIT.invalidLocation'));
-  }
-
-  if (!utils.isValidNumber(job.job_type)) {
-    throw new Error(i18n.t('JOB_EDIT.invalidJobType'));
-  }
-
   if (!utils.isValidString(job.title)) {
     throw new Error(i18n.t('JOB_EDIT.emptyIssue'));
   }
@@ -47,8 +39,16 @@ export const createJobValidator = (job) => {
     throw new Error(i18n.t('JOB_EDIT.invalidStatus'));
   }
 
+  if (!utils.isValidInteger(job.job_type)) {
+    throw new Error(i18n.t('JOB_EDIT.invalidJobType'));
+  }
+
+  if (!utils.isValidInteger(job.location)) {
+    throw new Error(i18n.t('JOB_EDIT.invalidLocation'));
+  }
+
   if (job.employee !== null) {
-    if (!utils.isValidNumber(job.employee)) {
+    if (!utils.isValidInteger(job.employee)) {
       throw new Error(i18n.t('JOB_EDIT.invalidEmployee'));
     }
   }
