@@ -1,5 +1,11 @@
 import Flux from 'flux-state';
-import { getData, postData, postFormData, putData } from '../utils/fetch';
+import {
+  getData,
+  postData,
+  postFormData,
+  putData,
+  deleteData,
+} from '../utils/fetch';
 import {
   commentJobValidator,
   pauseJobValidator,
@@ -57,6 +63,20 @@ export const createJob = (data) => {
   postData(`/jobs/`, data)
     .then((data) => {
       Flux.dispatchEvent('CreateJob', data);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
+ * Action to delete a specific job
+ * @param {number} jobId id of the job to delete
+ */
+export const deleteJob = (jobId) => {
+  deleteData(`/jobs/${jobId}/`)
+    .then((res) => {
+      Flux.dispatchEvent('DeleteJob', res);
     })
     .catch((err) => {
       Flux.dispatchEvent('JobStoreError', err);
