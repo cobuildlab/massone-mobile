@@ -1,14 +1,13 @@
 import React from 'react';
 import { StyleSheet } from 'react-native';
-import { BLUE_MAIN, VIOLET, GRAY_DARK } from '../constants/colorPalette';
+import { BLUE_MAIN } from '../constants/colorPalette';
 import { Text } from 'native-base';
 import { PropTypes } from 'prop-types';
 
 const style = StyleSheet.create({
   bold: {
-    fontSize: 16,
     fontWeight: '700',
-    color: VIOLET,
+    color: BLUE_MAIN,
   },
 });
 
