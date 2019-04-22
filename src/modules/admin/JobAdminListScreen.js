@@ -5,11 +5,9 @@ import {
   Accordion,
   Container,
   Text,
-  Button,
   Card,
   CardItem,
   Left,
-  Right,
 } from 'native-base';
 import { CustomHeader } from '../../utils/components';
 import { withNamespaces } from 'react-i18next';
@@ -18,6 +16,7 @@ import { getJobsForAdmin } from '../../Jobs/actions';
 import moment from 'moment';
 import BoldText from '../../componets/BoldText';
 import Loading from '../../utils/components/Loading';
+import { GRAY_DARK, VIOLET } from '../../constants/colorPalette';
 
 const WEEK_DAYS = [
   'Sunday',
@@ -116,49 +115,66 @@ class JobAdminListScreen extends React.Component {
                       <Text>{day}</Text>
                     </CardItem>
                     {todaysJobs.map((job, i) => {
-                      let customer = `Customer: Not assigned`;
-                      if (job.customer) {
-                        try {
-                          customer = `Customer: ${job.customer.first_name} ${
-                            job.customer.last_name
-                          }`;
-                        } catch (e) {
-                          customer = '';
-                        }
-                      }
-
-                      let employee = `Fieldworker: Not assigned`;
-                      if (job.employee !== '')
-                        employee = `Fieldworker: ${job.employee}`;
-
                       return (
                         <Content key={i}>
-                          <CardItem>
+                          <CardItem cardBody>
                             <Left>
                               <BoldText>{job.title}</BoldText>
                             </Left>
                           </CardItem>
                           <CardItem cardBody>
                             <Left>
-                              <Text note>{customer}</Text>
+                              <Text style={{ fontWeight: '700' }}>
+                                <Text style={{ color: GRAY_DARK }}>
+                                  {`${t('JOBS.fieldworker')}: `}
+                                </Text>
+                                <Text style={{ color: VIOLET }}>
+                                  {job.employee && job.employee.firstName
+                                    ? `${job.employee.first_name} ${
+                                      job.employee.last_name
+                                    }`
+                                    : t('JOBS.notAsigned')}
+                                </Text>
+                              </Text>
                             </Left>
                           </CardItem>
                           <CardItem cardBody>
                             <Left>
-                              <Text>{job.description}</Text>
+                              <Text>
+                                <Text
+                                  style={{
+                                    color: GRAY_DARK,
+                                    fontWeight: '700',
+                                  }}>
+                                  {`${t('JOBS.createdAt')}: `}
+                                </Text>
+                                <Text>
+                                  {job.created
+                                    ? moment(job.created)
+                                      .tz(moment.tz.guess())
+                                      .format('L')
+                                    : t('JOBS.notProvided')}
+                                </Text>
+                              </Text>
                             </Left>
                           </CardItem>
-                          <CardItem cardBody>
+                          <CardItem cardBody style={{ marginBottom: 20 }}>
                             <Left>
-                              <Text note>{employee}</Text>
+                              <Text>
+                                <Text
+                                  style={{
+                                    color: GRAY_DARK,
+                                    fontWeight: '700',
+                                  }}>
+                                  {`${t('JOBS.type')} `}
+                                </Text>
+                                <Text>
+                                  {job.job_type && job.job_type.name
+                                    ? job.job_type.name
+                                    : t('JOBS.notAsigned')}
+                                </Text>
+                              </Text>
                             </Left>
-                          </CardItem>
-                          <CardItem>
-                            <Right>
-                              <Button transparent success>
-                                <Text>{job.status}</Text>
-                              </Button>
-                            </Right>
                           </CardItem>
                         </Content>
                       );
