@@ -38,10 +38,7 @@ class SideBar extends Component {
             }
             if (route.key == 'Admin' && validateRoles(['Admin'])) {
               icon = (
-                <Icon
-                  name="md-person"
-                  style={{ fontSize: 20, color: '#fff' }}
-                />
+                <Icon name="md-key" style={{ fontSize: 20, color: '#fff' }} />
               );
             }
 

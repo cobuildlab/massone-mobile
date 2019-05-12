@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, FlatList, Alert } from 'react-native';
+import { TouchableOpacity, FlatList, Alert } from 'react-native';
 import { Button, Icon, Text, SwipeRow, Container, Spinner } from 'native-base';
 import jobStore from './jobStore';
 import authStore from '../Auth/authStore';
@@ -312,39 +312,43 @@ class JobsListScreen extends Component {
                   <TouchableOpacity
                     onPress={() => this.goToJobDetails(item.id)}
                     style={styles.listItem}>
-                    <View style={styles.issueView}>
-                      <Text style={styles.issueName}>{`${item.title} `}</Text>
-                      {item.customer ? (
-                        <Text>
-                          <Text>{`${t('JOBS.for')} `}</Text>
-                          <Text style={styles.customerName}>
-                            {item.customer.first_name}
-                          </Text>
-                        </Text>
-                      ) : null}
-                    </View>
-                    <View style={{ flexDirection: 'row' }}>
-                      <Text style={styles.textDate}>{`${t(
-                        'JOBS.startDate',
-                      )} `}</Text>
-                      <Text style={styles.textNumDate}>
-                        {item.date_start
-                          ? moment(item.date_start)
+                    <Text style={[styles.issueName, styles.textLeft]}>
+                      {`${item.title} `}
+                    </Text>
+                    <Text style={styles.textLeft}>
+                      <Text style={styles.textGray}>{`${t(
+                        'JOBS.For',
+                      )}: `}</Text>
+                      <Text style={styles.fieldworkerName}>
+                        {item.employee
+                          ? `${item.employee.first_name} ${
+                            item.employee.last_name
+                          }`
+                          : t('JOBS.notAsigned')}
+                      </Text>
+                    </Text>
+                    <Text style={styles.textLeft}>
+                      <Text style={styles.textGray}>
+                        {`${t('JOBS.createdAt')}: `}
+                      </Text>
+                      <Text style={styles.textLeft}>
+                        {item.created
+                          ? moment(item.created)
                             .tz(moment.tz.guess())
                             .format('L')
                           : t('JOBS.notProvided')}
                       </Text>
-                      <Text style={styles.textDate}>{` ${t(
-                        'JOBS.endDate',
-                      )} `}</Text>
-                      <Text style={styles.textNumDate}>
-                        {item.date_finish
-                          ? moment(item.date_finish)
-                            .tz(moment.tz.guess())
-                            .format('L')
-                          : t('JOBS.notProvided')}
+                    </Text>
+                    <Text style={styles.textLeft}>
+                      <Text style={styles.textGray}>
+                        {`${t('JOBS.type')} `}
                       </Text>
-                    </View>
+                      <Text style={styles.textLeft}>
+                        {item.job_type && item.job_type.name
+                          ? item.job_type.name
+                          : t('JOBS.notAsigned')}
+                      </Text>
+                    </Text>
                   </TouchableOpacity>
                 }
               />

@@ -14,25 +14,20 @@ export default StyleSheet.create({
     marginLeft: 10,
     marginRight: 10,
   },
-  issueView: {
-    flexDirection: 'row',
+  textLeft: {
+    textAlign: 'left',
+    alignSelf: 'flex-start',
   },
   issueName: {
-    fontSize: 16,
     fontWeight: '700',
     color: BLUE_MAIN,
   },
-  customerName: {
-    fontSize: 16,
+  fieldworkerName: {
     fontWeight: '700',
     color: VIOLET,
   },
-  textDate: {
-    fontSize: 14,
+  textGray: {
     color: GRAY_DARK,
     fontWeight: '700',
-  },
-  textNumDate: {
-    fontSize: 14,
   },
 });
