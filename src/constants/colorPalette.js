@@ -7,3 +7,4 @@ export const GRAY_DARK = '#777777';
 export const BLACK = '#202124';
 export const WHITE_MAIN = '#ffffff';
 export const VIOLET = '#a4a3bf';
+export const GREEN = '#00cc00';

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, Image } from 'react-native';
 import { Content, Button, Input } from 'native-base';
 import styles from './style';
-import ButtomComponet from '../componets/ButtomBlue';
+import ButtomComponet from '../shared/componets/ButtomBlue';
 import * as authActions from './actions';
 import authStore from './authStore';
 import { CustomToast, Loading } from '../utils/components';
@@ -80,9 +80,7 @@ class ForgotScreen extends Component {
               primary
             />
             <Button block transparent onPress={this.goToResetPassword}>
-              <Text style={styles.textBtn}>
-                {t('AUTH.alreadyHaveCode')}
-              </Text>
+              <Text style={styles.textBtn}>{t('AUTH.alreadyHaveCode')}</Text>
             </Button>
             <Button block transparent onPress={this.goBack}>
               <Text style={styles.textBtn}>{t('APP.goBack')}</Text>

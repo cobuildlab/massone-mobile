@@ -6,6 +6,7 @@ import {
   resetPasswordValidator,
 } from './validators';
 import { postData, deleteData } from '../utils/fetch';
+import { log, error } from 'pure-logger';
 
 /**
  * Login action
@@ -21,9 +22,11 @@ const login = (username, password) => {
 
   postData('/accounts/signin/', { username, password }, false)
     .then((data) => {
+      log(`login`, data);
       Flux.dispatchEvent('Login', data);
     })
     .catch((err) => {
+      error(`login`, err);
       Flux.dispatchEvent('AuthStoreError', err);
     });
 };

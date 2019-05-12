@@ -11,7 +11,7 @@ import {
   Input,
 } from 'native-base';
 import styles from './style';
-import ButtomComponet from '../componets/ButtomBlue';
+import ButtomComponet from '../shared/componets/ButtomBlue';
 import * as authActions from './actions';
 import authStore from './authStore';
 import { LOG } from '../utils';

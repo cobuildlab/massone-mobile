@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { View, Text, Image } from 'react-native';
 import { Content, Button, Input } from 'native-base';
 import styles from './style';
-import ButtomComponet from '../componets/ButtomBlue';
+import ButtomComponet from '../shared/componets/ButtomBlue';
 import * as authActions from './actions';
 import authStore from './authStore';
 import { CustomToast, Loading } from '../utils/components';
@@ -59,18 +59,10 @@ class RecoverScreen extends Component {
         {this.state.isLoading ? <Loading /> : null}
 
         <View style={styles.container}>
-          <Image
-            style={styles.viewBackground}
-            source={BG_MOBILE_IMG}
-          />
-          <Image
-            style={styles.viewLogo}
-            source={LOGO_WHITE}
-          />
+          <Image style={styles.viewBackground} source={BG_MOBILE_IMG} />
+          <Image style={styles.viewLogo} source={LOGO_WHITE} />
           <Text style={styles.title}>{t('AUTH.recoverPassword')}</Text>
-          <Text style={styles.subTitleForgot}>
-            {t('AUTH.enterYourCode')}
-          </Text>
+          <Text style={styles.subTitleForgot}>{t('AUTH.enterYourCode')}</Text>
           <View style={{ width: '80%', marginTop: 25 }}>
             <Input
               style={styles.inputLogin}

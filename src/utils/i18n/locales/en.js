@@ -81,7 +81,7 @@ export default {
     for: 'for',
     For: 'For',
     notAssigned: 'Not assigned',
-    createdAt: 'Created at',
+    createdAt: 'Created',
     issue: 'Issue:',
     description: 'Description:',
     customer: 'Customer:',

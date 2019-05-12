@@ -14,9 +14,11 @@ import { withNamespaces } from 'react-i18next';
 import jobStore from '../../Jobs/jobStore';
 import { getJobsForAdmin } from '../../Jobs/actions';
 import moment from 'moment';
-import BoldText from '../../componets/BoldText';
+import { H2 } from '../../shared/componets/text/H2';
 import Loading from '../../utils/components/Loading';
-import { GRAY_DARK, VIOLET } from '../../constants/colorPalette';
+import { log } from 'pure-logger';
+import { H3 } from '../../shared/componets/text/H3';
+import { GreenNormalText } from '../../shared/componets/text/GreenNormalText';
 
 const WEEK_DAYS = [
   'Sunday',
@@ -60,14 +62,16 @@ class JobAdminListScreen extends React.Component {
 
       const weeksAsKeys = Object.keys(jobs);
       const dataArray = [];
-      const thisWeek = moment().format('w');
+      const thisWeek = Number(moment().format('w'));
       weeksAsKeys.forEach((week) => {
+        const weekAsNumber = Number(week);
         let title = '';
-        if (thisWeek === week) title = 'This Week';
-        if (Number(week) === Number(thisWeek) - 1) title = 'Last Week';
-        if (Number(week) === Number(thisWeek) - 2) title = '2 Weeks Ago';
-        if (Number(week) === Number(thisWeek) + 1) title = 'Next Week';
-        if (Number(week) === Number(thisWeek) + 2) title = 'Next 2 Weeks';
+        if (thisWeek === weekAsNumber) title = 'This Week';
+        if (weekAsNumber === thisWeek - 1) title = 'Last Week';
+        if (weekAsNumber === thisWeek - 2) title = '2 Weeks Ago';
+        if (weekAsNumber === thisWeek - 3) title = '3 Weeks Ago';
+        if (weekAsNumber === thisWeek + 1) title = 'Next Week';
+        if (weekAsNumber === thisWeek + 2) title = 'Next 2 Weeks';
         dataArray.push({
           title,
           content: jobs[week],
@@ -84,7 +88,7 @@ class JobAdminListScreen extends React.Component {
   render() {
     const { t } = this.props;
     const { isLoading, jobs } = this.state;
-
+    log('RENDER', jobs);
     return (
       <Container>
         {isLoading ? <Loading /> : null}
@@ -94,9 +98,9 @@ class JobAdminListScreen extends React.Component {
             dataArray={jobs}
             expanded={2}
             renderContent={(item) => {
-              console.log('debug', item);
+              console.log('DEBUG:item', item);
               const { content: jobList } = item;
-              console.log('debug', jobList);
+              console.log('debug:jobList', jobList);
               const data = {};
               jobList.forEach((job) => {
                 const dayOfWeek = moment(job.created).format('d');
@@ -105,74 +109,57 @@ class JobAdminListScreen extends React.Component {
               });
 
               return WEEK_DAYS.map((day, pos) => {
-                const todaysJobs = data[String(pos)] || [];
-
-                if (todaysJobs.length === 0) return null;
-
+                const thisDayJobs = data[String(pos)] || [];
+                // No Jobs For this Day
+                if (thisDayJobs.length === 0) return null;
+                const dateString = moment(thisDayJobs[0].created).format('LL');
                 return (
                   <Card key={pos}>
                     <CardItem header>
-                      <Text>{day}</Text>
+                      <H2>{`${day}, ${dateString}`}</H2>
                     </CardItem>
-                    {todaysJobs.map((job, i) => {
+                    {thisDayJobs.map((job, i) => {
+                      const jobType = job.job_type
+                        ? job.job_type.name
+                        : 'Not Assigned';
+                      const employee =
+                        job.employee && job.employee.firstName
+                          ? `${job.employee.first_name} ${
+                            job.employee.last_name
+                          }`
+                          : t('JOBS.notAsigned');
+                      const created = job.created
+                        ? moment(job.created)
+                          .tz(moment.tz.guess())
+                          .format('LLL')
+                        : t('JOBS.notProvided');
                       return (
-                        <Content key={i}>
+                        <Content key={i} padder>
+                          <H2>{`JOB # ${job.id}`}</H2>
                           <CardItem cardBody>
                             <Left>
-                              <BoldText>{job.title}</BoldText>
+                              <H3>{job.title}</H3>
                             </Left>
                           </CardItem>
                           <CardItem cardBody>
                             <Left>
                               <Text style={{ fontWeight: '700' }}>
-                                <Text style={{ color: GRAY_DARK }}>
-                                  {`${t('JOBS.fieldworker')}: `}
-                                </Text>
-                                <Text style={{ color: VIOLET }}>
-                                  {job.employee && job.employee.firstName
-                                    ? `${job.employee.first_name} ${
-                                      job.employee.last_name
-                                    }`
-                                    : t('JOBS.notAsigned')}
-                                </Text>
+                                <Text>{employee}</Text>
                               </Text>
                             </Left>
                           </CardItem>
                           <CardItem cardBody>
                             <Left>
-                              <Text>
-                                <Text
-                                  style={{
-                                    color: GRAY_DARK,
-                                    fontWeight: '700',
-                                  }}>
-                                  {`${t('JOBS.createdAt')}: `}
-                                </Text>
-                                <Text>
-                                  {job.created
-                                    ? moment(job.created)
-                                      .tz(moment.tz.guess())
-                                      .format('L')
-                                    : t('JOBS.notProvided')}
-                                </Text>
-                              </Text>
+                              <GreenNormalText>
+                                {`${job.status} - ${jobType}`}
+                              </GreenNormalText>
                             </Left>
                           </CardItem>
-                          <CardItem cardBody style={{ marginBottom: 20 }}>
+                          <CardItem cardBody>
                             <Left>
                               <Text>
-                                <Text
-                                  style={{
-                                    color: GRAY_DARK,
-                                    fontWeight: '700',
-                                  }}>
-                                  {`${t('JOBS.type')} `}
-                                </Text>
-                                <Text>
-                                  {job.job_type && job.job_type.name
-                                    ? job.job_type.name
-                                    : t('JOBS.notAsigned')}
-                                </Text>
+                                <Text>{`${t('JOBS.createdAt')}: `}</Text>
+                                <Text>{created}</Text>
                               </Text>
                             </Left>
                           </CardItem>
