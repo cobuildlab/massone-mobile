@@ -38,12 +38,12 @@ class JobsListScreen extends Component {
         if (enabled) {
           LOG(this, 'firebase has permission');
         } else {
-          this.requestFcmMessagePersmissions();
+          this.requestFcmMessagePermissions();
         }
       });
   };
 
-  requestFcmMessagePersmissions = () => {
+  requestFcmMessagePermissions = () => {
     firebase
       .messaging()
       .requestPermission()
@@ -134,6 +134,7 @@ class JobsListScreen extends Component {
   updateFcmToken = (fcmTokenStoredId, fcmToken) => {
     fcmActions.updateFcmToken(fcmTokenStoredId, fcmToken);
   };
+
   /**
    *
    * FIREBASE methods
@@ -288,71 +289,61 @@ class JobsListScreen extends Component {
             ListFooterComponent={() =>
               this.state.isLoadingPage ? <Spinner color={BLUE_MAIN} /> : null
             }
-            renderItem={({ item }) => (
-              <SwipeRow
-                ref={(c) => {
-                  this.rowRefs[item.id] = c;
-                }}
-                onRowOpen={() => {
-                  if (
-                    this.selectedRow &&
-                    this.selectedRow !== this.rowRefs[item.id]
-                  ) {
-                    this.selectedRow._root.closeRow();
+            renderItem={({ item }) => {
+              const created = item.created
+                ? moment(item.created)
+                  .tz(moment.tz.guess())
+                  .format('LLLL')
+                : t('JOBS.notProvided');
+              const employee = item.employee
+                ? `${item.employee.first_name} ${item.employee.last_name}`
+                : t('JOBS.jobNotAssigned');
+              const type =
+                item.job_type && item.job_type.name
+                  ? item.job_type.name
+                  : t('JOBS.notAssigned');
+              return (
+                <SwipeRow
+                  ref={(c) => {
+                    this.rowRefs[item.id] = c;
+                  }}
+                  onRowOpen={() => {
+                    if (
+                      this.selectedRow &&
+                      this.selectedRow !== this.rowRefs[item.id]
+                    ) {
+                      this.selectedRow._root.closeRow();
+                    }
+                    this.selectedRow = this.rowRefs[item.id];
+                  }}
+                  rightOpenValue={-75}
+                  right={
+                    <Button
+                      title={''}
+                      onPress={() => this.acceptJob(item)}
+                      success>
+                      <Icon active type="MaterialIcons" name="check" />
+                    </Button>
                   }
-                  this.selectedRow = this.rowRefs[item.id];
-                }}
-                rightOpenValue={-75}
-                right={
-                  <Button onPress={() => this.acceptJob(item)} success>
-                    <Icon active type="MaterialIcons" name="check" />
-                  </Button>
-                }
-                body={
-                  <TouchableOpacity
-                    onPress={() => this.goToJobDetails(item.id)}
-                    style={styles.listItem}>
-                    <Text style={[styles.issueName, styles.textLeft]}>
-                      {`${item.title} `}
-                    </Text>
-                    <Text style={styles.textLeft}>
-                      <Text style={styles.textGray}>{`${t(
-                        'JOBS.For',
-                      )}: `}</Text>
-                      <Text style={styles.fieldworkerName}>
-                        {item.employee
-                          ? `${item.employee.first_name} ${
-                            item.employee.last_name
-                          }`
-                          : t('JOBS.notAsigned')}
+                  body={
+                    <TouchableOpacity
+                      onPress={() => this.goToJobDetails(item.id)}
+                      style={styles.listItem}>
+                      <Text style={[styles.issueName, styles.textLeft]}>
+                        {`${item.title} `}
                       </Text>
-                    </Text>
-                    <Text style={styles.textLeft}>
-                      <Text style={styles.textGray}>
-                        {`${t('JOBS.createdAt')}: `}
+                      <Text style={styles.textLeft}>{created}</Text>
+                      <Text style={styles.textLeft}>
+                        <Text style={styles.fieldworkerName}>{employee}</Text>
                       </Text>
                       <Text style={styles.textLeft}>
-                        {item.created
-                          ? moment(item.created)
-                            .tz(moment.tz.guess())
-                            .format('L')
-                          : t('JOBS.notProvided')}
+                        <Text style={styles.textLeft}>{type}</Text>
                       </Text>
-                    </Text>
-                    <Text style={styles.textLeft}>
-                      <Text style={styles.textGray}>
-                        {`${t('JOBS.type')} `}
-                      </Text>
-                      <Text style={styles.textLeft}>
-                        {item.job_type && item.job_type.name
-                          ? item.job_type.name
-                          : t('JOBS.notAsigned')}
-                      </Text>
-                    </Text>
-                  </TouchableOpacity>
-                }
-              />
-            )}
+                    </TouchableOpacity>
+                  }
+                />
+              );
+            }}
           />
         ) : null}
       </Container>

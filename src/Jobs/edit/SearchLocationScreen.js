@@ -21,7 +21,7 @@ import * as jobActions from '../actions';
 import jobStore from '../jobStore';
 import { debounce } from '../../utils';
 
-class SearchLocationScreen extends Component {
+class SearchCustomerScreen extends Component {
   static navigationOptions = {
     header: null,
   };
@@ -61,14 +61,14 @@ class SearchLocationScreen extends Component {
 
     return (
       <Container>
-        <CustomHeader leftButton={'goBack'} title={t('JOBS.searchLocation')} />
+        <CustomHeader leftButton={'goBack'} title={t('JOBS.searchCustomer')} />
 
         <Content>
           <Form>
             <Item stackedLabel>
-              <Label>{t('JOBS.locations')}</Label>
+              <Label>{t('JOBS.customers')}</Label>
               <Input
-                placeholder={t('JOBS.searchLocation')}
+                placeholder={t('JOBS.searchCustomerPlaceholder')}
                 onChangeText={this.getLocations}
               />
             </Item>
@@ -113,4 +113,4 @@ class SearchLocationScreen extends Component {
   };
 }
 
-export default withNamespaces()(SearchLocationScreen);
+export default withNamespaces()(SearchCustomerScreen);

@@ -361,7 +361,7 @@ class JobCreateScreen extends Component {
                 <Text>
                   {job.location
                     ? job.location.name
-                    : t('JOB_EDIT.selectLocation')}
+                    : t('JOB_EDIT.selectCustomer')}
                 </Text>
               </Body>
               {job.location && job.location.id ? (
