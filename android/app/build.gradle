@@ -73,7 +73,7 @@ import com.android.build.OutputFile
  */
 
 project.ext.react = [
-    entryFile: "index.js"
+        entryFile: "index.js"
 ]
 
 apply from: "../../node_modules/react-native/react.gradle"
@@ -137,7 +137,7 @@ android {
         variant.outputs.each { output ->
             // For each separate APK per architecture, set a unique version code as described here:
             // http://tools.android.com/tech-docs/new-build-system/user-guide/apk-splits
-            def versionCodes = ["armeabi-v7a":1, "x86":2]
+            def versionCodes = ["armeabi-v7a": 1, "x86": 2]
             def abi = output.getFilter(OutputFile.ABI)
             if (abi != null) {  // null for the universal-debug, universal-release variants
                 output.versionCodeOverride =
@@ -148,7 +148,14 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-view-pdf')
+    compile project(':react-native-signature-capture')
+    compile project(':react-native-image-picker')
+    compile project(':react-native-gesture-handler')
+    compile project(':react-native-document-picker')
     compile project(':react-native-firebase')
+
+
     implementation project(':react-native-firebase')
     implementation project(':react-native-signature-capture')
     implementation project(':react-native-view-pdf')
@@ -160,8 +167,9 @@ dependencies {
     implementation "com.facebook.react:react-native:+"  // From node_modules
 
     // firebase dependencies
-    implementation "com.google.firebase:firebase-core:16.0.6"
     implementation "com.google.firebase:firebase-messaging:17.3.4"
+    implementation "com.google.android.gms:play-services-base:16.1.0"
+    implementation "com.google.firebase:firebase-core:16.0.8"
 }
 
 // Run this once to be able to run the application with BUCK
