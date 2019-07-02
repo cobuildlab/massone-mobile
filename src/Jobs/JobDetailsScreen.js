@@ -127,12 +127,16 @@ class JobDetailsScreen extends Component {
                 <Text style={styles.textData}>
                   {this.state.job.description}
                 </Text>
-                {this.state.job.customer ? (
+                {this.state.job.location ? (
                   <>
                     <Title>{t('JOBS.customer')}</Title>
                     <Text style={styles.textData}>
-                      {`${this.state.job.customer.first_name} ${
-                        this.state.job.customer.last_name
+                      {this.state.job.location.name}
+                    </Text>
+                    <Title>{t('JOBS.address')}</Title>
+                    <Text style={styles.textData}>
+                      {`${this.state.job.location.address}, ${
+                        this.state.job.location.city
                       }`}
                     </Text>
                   </>

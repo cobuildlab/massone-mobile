@@ -130,6 +130,7 @@ const getJobs = (urlParams = '') => {
 const getJob = (jobId) => {
   getData(`/job/users/${jobId}/`)
     .then((data) => {
+      console.log(`DEBUG:job:`, data);
       Flux.dispatchEvent('GetJob', data);
     })
     .catch((err) => {

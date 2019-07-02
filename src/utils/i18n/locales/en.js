@@ -76,6 +76,7 @@ export default {
     selectCustomer: 'Select Customer',
   },
   JOBS: {
+    address: 'Address',
     jobs: 'Jobs',
     jobDetails: 'Job details',
     jobComments: 'Job comments',

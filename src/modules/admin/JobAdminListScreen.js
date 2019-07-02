@@ -98,9 +98,7 @@ class JobAdminListScreen extends React.Component {
             dataArray={jobs}
             expanded={2}
             renderContent={(item) => {
-              console.log('DEBUG:item', item);
               const { content: jobList } = item;
-              console.log('debug:jobList', jobList);
               const data = {};
               jobList.forEach((job) => {
                 const dayOfWeek = moment(job.created).format('d');
@@ -119,11 +117,12 @@ class JobAdminListScreen extends React.Component {
                       <H2>{`${day}, ${dateString}`}</H2>
                     </CardItem>
                     {thisDayJobs.map((job, i) => {
+                      console.log('DEBUG:job', job);
                       const jobType = job.job_type
                         ? job.job_type.name
                         : 'Not Assigned';
                       const employee =
-                        job.employee && job.employee.firstName
+                        job.employee && job.employee.first_name
                           ? `${job.employee.first_name} ${
                             job.employee.last_name
                           }`
