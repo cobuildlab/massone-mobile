@@ -1,15 +1,6 @@
 import React, { Component } from 'react';
 import { Alert, RefreshControl } from 'react-native';
-import {
-  Content,
-  Container,
-  Textarea,
-  Button,
-  Text,
-  View,
-  Picker,
-  Icon,
-} from 'native-base';
+import { Content, Container, Textarea, Button, Text, View, Picker, Icon } from 'native-base';
 import { CustomHeader, CustomToast, Loading } from '../utils/components';
 import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
@@ -35,10 +26,7 @@ class PauseJobScreen extends Component {
   }
 
   componentDidMount() {
-    this.pauseJobSubscription = jobStore.subscribe(
-      'PauseJob',
-      this.pauseJobHandler,
-    );
+    this.pauseJobSubscription = jobStore.subscribe('PauseJob', this.pauseJobHandler);
     this.getPauseJobReasonSubscription = jobStore.subscribe(
       'GetPauseJobReason',
       this.getPauseJobReasonHandler,
@@ -79,10 +67,7 @@ class PauseJobScreen extends Component {
 
         <Content
           refreshControl={
-            <RefreshControl
-              refreshing={this.state.isRefreshing}
-              onRefresh={this.refreshData}
-            />
+            <RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.refreshData} />
           }
           contentContainerStyle={styles.content}>
           <View style={styles.viewText}>
@@ -101,11 +86,7 @@ class PauseJobScreen extends Component {
               onValueChange={this.onReasonChange}>
               <Picker.Item label={t('JOBS.selectReason')} value={null} />
               {this.state.pauseJobReason.map((reason) => (
-                <Picker.Item
-                  key={reason.id}
-                  label={reason.reason}
-                  value={reason.id}
-                />
+                <Picker.Item key={reason.id} label={reason.reason} value={reason.id} />
               ))}
             </Picker>
           ) : null}
@@ -120,7 +101,7 @@ class PauseJobScreen extends Component {
             />
           </View>
 
-          <Button primary block onPress={this.pauseJob}>
+          <Button title={'Pause Job'} primary block onPress={this.pauseJob}>
             <Text>{t('JOBS.pauseJob')}</Text>
           </Button>
         </Content>
@@ -129,10 +110,7 @@ class PauseJobScreen extends Component {
   }
 
   loadData = () => {
-    if (
-      !Array.isArray(this.state.pauseJobReason) ||
-      !this.state.pauseJobReason.length
-    ) {
+    if (!Array.isArray(this.state.pauseJobReason) || !this.state.pauseJobReason.length) {
       this.setState({ isLoading: true }, () => {
         this.getPauseJobReason();
       });
@@ -169,11 +147,7 @@ class PauseJobScreen extends Component {
         text: this.props.t('JOBS.pause'),
         onPress: () => {
           this.setState({ isLoading: true }, () => {
-            jobActions.pauseJob(
-              this.state.job.id,
-              this.state.messsage || '',
-              this.state.reasonId,
-            );
+            jobActions.pauseJob(this.state.job.id, this.state.messsage || '', this.state.reasonId);
           });
         },
       },

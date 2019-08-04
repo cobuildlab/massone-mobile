@@ -59,22 +59,10 @@ class CloseJobScreen extends Component {
   }
 
   componentDidMount() {
-    this.closeJobSubscription = jobStore.subscribe(
-      'CloseJob',
-      this.closeJobHandler,
-    );
-    this.getJobTimesSubscription = jobStore.subscribe(
-      'GetJobTimes',
-      this.getJobTimesHandler,
-    );
-    this.selectPartSubscription = jobStore.subscribe(
-      'SelectPart',
-      this.selectPartHandler,
-    );
-    this.signatureSubscription = jobStore.subscribe(
-      'Signature',
-      this.signatureHandler,
-    );
+    this.closeJobSubscription = jobStore.subscribe('CloseJob', this.closeJobHandler);
+    this.getJobTimesSubscription = jobStore.subscribe('GetJobTimes', this.getJobTimesHandler);
+    this.selectPartSubscription = jobStore.subscribe('SelectPart', this.selectPartHandler);
+    this.signatureSubscription = jobStore.subscribe('Signature', this.signatureHandler);
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
     this.loadData();
@@ -120,10 +108,7 @@ class CloseJobScreen extends Component {
 
         <Content
           refreshControl={
-            <RefreshControl
-              refreshing={this.state.isRefreshing}
-              onRefresh={this.refreshData}
-            />
+            <RefreshControl refreshing={this.state.isRefreshing} onRefresh={this.refreshData} />
           }>
           <Form>
             <Item stackedLabel>
@@ -139,20 +124,14 @@ class CloseJobScreen extends Component {
               <Input
                 value={this.state.completionNotes}
                 placeholder={t('JOBS.completionNotesPlaceholder')}
-                onChangeText={(completionNotes) =>
-                  this.setState({ completionNotes })
-                }
+                onChangeText={(completionNotes) => this.setState({ completionNotes })}
               />
             </Item>
             <ListItem
               button
-              onPress={() =>
-                this.setState({ workCompleted: !this.state.workCompleted })
-              }>
+              onPress={() => this.setState({ workCompleted: !this.state.workCompleted })}>
               <CheckBox
-                onPress={() =>
-                  this.setState({ workCompleted: !this.state.workCompleted })
-                }
+                onPress={() => this.setState({ workCompleted: !this.state.workCompleted })}
                 style={styles.listItemMargin}
                 checked={this.state.workCompleted}
                 color={BLUE_MAIN}
@@ -166,9 +145,7 @@ class CloseJobScreen extends Component {
               <Input
                 value={this.state.workPerformed}
                 placeholder={t('JOBS.workPerformedPlaceholder')}
-                onChangeText={(workPerformed) =>
-                  this.setState({ workPerformed })
-                }
+                onChangeText={(workPerformed) => this.setState({ workPerformed })}
               />
             </Item>
             <ListItem button noIndentBodyText onPress={this.goToSearchParts}>
@@ -177,6 +154,7 @@ class CloseJobScreen extends Component {
                 {Array.isArray(this.state.parts)
                   ? this.state.parts.map((part) => (
                     <Button
+                      title={'DELETE PART'}
                       key={part.id}
                       onPress={() => this.deletePart(part)}
                       style={styles.partButton}
@@ -190,6 +168,7 @@ class CloseJobScreen extends Component {
                   : null}
               </Body>
               <Button
+                title={'SEARCH PART'}
                 onPress={this.goToSearchParts}
                 style={styles.listItemMargin}
                 primary>
@@ -232,9 +211,7 @@ class CloseJobScreen extends Component {
                       {`${t('JOBS.jobStarted')}: `}
                       {moment
                         .duration(
-                          moment
-                            .utc(this.state.jobTimes.start_time)
-                            .diff(moment.utc(), 'seconds'),
+                          moment.utc(this.state.jobTimes.start_time).diff(moment.utc(), 'seconds'),
                           'seconds',
                         )
                         .humanize(true)}
@@ -256,9 +233,7 @@ class CloseJobScreen extends Component {
                 value={this.state.laborOvertime}
                 keyboardType={'numeric'}
                 placeholder={t('JOBS.laborOvertimePlaceholder')}
-                onChangeText={(laborOvertime) =>
-                  this.setState({ laborOvertime })
-                }
+                onChangeText={(laborOvertime) => this.setState({ laborOvertime })}
               />
             </Item>
             <Item stackedLabel>
@@ -274,9 +249,7 @@ class CloseJobScreen extends Component {
               <Input
                 value={this.state.equipmentUsed}
                 placeholder={t('JOBS.equipmentUsedPlaceholder')}
-                onChangeText={(equipmentUsed) =>
-                  this.setState({ equipmentUsed })
-                }
+                onChangeText={(equipmentUsed) => this.setState({ equipmentUsed })}
               />
             </Item>
             <Item stackedLabel>
@@ -284,9 +257,7 @@ class CloseJobScreen extends Component {
               <Input
                 value={this.state.refrigerantInventory}
                 placeholder={t('JOBS.refrigerantInventoryPlaceholder')}
-                onChangeText={(refrigerantInventory) =>
-                  this.setState({ refrigerantInventory })
-                }
+                onChangeText={(refrigerantInventory) => this.setState({ refrigerantInventory })}
               />
             </Item>
             <ListItem
@@ -300,10 +271,11 @@ class CloseJobScreen extends Component {
               </Body>
               {this.state.signature ? (
                 <View style={styles.signatureButtons}>
-                  <Button onPress={this.goToSignature} danger>
+                  <Button title={'Edit'} onPress={this.goToSignature} danger>
                     <Text>{t('JOBS.edit')}</Text>
                   </Button>
                   <Button
+                    title={'View'}
                     style={styles.buttonMargin}
                     onPress={this.goToViewImage}
                     primary>
@@ -311,7 +283,7 @@ class CloseJobScreen extends Component {
                   </Button>
                 </View>
               ) : (
-                <Button onPress={this.goToSignature} primary>
+                <Button title={'Sign'} onPress={this.goToSignature} primary>
                   <Text>{t('JOBS.add')}</Text>
                 </Button>
               )}
@@ -321,7 +293,7 @@ class CloseJobScreen extends Component {
 
         <Footer>
           <FooterTab>
-            <Button onPress={this.closeJob} primary transparent>
+            <Button title={'Close'} onPress={this.closeJob} primary transparent>
               <Text>{t('JOBS.closeJob')}</Text>
             </Button>
           </FooterTab>

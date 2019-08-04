@@ -36,10 +36,7 @@ class SearchPartsScreen extends Component {
   }
 
   componentDidMount() {
-    this.getPartsSubscription = jobStore.subscribe(
-      'GetParts',
-      this.getPartsHandler,
-    );
+    this.getPartsSubscription = jobStore.subscribe('GetParts', this.getPartsHandler);
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
   }
 
@@ -69,26 +66,21 @@ class SearchPartsScreen extends Component {
           <Form>
             <Item stackedLabel>
               <Label>{t('JOBS.parts')}</Label>
-              <Input
-                placeholder={t('JOBS.partsPlaceholder')}
-                onChangeText={this.getParts}
-              />
+              <Input placeholder={t('JOBS.partsPlaceholder')} onChangeText={this.getParts} />
             </Item>
 
             {this.state.isLoadingParts ? <Spinner color={BLUE_MAIN} /> : null}
 
             {Array.isArray(this.state.parts) && this.state.parts.length
               ? this.state.parts.map((part) => (
-                <ListItem
-                  key={part.id}
-                  button
-                  onPress={() => this.selectPart(part)}>
+                <ListItem key={part.id} button onPress={() => this.selectPart(part)}>
                   <Body>
                     <Text>{part.item}</Text>
                     <Text note>{part.description}</Text>
                   </Body>
                   <Right>
                     <Button
+                      title={'ADD'}
                       onPress={() => this.selectPart(part)}
                       transparent
                       primary>

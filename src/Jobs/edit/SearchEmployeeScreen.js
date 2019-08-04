@@ -67,27 +67,20 @@ class SearchEmployeeScreen extends Component {
           <Form>
             <Item stackedLabel>
               <Label>{t('JOBS.employees')}</Label>
-              <Input
-                placeholder={t('JOBS.searchEmployee')}
-                onChangeText={this.getEmployees}
-              />
+              <Input placeholder={t('JOBS.searchEmployee')} onChangeText={this.getEmployees} />
             </Item>
 
             {this.state.isLoading ? <Spinner color={BLUE_MAIN} /> : null}
 
             {Array.isArray(this.state.employees) && this.state.employees.length
               ? this.state.employees.map((employee) => (
-                <ListItem
-                  key={employee.id}
-                  button
-                  onPress={() => this.selectEmployee(employee)}>
+                <ListItem key={employee.id} button onPress={() => this.selectEmployee(employee)}>
                   <Body>
-                    <Text>{`${employee.first_name} ${
-                      employee.last_name
-                    }`}</Text>
+                    <Text>{`${employee.first_name} ${employee.last_name}`}</Text>
                   </Body>
                   <Right>
                     <Button
+                      title={'ADD'}
                       onPress={() => this.selectEmployee(employee)}
                       transparent
                       primary>

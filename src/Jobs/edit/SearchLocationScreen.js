@@ -77,15 +77,13 @@ class SearchCustomerScreen extends Component {
 
             {Array.isArray(this.state.locations) && this.state.locations.length
               ? this.state.locations.map((location) => (
-                <ListItem
-                  key={location.id}
-                  button
-                  onPress={() => this.selectLocation(location)}>
+                <ListItem key={location.id} button onPress={() => this.selectLocation(location)}>
                   <Body>
                     <Text>{location.name}</Text>
                   </Body>
                   <Right>
                     <Button
+                      title={'ADD'}
                       onPress={() => this.selectLocation(location)}
                       transparent
                       primary>

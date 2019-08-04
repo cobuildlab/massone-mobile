@@ -50,26 +50,17 @@ class JobEditScreen extends Component {
 
   componentDidMount() {
     this.getJobSubscription = jobStore.subscribe('GetJob', this.getJobHandler);
-    this.selectEmployeesSubscription = jobStore.subscribe(
-      'SelectEmployee',
-      this.selectEmployee,
-    );
-    this.selectLocationSubscription = jobStore.subscribe(
-      'SelectLocation',
-      this.selectLocation,
-    );
+    this.selectEmployeesSubscription = jobStore.subscribe('SelectEmployee', this.selectEmployee);
+    this.selectLocationSubscription = jobStore.subscribe('SelectLocation', this.selectLocation);
     this.editJobSubscription = jobStore.subscribe('EditJob', () => {
       this.setState({ isLoading: false }, () => {
         CustomToast(this.props.t('JOB_EDIT.jobUpdated'));
         this.goBack();
       });
     });
-    this.getJobTypesSubscription = jobStore.subscribe(
-      'GetJobTypes',
-      (jobTypeList) => {
-        this.setState({ jobTypeList });
-      },
-    );
+    this.getJobTypesSubscription = jobStore.subscribe('GetJobTypes', (jobTypeList) => {
+      this.setState({ jobTypeList });
+    });
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
     jobActions.getJob(this.state.jobId);
     this.getJobTypes();
@@ -181,8 +172,7 @@ class JobEditScreen extends Component {
 
   showStartDatePicker = () => this.setState({ isStartDatePickerVisible: true });
 
-  hideStartDatePicker = () =>
-    this.setState({ isStartDatePickerVisible: false });
+  hideStartDatePicker = () => this.setState({ isStartDatePickerVisible: false });
 
   onStartDatePicked = (date) => {
     const { job } = this.state;
@@ -244,20 +234,13 @@ class JobEditScreen extends Component {
                 multiline
                 value={job.description}
                 placeholder={t('JOB_EDIT.description')}
-                onChangeText={(value) =>
-                  this.onChangeText('description', value)
-                }
+                onChangeText={(value) => this.onChangeText('description', value)}
               />
             </Item>
-            <ListItem
-              onPress={this.showStartDatePicker}
-              button
-              noIndentBodyText>
+            <ListItem onPress={this.showStartDatePicker} button noIndentBodyText>
               <Body style={{ marginVertical: 10 }}>
                 <Text>
-                  <Text style={{ color: '#575757' }}>{`${t(
-                    'JOBS.startDate',
-                  )} `}</Text>
+                  <Text style={{ color: '#575757' }}>{`${t('JOBS.startDate')} `}</Text>
                   {job.date_start
                     ? moment(job.date_start)
                       .tz(moment.tz.guess())
@@ -269,9 +252,7 @@ class JobEditScreen extends Component {
             <ListItem onPress={this.showEndDatePicker} button noIndentBodyText>
               <Body style={{ marginVertical: 10 }}>
                 <Text>
-                  <Text style={{ color: '#575757' }}>{`${t(
-                    'JOBS.endDate',
-                  )} `}</Text>
+                  <Text style={{ color: '#575757' }}>{`${t('JOBS.endDate')} `}</Text>
                   {job.date_finish
                     ? moment(job.date_finish)
                       .tz(moment.tz.guess())
@@ -289,19 +270,10 @@ class JobEditScreen extends Component {
                   iosIcon={<Icon name="ios-arrow-down" />}
                   style={{ width: undefined, marginVertical: 10 }}
                   selectedValue={job.priority}
-                  onValueChange={(value) =>
-                    this.onChangeText('priority', value)
-                  }>
-                  <Picker.Item
-                    label={t('JOB_EDIT.selectPriority')}
-                    value={null}
-                  />
+                  onValueChange={(value) => this.onChangeText('priority', value)}>
+                  <Picker.Item label={t('JOB_EDIT.selectPriority')} value={null} />
                   {priorityList.map((priority) => (
-                    <Picker.Item
-                      key={priority}
-                      label={priority}
-                      value={priority}
-                    />
+                    <Picker.Item key={priority} label={priority} value={priority} />
                   ))}
                 </Picker>
               </Item>
@@ -316,10 +288,7 @@ class JobEditScreen extends Component {
                   style={{ width: undefined, marginVertical: 10 }}
                   selectedValue={job.status}
                   onValueChange={(value) => this.onChangeText('status', value)}>
-                  <Picker.Item
-                    label={t('JOB_EDIT.selectStatus')}
-                    value={null}
-                  />
+                  <Picker.Item label={t('JOB_EDIT.selectStatus')} value={null} />
                   {statusList.map((status) => (
                     <Picker.Item key={status} label={status} value={status} />
                   ))}
@@ -335,37 +304,24 @@ class JobEditScreen extends Component {
                   iosIcon={<Icon name="ios-arrow-down" />}
                   style={{ width: undefined, marginVertical: 10 }}
                   selectedValue={job.job_type}
-                  onValueChange={(value) =>
-                    this.onChangeText('job_type', value)
-                  }>
-                  <Picker.Item
-                    label={t('JOB_EDIT.selectJobType')}
-                    value={null}
-                  />
+                  onValueChange={(value) => this.onChangeText('job_type', value)}>
+                  <Picker.Item label={t('JOB_EDIT.selectJobType')} value={null} />
                   {jobTypeList.map((type) => (
-                    <Picker.Item
-                      key={type.id}
-                      label={type.name}
-                      value={type.id}
-                    />
+                    <Picker.Item key={type.id} label={type.name} value={type.id} />
                   ))}
                 </Picker>
               </Item>
             ) : null}
             <ListItem button noIndentBodyText onPress={this.goToSearchLocation}>
               <Body style={{ marginVertical: 10 }}>
-                <Text>
-                  {job.location
-                    ? job.location.name
-                    : t('JOB_EDIT.selectLocation')}
-                </Text>
+                <Text>{job.location ? job.location.name : t('JOB_EDIT.selectLocation')}</Text>
               </Body>
               {job.location && job.location.id ? (
-                <Button onPress={this.deleteLocation} danger>
+                <Button title={'Delete Location'} onPress={this.deleteLocation} danger>
                   <Icon name="md-close" />
                 </Button>
               ) : (
-                <Button onPress={this.goToSearchLocation} primary>
+                <Button title={'Search'} onPress={this.goToSearchLocation} primary>
                   <Text>{t('JOBS.search')}</Text>
                 </Button>
               )}
@@ -375,18 +331,16 @@ class JobEditScreen extends Component {
                 <Text>{fieldworkerText}</Text>
               </Body>
               {employee && employee.id ? (
-                <Button onPress={this.deleteEmployee} danger>
+                <Button title={'Delete Employee'} onPress={this.deleteEmployee} danger>
                   <Icon name="md-close" />
                 </Button>
               ) : (
-                <Button onPress={this.goToSearchEmployee} primary>
+                <Button title={'Search'} onPress={this.goToSearchEmployee} primary>
                   <Text>{t('JOBS.search')}</Text>
                 </Button>
               )}
             </ListItem>
-            <ListItem
-              button
-              onPress={() => this.onChangeBoolean('alert_employee')}>
+            <ListItem button onPress={() => this.onChangeBoolean('alert_employee')}>
               <CheckBox
                 style={{ marginVertical: 10 }}
                 onPress={() => this.onChangeBoolean('alert_employee')}
@@ -397,9 +351,7 @@ class JobEditScreen extends Component {
                 <Text>{t('JOB_EDIT.alertEmployee')}</Text>
               </Body>
             </ListItem>
-            <ListItem
-              button
-              onPress={() => this.onChangeBoolean('email_customer')}>
+            <ListItem button onPress={() => this.onChangeBoolean('email_customer')}>
               <CheckBox
                 style={{ marginVertical: 10 }}
                 onPress={() => this.onChangeBoolean('email_customer')}
@@ -415,13 +367,13 @@ class JobEditScreen extends Component {
           <Grid style={{ marginVertical: 10 }}>
             <Col size={1} />
             <Col size={4}>
-              <Button block danger onPress={this.goBack}>
+              <Button title={'CANCEL'} block danger onPress={this.goBack}>
                 <Text>{t('APP.cancel')}</Text>
               </Button>
             </Col>
             <Col size={1} />
             <Col size={4}>
-              <Button block primary onPress={this.onSave}>
+              <Button title={'SAVE'} block primary onPress={this.onSave}>
                 <Text>{t('APP.save')}</Text>
               </Button>
             </Col>

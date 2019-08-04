@@ -25,10 +25,7 @@ import * as jobActions from './actions';
 import jobStore from './jobStore';
 import moment from 'moment';
 import ImagePicker from 'react-native-image-picker';
-import {
-  DocumentPicker,
-  DocumentPickerUtil,
-} from 'react-native-document-picker';
+import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
 import { BLUE_MAIN } from '../constants/colorPalette';
 import { LOG, WARN, sortByDate } from '../utils';
 
@@ -64,10 +61,7 @@ class CommentsScreen extends Component {
       'GetJobComments',
       this.getJobCommentsHandler,
     );
-    this.commentJobSubscription = jobStore.subscribe(
-      'CommentJob',
-      this.commentJobHandler,
-    );
+    this.commentJobSubscription = jobStore.subscribe('CommentJob', this.commentJobHandler);
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
     this.firstLoad();
@@ -135,9 +129,7 @@ class CommentsScreen extends Component {
 
         <CustomHeader leftButton={'goBack'} title={t('JOBS.jobComments')} />
 
-        {this.state.emptyComments ? (
-          <CenteredText text={`${t('JOBS.emptyComments')}`} />
-        ) : null}
+        {this.state.emptyComments ? <CenteredText text={`${t('JOBS.emptyComments')}`} /> : null}
 
         {Array.isArray(this.state.comments) ? (
           <FlatList
@@ -158,29 +150,25 @@ class CommentsScreen extends Component {
                   <Left>
                     <Body>
                       {comment.owner ? (
-                        <Text>{`${comment.owner.first_name} ${
-                          comment.owner.last_name
-                        }`}</Text>
+                        <Text>{`${comment.owner.first_name} ${comment.owner.last_name}`}</Text>
                       ) : null}
 
                       {comment.owner &&
                       Array.isArray(comment.owner.user_types) &&
                       comment.owner.user_types.length ? (
                           <Text>
-                            {comment.owner.user_types.map(
-                              (role, index, array) => {
-                                const isLast = index === array.length - 1;
+                            {comment.owner.user_types.map((role, index, array) => {
+                              const isLast = index === array.length - 1;
 
-                                return (
-                                  <Fragment key={role}>
-                                    <Text small style={styles.rolesText}>
-                                      {role}
-                                      {!isLast ? ', ' : ''}
-                                    </Text>
-                                  </Fragment>
-                                );
-                              },
-                            )}
+                              return (
+                                <Fragment key={role}>
+                                  <Text small style={styles.rolesText}>
+                                    {role}
+                                    {!isLast ? ', ' : ''}
+                                  </Text>
+                                </Fragment>
+                              );
+                            })}
                           </Text>
                         ) : null}
 
@@ -207,6 +195,7 @@ class CommentsScreen extends Component {
                     {Array.isArray(comment.file)
                       ? comment.file.map((file) => (
                         <Button
+                          title={'VIEW'}
                           bordered
                           iconRight
                           key={file.id}
@@ -234,13 +223,13 @@ class CommentsScreen extends Component {
 
         <Footer white>
           <FooterTab>
-            <Button onPress={this.selectImage} dark transparent>
+            <Button title={'SELECT IMAGE'} onPress={this.selectImage} dark transparent>
               <Icon active name="md-image" />
             </Button>
-            <Button onPress={this.openCamera} dark transparent>
+            <Button title={'OPEN CAMERA'} onPress={this.openCamera} dark transparent>
               <Icon active name="md-camera" />
             </Button>
-            <Button onPress={this.selectFile} dark transparent>
+            <Button title={'SELECT FILE'} onPress={this.selectFile} dark transparent>
               <Icon active name="md-attach" />
             </Button>
           </FooterTab>
@@ -261,10 +250,7 @@ class CommentsScreen extends Component {
         {this.state.selectedImage.uri ? (
           <View style={styles.imageView}>
             <TouchableOpacity onPress={this.deleteImage}>
-              <Thumbnail
-                style={styles.thumbnail}
-                source={this.state.selectedImage}
-              />
+              <Thumbnail style={styles.thumbnail} source={this.state.selectedImage} />
               <Icon name="md-close-circle" style={styles.iconClose} />
             </TouchableOpacity>
           </View>
@@ -272,13 +258,12 @@ class CommentsScreen extends Component {
         {this.state.selectedFile.uri ? (
           <View style={styles.fileView}>
             <Button
+              title={'CLOSE'}
               style={styles.fileButton}
               iconRight
               bordered
               onPress={this.deleteFile}>
-              <Text style={styles.fileText}>
-                {this.state.selectedFile.name}
-              </Text>
+              <Text style={styles.fileText}>{this.state.selectedFile.name}</Text>
               <Icon name="md-close-circle" />
             </Button>
           </View>
@@ -308,9 +293,7 @@ class CommentsScreen extends Component {
 
     try {
       const urlParams = this.state.nextUrl
-        ? this.state.nextUrl.split('/comments/')[
-          this.state.nextUrl.split('/comments/').length - 1
-        ]
+        ? this.state.nextUrl.split('/comments/')[this.state.nextUrl.split('/comments/').length - 1]
         : `?job=${this.state.jobId}`;
 
       this.setState({ isLoadingPage: true }, () => {
@@ -363,17 +346,11 @@ class CommentsScreen extends Component {
   };
 
   selectImage = () => {
-    ImagePicker.launchImageLibrary(
-      IMAGE_PICKER_OPTIONS,
-      this.handleImagePickerResponse,
-    );
+    ImagePicker.launchImageLibrary(IMAGE_PICKER_OPTIONS, this.handleImagePickerResponse);
   };
 
   openCamera = () => {
-    ImagePicker.launchCamera(
-      IMAGE_PICKER_OPTIONS,
-      this.handleImagePickerResponse,
-    );
+    ImagePicker.launchCamera(IMAGE_PICKER_OPTIONS, this.handleImagePickerResponse);
   };
 
   /**

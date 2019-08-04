@@ -27,10 +27,7 @@ class ForgotScreen extends Component {
       'ForgotPassword',
       this.forgotPasswordHandler,
     );
-    this.authStoreError = authStore.subscribe(
-      'AuthStoreError',
-      this.errorHandler,
-    );
+    this.authStoreError = authStore.subscribe('AuthStoreError', this.errorHandler);
   }
 
   componentWillUnmount() {
@@ -60,9 +57,7 @@ class ForgotScreen extends Component {
           <Image style={styles.viewBackground} source={BG_MOBILE_IMG} />
           <Image style={styles.viewLogo} source={LOGO_WHITE} />
           <Text style={styles.title}>{t('AUTH.forgotPassword')}</Text>
-          <Text style={styles.subTitleForgot}>
-            {t('AUTH.enterEmailForCode')}
-          </Text>
+          <Text style={styles.subTitleForgot}>{t('AUTH.enterEmailForCode')}</Text>
           <View style={{ width: '80%', marginTop: 25 }}>
             <Input
               style={styles.inputLogin}
@@ -79,10 +74,10 @@ class ForgotScreen extends Component {
               block
               primary
             />
-            <Button block transparent onPress={this.goToResetPassword}>
+            <Button title={'ALREADY'} block transparent onPress={this.goToResetPassword}>
               <Text style={styles.textBtn}>{t('AUTH.alreadyHaveCode')}</Text>
             </Button>
-            <Button block transparent onPress={this.goBack}>
+            <Button title={'BACK'} block transparent onPress={this.goBack}>
               <Text style={styles.textBtn}>{t('APP.goBack')}</Text>
             </Button>
           </View>

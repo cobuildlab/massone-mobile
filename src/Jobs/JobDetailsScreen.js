@@ -40,34 +40,13 @@ class JobDetailsScreen extends Component {
 
   componentDidMount() {
     this.getJobSubscription = jobStore.subscribe('GetJob', this.getJobHandler);
-    this.acceptJobSubscription = jobStore.subscribe(
-      'AcceptJob',
-      this.updateJobHandler,
-    );
-    this.pauseJobSubscription = jobStore.subscribe(
-      'PauseJob',
-      this.updateJobHandler,
-    );
-    this.startDriveSubscription = jobStore.subscribe(
-      'StartDrive',
-      this.updateJobHandler,
-    );
-    this.endDriveSubscription = jobStore.subscribe(
-      'EndDrive',
-      this.updateJobHandler,
-    );
-    this.startJobSubscription = jobStore.subscribe(
-      'StartJob',
-      this.updateJobHandler,
-    );
-    this.closeJobSubscription = jobStore.subscribe(
-      'CloseJob',
-      this.updateJobHandler,
-    );
-    this.editJobSubscription = jobStore.subscribe(
-      'EditJob',
-      this.updateJobHandler,
-    );
+    this.acceptJobSubscription = jobStore.subscribe('AcceptJob', this.updateJobHandler);
+    this.pauseJobSubscription = jobStore.subscribe('PauseJob', this.updateJobHandler);
+    this.startDriveSubscription = jobStore.subscribe('StartDrive', this.updateJobHandler);
+    this.endDriveSubscription = jobStore.subscribe('EndDrive', this.updateJobHandler);
+    this.startJobSubscription = jobStore.subscribe('StartJob', this.updateJobHandler);
+    this.closeJobSubscription = jobStore.subscribe('CloseJob', this.updateJobHandler);
+    this.editJobSubscription = jobStore.subscribe('EditJob', this.updateJobHandler);
     this.deleteJobSubscription = jobStore.subscribe('DeleteJob', () => {
       CustomToast(this.props.t('JOBS.jobDeleted'));
       this.props.navigation.goBack();
@@ -124,20 +103,14 @@ class JobDetailsScreen extends Component {
                 <Title>{t('JOBS.issue')}</Title>
                 <Text style={styles.textData}>{this.state.job.title}</Text>
                 <Title>{t('JOBS.description')}</Title>
-                <Text style={styles.textData}>
-                  {this.state.job.description}
-                </Text>
+                <Text style={styles.textData}>{this.state.job.description}</Text>
                 {this.state.job.location ? (
                   <>
                     <Title>{t('JOBS.customer')}</Title>
-                    <Text style={styles.textData}>
-                      {this.state.job.location.name}
-                    </Text>
+                    <Text style={styles.textData}>{this.state.job.location.name}</Text>
                     <Title>{t('JOBS.address')}</Title>
                     <Text style={styles.textData}>
-                      {`${this.state.job.location.address}, ${
-                        this.state.job.location.city
-                      }`}
+                      {`${this.state.job.location.address}, ${this.state.job.location.city}`}
                     </Text>
                   </>
                 ) : null}
@@ -165,9 +138,7 @@ class JobDetailsScreen extends Component {
                 {this.state.job.job_type ? (
                   <>
                     <Title>{t('JOBS.type')}</Title>
-                    <Text style={styles.textData}>
-                      {this.state.job.job_type.name}
-                    </Text>
+                    <Text style={styles.textData}>{this.state.job.job_type.name}</Text>
                   </>
                 ) : null}
                 <Title>{t('JOBS.status')}</Title>
@@ -203,6 +174,7 @@ class JobDetailsScreen extends Component {
                   {validateRoles(['Admin', 'Massone']) ? (
                     <Col>
                       <Button
+                        title={'EDIT'}
                         style={{ marginHorizontal: 10 }}
                         bordered
                         block
@@ -213,6 +185,7 @@ class JobDetailsScreen extends Component {
                   ) : null}
                   <Col>
                     <Button
+                      title={'HISTORY'}
                       style={{ marginHorizontal: 10 }}
                       bordered
                       block
@@ -223,6 +196,7 @@ class JobDetailsScreen extends Component {
                   {validateRoles(['Admin']) ? (
                     <Col>
                       <Button
+                        title={'DELETE'}
                         style={{ marginHorizontal: 10 }}
                         bordered
                         block
@@ -243,32 +217,32 @@ class JobDetailsScreen extends Component {
             <Footer>
               <FooterTab>
                 {this.state.job.status === 'Dispatch' ? (
-                  <Button onPress={this.acceptJob} primary transparent>
+                  <Button title={'Accept'} onPress={this.acceptJob} primary transparent>
                     <Text>{t('JOBS.acceptJob')}</Text>
                   </Button>
                 ) : null}
                 {this.state.job.status === 'Accept' ? (
-                  <Button onPress={this.startDrive} primary transparent>
+                  <Button title={'Start Drive'} onPress={this.startDrive} primary transparent>
                     <Text>{t('JOBS.startDrive')}</Text>
                   </Button>
                 ) : null}
                 {this.state.job.status === 'Start Drive Time' ? (
-                  <Button onPress={this.endDrive} primary transparent>
+                  <Button title={'End Drive'} onPress={this.endDrive} primary transparent>
                     <Text>{t('JOBS.endDrive')}</Text>
                   </Button>
                 ) : null}
                 {this.state.job.status === 'End Drive Time' ? (
-                  <Button onPress={this.startJob} primary transparent>
+                  <Button title={'Start Job'} onPress={this.startJob} primary transparent>
                     <Text>{t('JOBS.startJob')}</Text>
                   </Button>
                 ) : null}
                 {this.state.job.status === 'Start' ? (
-                  <Button onPress={this.goToPauseJob} danger transparent>
+                  <Button title={'Pause Job'} onPress={this.goToPauseJob} danger transparent>
                     <Text>{t('JOBS.pauseJob')}</Text>
                   </Button>
                 ) : null}
                 {this.state.job.status === 'Start' ? (
-                  <Button onPress={this.goToCloseJob} primary transparent>
+                  <Button title={'Close Job'} onPress={this.goToCloseJob} primary transparent>
                     <Text>{t('JOBS.closeJob')}</Text>
                   </Button>
                 ) : null}

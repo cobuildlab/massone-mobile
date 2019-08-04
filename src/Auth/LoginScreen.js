@@ -1,15 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text, Image, TouchableOpacity } from 'react-native';
-import {
-  Content,
-  ListItem,
-  Body,
-  CheckBox,
-  Left,
-  Right,
-  Button,
-  Input,
-} from 'native-base';
+import { Content, ListItem, Body, CheckBox, Left, Right, Button, Input } from 'native-base';
 import styles from './style';
 import ButtomComponet from '../shared/componets/ButtomBlue';
 import * as authActions from './actions';
@@ -37,10 +28,7 @@ class LoginScreen extends Component {
 
   componentDidMount() {
     this.loginSubscription = authStore.subscribe('Login', this.loginHandler);
-    this.authStoreError = authStore.subscribe(
-      'AuthStoreError',
-      this.errorHandler,
-    );
+    this.authStoreError = authStore.subscribe('AuthStoreError', this.errorHandler);
   }
 
   componentWillUnmount() {
@@ -111,20 +99,15 @@ class LoginScreen extends Component {
                 </TouchableOpacity>
               </Body>
               <Right style={{ borderBottomWidth: 0 }}>
-                <Button transparent light onPress={this.forgot}>
+                <Button title={'FORGOT'} transparent light onPress={this.forgot}>
                   <Text style={styles.textBtn}>{t('AUTH.forgotPassword')}</Text>
                 </Button>
               </Right>
             </ListItem>
-            <ButtomComponet
-              text={t('AUTH.login')}
-              onPress={this.login}
-              block
-              primary
-            />
+            <ButtomComponet text={t('AUTH.login')} onPress={this.login} block primary />
           </View>
           <View>
-            <Button block transparent onPress={this.goBack}>
+            <Button title={'TERMS'} block transparent onPress={this.goBack}>
               <Text style={styles.textBtn}>{t('AUTH.termsAndPrivacy')}</Text>
             </Button>
           </View>

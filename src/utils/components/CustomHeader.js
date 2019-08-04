@@ -17,7 +17,7 @@ class CustomHeader extends Component {
       <Header>
         {leftButton === 'goBack' || leftButton === 'openDrawer' ? (
           <Left>
-            <Button transparent onPress={this.leftButtonHandler}>
+            <Button title={'Left Action'} transparent onPress={this.leftButtonHandler}>
               <Icon
                 name={
                   leftButton === 'goBack'
@@ -36,7 +36,7 @@ class CustomHeader extends Component {
         </Body>
         <Right>
           {rightButton ? (
-            <Button transparent onPress={rightButton.handler}>
+            <Button title={'Right Button'} transparent onPress={rightButton.handler}>
               <Icon name={rightButton.icon} style={{ color: BLUE_MAIN }} />
             </Button>
           ) : null}
@@ -46,6 +46,7 @@ class CustomHeader extends Component {
   }
 
   leftButtonHandler = () => {
+    console.log(`DEBUG:`, this.props);
     const action = this.props.leftButton;
     if (action !== 'goBack' && action !== 'openDrawer') return;
     this.props.navigation[action]();

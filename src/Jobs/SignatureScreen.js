@@ -1,12 +1,5 @@
 import React, { Component } from 'react';
-import {
-  Content,
-  Container,
-  Button,
-  Text,
-  Footer,
-  FooterTab,
-} from 'native-base';
+import { Content, Container, Button, Text, Footer, FooterTab } from 'native-base';
 import { CustomHeader } from '../utils/components';
 import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
@@ -51,12 +44,12 @@ class SignatureScreen extends Component {
 
         <Footer>
           <FooterTab>
-            <Button onPress={this.resetSign} danger transparent>
+            <Button title={'RESET'} onPress={this.resetSign} danger transparent>
               <Text>{t('JOBS.resetSignature')}</Text>
             </Button>
           </FooterTab>
           <FooterTab>
-            <Button onPress={this.saveSign} primary transparent>
+            <Button title={'SAVE'} onPress={this.saveSign} primary transparent>
               <Text>{t('JOBS.saveSignature')}</Text>
             </Button>
           </FooterTab>

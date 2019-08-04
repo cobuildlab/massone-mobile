@@ -29,10 +29,7 @@ class RecoverScreen extends Component {
       'ResetPassword',
       this.resetPasswordHandler,
     );
-    this.authStoreError = authStore.subscribe(
-      'AuthStoreError',
-      this.errorHandler,
-    );
+    this.authStoreError = authStore.subscribe('AuthStoreError', this.errorHandler);
   }
 
   componentWillUnmount() {
@@ -88,13 +85,8 @@ class RecoverScreen extends Component {
               onChangeText={(text) => this.setState({ repeatPassword: text })}
               secureTextEntry={true}
             />
-            <ButtomComponet
-              text={t('AUTH.recover')}
-              onPress={this.resetPassword}
-              block
-              primary
-            />
-            <Button block transparent onPress={this.goBack}>
+            <ButtomComponet text={t('AUTH.recover')} onPress={this.resetPassword} block primary />
+            <Button title={'BACK'} block transparent onPress={this.goBack}>
               <Text style={styles.textBtn}>{t('APP.goBack')}</Text>
             </Button>
           </View>
@@ -109,11 +101,7 @@ class RecoverScreen extends Component {
 
   resetPassword = () => {
     this.setState({ isLoading: true }, () => {
-      authActions.resetPassword(
-        this.state.code,
-        this.state.password,
-        this.state.repeatPassword,
-      );
+      authActions.resetPassword(this.state.code, this.state.password, this.state.repeatPassword);
     });
   };
 }

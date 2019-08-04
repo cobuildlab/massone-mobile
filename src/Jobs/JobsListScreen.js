@@ -8,12 +8,7 @@ import * as jobActions from './actions';
 import * as authActions from '../Auth/actions';
 import * as fcmActions from './fcmActions';
 import styles from './JobsListStyle';
-import {
-  CustomHeader,
-  CustomToast,
-  Loading,
-  CenteredText,
-} from '../utils/components';
+import { CustomHeader, CustomToast, Loading, CenteredText } from '../utils/components';
 import { BLUE_MAIN } from '../constants/colorPalette';
 import { LOG, WARN, sortByDate } from '../utils';
 import moment from 'moment';
@@ -157,32 +152,14 @@ class JobsListScreen extends Component {
 
   componentDidMount() {
     this.logoutSubscription = authStore.subscribe('Logout', this.logoutHandler);
-    this.getJobsSubscription = jobStore.subscribe(
-      'GetJobs',
-      this.getJobsHandler,
-    );
-    this.acceptJobSubscription = jobStore.subscribe(
-      'AcceptJob',
-      this.acceptJobHandler,
-    );
+    this.getJobsSubscription = jobStore.subscribe('GetJobs', this.getJobsHandler);
+    this.acceptJobSubscription = jobStore.subscribe('AcceptJob', this.acceptJobHandler);
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
-    this.updateTokenSubscription = fcmStore.subscribe(
-      'UpdateFcmToken',
-      this.updateFcmTokenHandler,
-    );
-    this.updateTokenSubscription = fcmStore.subscribe(
-      'AddFcmToken',
-      this.updateFcmTokenHandler,
-    );
-    this.createJobSubscription = jobStore.subscribe(
-      'CreateJob',
-      this.refreshData,
-    );
-    this.deleteJobSubscription = jobStore.subscribe(
-      'DeleteJob',
-      this.refreshData,
-    );
+    this.updateTokenSubscription = fcmStore.subscribe('UpdateFcmToken', this.updateFcmTokenHandler);
+    this.updateTokenSubscription = fcmStore.subscribe('AddFcmToken', this.updateFcmTokenHandler);
+    this.createJobSubscription = jobStore.subscribe('CreateJob', this.refreshData);
+    this.deleteJobSubscription = jobStore.subscribe('DeleteJob', this.refreshData);
     this.editJobSubscription = jobStore.subscribe('EditJob', this.refreshData);
     this.fcmStoreError = fcmStore.subscribe('FcmStoreError', this.errorHandler);
 
@@ -195,9 +172,7 @@ class JobsListScreen extends Component {
       .getInitialNotification()
       .then(this.onNotificationOpenedHandler);
 
-    this.onTokenRefreshListener = firebase
-      .messaging()
-      .onTokenRefresh(this.onTokenRefreshHandler);
+    this.onTokenRefreshListener = firebase.messaging().onTokenRefresh(this.onTokenRefreshHandler);
 
     this.loadData();
     this.hasFcmMessagePermission();
@@ -274,9 +249,7 @@ class JobsListScreen extends Component {
           rightButton={{ icon: 'md-add', handler: this.goToCreateJob }}
         />
 
-        {this.state.emptyJobs ? (
-          <CenteredText text={`${t('JOBS.emptyJobs')}`} />
-        ) : null}
+        {this.state.emptyJobs ? <CenteredText text={`${t('JOBS.emptyJobs')}`} /> : null}
 
         {Array.isArray(this.state.jobs) ? (
           <FlatList
@@ -299,29 +272,21 @@ class JobsListScreen extends Component {
                 ? `${item.employee.first_name} ${item.employee.last_name}`
                 : t('JOBS.jobNotAssigned');
               const type =
-                item.job_type && item.job_type.name
-                  ? item.job_type.name
-                  : t('JOBS.notAssigned');
+                item.job_type && item.job_type.name ? item.job_type.name : t('JOBS.notAssigned');
               return (
                 <SwipeRow
                   ref={(c) => {
                     this.rowRefs[item.id] = c;
                   }}
                   onRowOpen={() => {
-                    if (
-                      this.selectedRow &&
-                      this.selectedRow !== this.rowRefs[item.id]
-                    ) {
+                    if (this.selectedRow && this.selectedRow !== this.rowRefs[item.id]) {
                       this.selectedRow._root.closeRow();
                     }
                     this.selectedRow = this.rowRefs[item.id];
                   }}
                   rightOpenValue={-75}
                   right={
-                    <Button
-                      title={''}
-                      onPress={() => this.acceptJob(item)}
-                      success>
+                    <Button title={'CHECK'} onPress={() => this.acceptJob(item)} success>
                       <Icon active type="MaterialIcons" name="check" />
                     </Button>
                   }
@@ -329,9 +294,7 @@ class JobsListScreen extends Component {
                     <TouchableOpacity
                       onPress={() => this.goToJobDetails(item.id)}
                       style={styles.listItem}>
-                      <Text style={[styles.issueName, styles.textLeft]}>
-                        {`${item.title} `}
-                      </Text>
+                      <Text style={[styles.issueName, styles.textLeft]}>{`${item.title} `}</Text>
                       <Text style={styles.textLeft}>{created}</Text>
                       <Text style={styles.textLeft}>
                         <Text style={styles.fieldworkerName}>{employee}</Text>
