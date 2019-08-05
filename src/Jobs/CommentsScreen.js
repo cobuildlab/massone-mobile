@@ -1,9 +1,8 @@
 import React, { Component, Fragment } from 'react';
-import { TouchableOpacity, Image, FlatList } from 'react-native';
+import { TouchableOpacity, Image, FlatList, KeyboardAvoidingView } from 'react-native';
 import {
   Input,
   Spinner,
-  Container,
   Icon,
   Item,
   Card,
@@ -12,8 +11,6 @@ import {
   Body,
   Right,
   Text,
-  Footer,
-  FooterTab,
   Button,
   Thumbnail,
   View,
@@ -124,17 +121,16 @@ class CommentsScreen extends Component {
     const { t } = this.props;
 
     return (
-      <Container>
-        {this.state.isLoading ? <Loading /> : null}
-
+      <KeyboardAvoidingView behavior={'padding'} style={{ flex: 1 }}>
         <CustomHeader leftButton={'goBack'} title={t('JOBS.jobComments')} />
 
-        {this.state.emptyComments ? <CenteredText text={`${t('JOBS.emptyComments')}`} /> : null}
+        {this.state.isLoading ? <Loading /> : null}
 
+        {this.state.emptyComments ? <CenteredText text={`${t('JOBS.emptyComments')}`} /> : null}
         {Array.isArray(this.state.comments) ? (
           <FlatList
             ref={(flatList) => (this.flatList = flatList)}
-            style={styles.flatList}
+            style={[styles.flatList]}
             onRefresh={this.refreshData}
             refreshing={this.state.isRefreshing}
             onEndReached={this.getNextPage}
@@ -220,55 +216,52 @@ class CommentsScreen extends Component {
             )}
           />
         ) : null}
-
-        <Footer white>
-          <FooterTab>
+        <View>
+          <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
             <Button title={'SELECT IMAGE'} onPress={this.selectImage} dark transparent>
               <Icon active name="md-image" />
             </Button>
             <Button title={'OPEN CAMERA'} onPress={this.openCamera} dark transparent>
               <Icon active name="md-camera" />
             </Button>
-            <Button title={'SELECT FILE'} onPress={this.selectFile} dark transparent>
-              <Icon active name="md-attach" />
-            </Button>
-          </FooterTab>
-        </Footer>
-        <Item style={styles.item}>
-          <Input
-            ref={(input) => (this.input = input)}
-            multiline
-            returnKeyType={'next'}
-            value={this.state.message}
-            placeholder={t('JOBS.typeMessage')}
-            onChangeText={(text) => this.setState({ message: text })}
-          />
-          <TouchableOpacity onPress={this.addComment}>
-            <Icon active name="md-send" style={styles.iconBlue} />
-          </TouchableOpacity>
-        </Item>
-        {this.state.selectedImage.uri ? (
-          <View style={styles.imageView}>
-            <TouchableOpacity onPress={this.deleteImage}>
-              <Thumbnail style={styles.thumbnail} source={this.state.selectedImage} />
-              <Icon name="md-close-circle" style={styles.iconClose} />
+          </View>
+
+          <Item style={styles.item}>
+            <Input
+              ref={(input) => (this.input = input)}
+              multiline
+              returnKeyType={'next'}
+              value={this.state.message}
+              placeholder={t('JOBS.typeMessage')}
+              onChangeText={(text) => this.setState({ message: text })}
+            />
+            <TouchableOpacity onPress={this.addComment}>
+              <Icon active name="md-send" style={styles.iconBlue} />
             </TouchableOpacity>
-          </View>
-        ) : null}
-        {this.state.selectedFile.uri ? (
-          <View style={styles.fileView}>
-            <Button
-              title={'CLOSE'}
-              style={styles.fileButton}
-              iconRight
-              bordered
-              onPress={this.deleteFile}>
-              <Text style={styles.fileText}>{this.state.selectedFile.name}</Text>
-              <Icon name="md-close-circle" />
-            </Button>
-          </View>
-        ) : null}
-      </Container>
+          </Item>
+          {this.state.selectedImage.uri ? (
+            <View style={styles.imageView}>
+              <TouchableOpacity onPress={this.deleteImage}>
+                <Thumbnail style={styles.thumbnail} source={this.state.selectedImage} />
+                <Icon name="md-close-circle" style={styles.iconClose} />
+              </TouchableOpacity>
+            </View>
+          ) : null}
+          {this.state.selectedFile.uri ? (
+            <View style={styles.fileView}>
+              <Button
+                title={'CLOSE'}
+                style={styles.fileButton}
+                iconRight
+                bordered
+                onPress={this.deleteFile}>
+                <Text style={styles.fileText}>{this.state.selectedFile.name}</Text>
+                <Icon name="md-close-circle" />
+              </Button>
+            </View>
+          ) : null}
+        </View>
+      </KeyboardAvoidingView>
     );
   }
 
