@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, FlatList, Alert } from 'react-native';
-import { Button, Icon, Text, SwipeRow, Container, Spinner } from 'native-base';
+import { Text, ListItem, Container, Spinner } from 'native-base';
 import jobStore from './jobStore';
 import authStore from '../Auth/authStore';
 import fcmStore from './fcmStore';
@@ -274,37 +274,20 @@ class JobsListScreen extends Component {
               const type =
                 item.job_type && item.job_type.name ? item.job_type.name : t('JOBS.notAssigned');
               return (
-                <SwipeRow
-                  ref={(c) => {
-                    this.rowRefs[item.id] = c;
-                  }}
-                  onRowOpen={() => {
-                    if (this.selectedRow && this.selectedRow !== this.rowRefs[item.id]) {
-                      this.selectedRow._root.closeRow();
-                    }
-                    this.selectedRow = this.rowRefs[item.id];
-                  }}
-                  rightOpenValue={-75}
-                  right={
-                    <Button title={'CHECK'} onPress={() => this.acceptJob(item)} success>
-                      <Icon active type="MaterialIcons" name="check" />
-                    </Button>
-                  }
-                  body={
-                    <TouchableOpacity
-                      onPress={() => this.goToJobDetails(item.id)}
-                      style={styles.listItem}>
-                      <Text style={[styles.issueName, styles.textLeft]}>{`${item.title} `}</Text>
-                      <Text style={styles.textLeft}>{created}</Text>
-                      <Text style={styles.textLeft}>
-                        <Text style={styles.fieldworkerName}>{employee}</Text>
-                      </Text>
-                      <Text style={styles.textLeft}>
-                        <Text style={styles.textLeft}>{type}</Text>
-                      </Text>
-                    </TouchableOpacity>
-                  }
-                />
+                <ListItem>
+                  <TouchableOpacity
+                    onPress={() => this.goToJobDetails(item.id)}
+                    style={styles.listItem}>
+                    <Text style={[styles.issueName, styles.textLeft]}>{`${item.title} `}</Text>
+                    <Text style={styles.textLeft}>{created}</Text>
+                    <Text style={styles.textLeft}>
+                      <Text style={styles.fieldworkerName}>{employee}</Text>
+                    </Text>
+                    <Text style={styles.textLeft}>
+                      <Text style={styles.textLeft}>{type}</Text>
+                    </Text>
+                  </TouchableOpacity>
+                </ListItem>
               );
             }}
           />

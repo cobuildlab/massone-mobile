@@ -25,6 +25,7 @@ import ImagePicker from 'react-native-image-picker';
 import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
 import { BLUE_MAIN } from '../constants/colorPalette';
 import { LOG, WARN, sortByDate } from '../utils';
+import { getBottomSpace } from 'react-native-iphone-x-helper';
 
 const IMAGE_PICKER_OPTIONS = {
   mediaType: 'photo',
@@ -121,7 +122,7 @@ class CommentsScreen extends Component {
     const { t } = this.props;
 
     return (
-      <KeyboardAvoidingView behavior={'padding'} style={{ flex: 1 }}>
+      <KeyboardAvoidingView behavior={'padding'} style={[{ flex: 1 }]}>
         <CustomHeader leftButton={'goBack'} title={t('JOBS.jobComments')} />
 
         {this.state.isLoading ? <Loading /> : null}
@@ -226,7 +227,7 @@ class CommentsScreen extends Component {
             </Button>
           </View>
 
-          <Item style={styles.item}>
+          <Item style={[styles.item, { marginBottom: getBottomSpace() }]}>
             <Input
               ref={(input) => (this.input = input)}
               multiline

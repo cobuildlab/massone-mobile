@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Header, Title, Button, Left, Right, Body, Icon } from 'native-base';
 import { BLUE_MAIN } from '../../constants/colorPalette';
 import { withNavigation } from 'react-navigation';
+import { ifIphoneX } from 'react-native-iphone-x-helper';
 
 /**
  * Use this header and pass the props to select your leftButton, title and
@@ -14,7 +15,7 @@ class CustomHeader extends Component {
     const { leftButton, title, rightButton } = this.props;
 
     return (
-      <Header>
+      <Header style={ifIphoneX({ paddingTop: 40, marginTop: 0, height: 85 }, {})}>
         {leftButton === 'goBack' || leftButton === 'openDrawer' ? (
           <Left>
             <Button title={'Left Action'} transparent onPress={this.leftButtonHandler}>

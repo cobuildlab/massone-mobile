@@ -377,7 +377,6 @@ class JobDetailsScreen extends Component {
 
   goToCloseJob = () => {
     if (!this.state.job || !this.state.job.id) return;
-
     this.props.navigation.navigate('CloseJob', { job: this.state.job });
   };
 

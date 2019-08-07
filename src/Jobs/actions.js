@@ -1,16 +1,6 @@
 import Flux from 'flux-state';
-import {
-  getData,
-  postData,
-  postFormData,
-  putData,
-  deleteData,
-} from '../utils/fetch';
-import {
-  commentJobValidator,
-  pauseJobValidator,
-  closeJobValidator,
-} from './validators';
+import { getData, postData, postFormData, putData, deleteData } from '../utils/fetch';
+import { commentJobValidator, pauseJobValidator, closeJobValidator } from './validators';
 import { createJobValidator } from './edit/validators';
 import moment from 'moment';
 
@@ -424,7 +414,7 @@ const selectEmployee = (employee) => {
  * @param  {number} jobId
  */
 const getJobTimes = (jobId) => {
-  getData(`/job-time/${jobId}`)
+  getData(`/job-time/${jobId}/`)
     .then((data) => {
       Flux.dispatchEvent('GetJobTimes', data);
     })
