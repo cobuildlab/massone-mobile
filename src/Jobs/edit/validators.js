@@ -44,14 +44,14 @@ export const createJobValidator = (job) => {
   }
 
   if (!utils.isValidInteger(job.location)) {
-    throw new Error(i18n.t('JOB_EDIT.invalidLocation'));
+    throw new Error(i18n.t('JOB_EDIT.invalidCustomer'));
   }
 
   if (job.employee !== null) {
     if (!utils.isValidInteger(job.employee)) {
       throw new Error(i18n.t('JOB_EDIT.invalidEmployee'));
     }
-  }
+  } else throw new Error(i18n.t('JOB_EDIT.invalidEmployee'));
 
   if (typeof job.alert_employee !== 'boolean') {
     throw new Error(i18n.t('JOB_EDIT.invalidAlertEmployee'));

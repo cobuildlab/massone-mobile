@@ -4,6 +4,8 @@ import {
   Container,
   Button,
   Text,
+  H3,
+  H2,
   Item,
   Input,
   ListItem,
@@ -62,7 +64,6 @@ class SearchCustomerScreen extends Component {
     return (
       <Container>
         <CustomHeader leftButton={'goBack'} title={t('JOBS.searchCustomer')} />
-
         <Content>
           <Form>
             <Item stackedLabel>
@@ -74,12 +75,12 @@ class SearchCustomerScreen extends Component {
             </Item>
 
             {this.state.isLoading ? <Spinner color={BLUE_MAIN} /> : null}
-
             {Array.isArray(this.state.locations) && this.state.locations.length
               ? this.state.locations.map((location) => (
                 <ListItem key={location.id} button onPress={() => this.selectLocation(location)}>
                   <Body>
-                    <Text>{location.name}</Text>
+                    <H3>{location.name}</H3>
+                    <Text>{`${location.address},${location.city}, ${location.state}`}</Text>
                   </Body>
                   <Right>
                     <Button

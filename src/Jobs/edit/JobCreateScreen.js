@@ -25,7 +25,7 @@ import moment from 'moment';
 // import { LOG } from '../../utils';
 import { withNavigation } from 'react-navigation';
 import { JOB_STATUS_LIST, JOB_CLOSED, JOB_DISPATCH, JOB_OPEN } from './jobStatus';
-import { JOB_PRIORITY_LIST } from './jobPriority';
+import { JOB_MEDIUM, JOB_PRIORITY_LIST } from './jobPriority';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 
 class JobCreateScreen extends Component {
@@ -45,7 +45,7 @@ class JobCreateScreen extends Component {
         date_start: null,
         date_finish: null,
         job_type: null,
-        priority: null,
+        priority: JOB_MEDIUM,
         status: JOB_OPEN,
         email_customer: true,
         alert_employee: true,
@@ -69,7 +69,13 @@ class JobCreateScreen extends Component {
       });
     });
     this.getJobTypesSubscription = jobStore.subscribe('GetJobTypes', (jobTypeList) => {
-      this.setState({ jobTypeList });
+      const { job } = this.state;
+      if (job.job_type === null) {
+        job.job_type = jobTypeList[0].id;
+        this.setState({ jobTypeList, job });
+      } else {
+        this.setState({ jobTypeList });
+      }
     });
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
     this.getJobTypes();

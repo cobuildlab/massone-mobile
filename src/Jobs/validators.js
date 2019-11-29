@@ -1,12 +1,7 @@
 import { isValidString, isValidNumber, isValidInteger } from '../utils';
 import { i18n } from '../utils/i18n';
 
-const validFileTypes = [
-  'image/jpg',
-  'image/jpeg',
-  'image/png',
-  'application/pdf',
-];
+const validFileTypes = ['image/jpg', 'image/jpeg', 'image/png', 'application/pdf'];
 
 const pauseJobValidator = (jobId, message, reasonId) => {
   if (!isValidNumber(jobId)) {
@@ -124,9 +119,9 @@ const closeJobValidator = (
     throw new Error(i18n.t('JOBS.emptyLaborHours'));
   }
 
-  if (!isValidInteger(laborOvertime, true)) {
-    throw new Error(i18n.t('JOBS.emptyLabourOvertime'));
-  }
+  // if (!isValidInteger(laborOvertime, true)) {
+  //   throw new Error(i18n.t('JOBS.emptyLabourOvertime'));
+  // }
 
   if (!isValidString(materials, false, true)) {
     throw new Error(i18n.t('JOBS.invalidMaterials'));
@@ -136,13 +131,13 @@ const closeJobValidator = (
     throw new Error(i18n.t('JOBS.invalidEquipmentUsed'));
   }
 
-  if (!isValidString(refrigerantInventory, false, true)) {
-    throw new Error(i18n.t('JOBS.invalidRefrigerantInventory'));
-  }
+  // if (!isValidString(refrigerantInventory, false, true)) {
+  //   throw new Error(i18n.t('JOBS.invalidRefrigerantInventory'));
+  // }
 
-  if (!isValidString(signature)) {
-    throw new Error(i18n.t('JOBS.invalidSignature'));
-  }
+  // if (!isValidString(signature)) {
+  //   throw new Error(i18n.t('JOBS.invalidSignature'));
+  // }
 };
 
 export { commentJobValidator, pauseJobValidator, closeJobValidator };

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { TouchableOpacity, FlatList, Alert } from 'react-native';
-import { Text, ListItem, Container, Spinner } from 'native-base';
+import { Text, ListItem, Container, Spinner, Label } from 'native-base';
 import jobStore from './jobStore';
 import authStore from '../Auth/authStore';
 import fcmStore from './fcmStore';
@@ -14,6 +14,8 @@ import { LOG, WARN, sortByDate } from '../utils';
 import moment from 'moment';
 import { withNamespaces } from 'react-i18next';
 import firebase from 'react-native-firebase';
+import { GreenNormalText } from '../shared/componets/text/GreenNormalText';
+import { SubTitle } from '../shared/componets/text/SubTitle';
 
 class JobsListScreen extends Component {
   static navigationOptions = {
@@ -263,6 +265,7 @@ class JobsListScreen extends Component {
               this.state.isLoadingPage ? <Spinner color={BLUE_MAIN} /> : null
             }
             renderItem={({ item }) => {
+              const location = item.location || {};
               const created = item.created
                 ? moment(item.created)
                   .tz(moment.tz.guess())
@@ -281,10 +284,18 @@ class JobsListScreen extends Component {
                     <Text style={[styles.issueName, styles.textLeft]}>{`${item.title} `}</Text>
                     <Text style={styles.textLeft}>{created}</Text>
                     <Text style={styles.textLeft}>
+                      <SubTitle>Employee: {` `}</SubTitle>
                       <Text style={styles.fieldworkerName}>{employee}</Text>
                     </Text>
                     <Text style={styles.textLeft}>
                       <Text style={styles.textLeft}>{type}</Text>
+                    </Text>
+
+                    <Text style={styles.textLeft}>
+                      <SubTitle>Customer Information: {` `}</SubTitle>
+                      <Text style={styles.fieldworkerName}>{`${location.name}, ${
+                        location.address
+                      }, ${location.city}, ${location.state}`}</Text>
                     </Text>
                   </TouchableOpacity>
                 </ListItem>

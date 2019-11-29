@@ -33,7 +33,7 @@ class CustomHeader extends Component {
           </Left>
         ) : null}
         <Body>
-          <Title>{title}</Title>
+          <Title style={{ width: 200 }}>{title}</Title>
         </Body>
         <Right>
           {rightButton ? (

@@ -37,6 +37,7 @@ export const editJob = (jobId, data) => {
  * @param  {Job} data the job
  */
 export const createJob = (data) => {
+  console.log(`createJob:data:`, data);
   try {
     createJobValidator(data);
   } catch (e) {
@@ -44,11 +45,14 @@ export const createJob = (data) => {
   }
 
   if (data.date_start !== null) {
-    data.date_start = moment(data.date_start).format('YYYY-MM-DD HH:mm');
+    const start_moment = moment.utc(data.date_start);
+    data.date_start = start_moment.format();
   }
   if (data.date_finish !== null) {
-    data.date_finish = moment(data.date_finish).format('YYYY-MM-DD HH:mm');
+    const finish_moment = moment.utc(data.date_finish);
+    data.date_finish = finish_moment.format();
   }
+  console.log(`createJob:normalized_data:`, data);
 
   postData(`/jobs/`, data)
     .then((data) => {

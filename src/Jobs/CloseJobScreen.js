@@ -222,7 +222,7 @@ class CloseJobScreen extends Component {
               <Label>{t('JOBS.laborHoursLabel')}</Label>
               <Input
                 value={this.state.laborHours}
-                keyboardType={'numeric'}
+                // keyboardType={'numeric'}
                 placeholder={t('JOBS.laborHoursPlaceholder')}
                 onChangeText={(laborHours) => this.setState({ laborHours })}
               />
@@ -231,7 +231,7 @@ class CloseJobScreen extends Component {
               <Label>{t('JOBS.laborOvertime')}</Label>
               <Input
                 value={this.state.laborOvertime}
-                keyboardType={'numeric'}
+                // keyboardType={'numeric'}
                 placeholder={t('JOBS.laborOvertimePlaceholder')}
                 onChangeText={(laborOvertime) => this.setState({ laborOvertime })}
               />

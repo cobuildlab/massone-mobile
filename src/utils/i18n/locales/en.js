@@ -34,8 +34,7 @@ export default {
     enterYourUsername: 'Enter your username',
     enterYourEmail: 'Enter your email',
     passwordNotMatch: 'Passwords do not match',
-    youWillreceiveCode:
-      'You will receive an email with a code to reset your password',
+    youWillreceiveCode: 'You will receive an email with a code to reset your password',
     passwordChanged: 'Password changed!',
     code: 'Code',
     wantToLogout: 'Logout?',
@@ -59,6 +58,7 @@ export default {
     emailCustomer: 'Email customer',
     alertEmployee: 'Alert employee',
     invalidLocation: 'Invalid location',
+    invalidCustomer: 'Invalid Customer',
     invalidJobType: 'Invalid job type',
     emptyIssue: 'Type the issue',
     emptyDescription: 'Type the description',

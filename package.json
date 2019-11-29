@@ -18,7 +18,7 @@
     "pure-logger": "0.0.1",
     "react": "16.6.1",
     "react-i18next": "^8.3.8",
-    "react-native": "0.57.5",
+    "react-native": "0.57.8",
     "react-native-document-picker": "^2.2.0",
     "react-native-dotenv": "^0.2.0",
     "react-native-firebase": "^5.2.3",
