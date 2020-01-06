@@ -333,20 +333,24 @@ const closeJob = (
     return Flux.dispatchEvent('JobStoreError', err);
   }
 
-  postData(`/service-order/`, {
+  const payload = {
     job: jobId,
     equipment,
     completion_notes: completionNotes,
     work_completed: workCompleted,
     work_performed: workPerformed,
-    parts,
     labor_hours: laborHours,
     labor_overtime: laborOvertime,
     materials,
     equipment_used: equipmentUsed,
     refrigerant_inventory: refrigerantInventory,
-    signature: signature,
-  })
+  };
+
+  if (parts.length > 0) payload.parts = parts;
+
+  if (signature !== '') payload.signature = signature;
+
+  postData(`/service-order/`, payload)
     .then((data) => {
       Flux.dispatchEvent('CloseJob', data);
     })
