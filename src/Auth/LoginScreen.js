@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text, Image, TouchableOpacity } from 'react-native';
+import { View, Text, Image, TouchableOpacity, Linking } from 'react-native';
 import { Content, ListItem, Body, CheckBox, Left, Right, Button, Input } from 'native-base';
 import styles from './style';
 import ButtomComponet from '../shared/componets/ButtomBlue';
@@ -107,7 +107,7 @@ class LoginScreen extends Component {
             <ButtomComponet text={t('AUTH.login')} onPress={this.login} block primary />
           </View>
           <View>
-            <Button title={'TERMS'} block transparent onPress={this.goBack}>
+            <Button title={'TERMS'} block transparent onPress={this.goToTermsAndConditions}>
               <Text style={styles.textBtn}>{t('AUTH.termsAndPrivacy')}</Text>
             </Button>
           </View>
@@ -115,6 +115,9 @@ class LoginScreen extends Component {
       </Content>
     );
   }
+
+  goToTermsAndConditions = () =>
+    Linking.openURL('https://www.massonemechanical.com/privacy-policy/');
 
   goBack = () => {
     this.props.navigation.goBack();
