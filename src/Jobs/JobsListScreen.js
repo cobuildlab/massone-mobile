@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { TouchableOpacity, FlatList, Alert } from 'react-native';
-import { Text, ListItem, Container, Spinner, Label } from 'native-base';
+import { TouchableOpacity, FlatList, Alert, View } from 'react-native';
+import { Text, Container, Spinner, Icon, Card, Left, Right } from 'native-base';
 import jobStore from './jobStore';
 import authStore from '../Auth/authStore';
 import fcmStore from './fcmStore';
@@ -14,8 +14,6 @@ import { LOG, WARN, sortByDate } from '../utils';
 import moment from 'moment';
 import { withNamespaces } from 'react-i18next';
 import firebase from 'react-native-firebase';
-import { GreenNormalText } from '../shared/componets/text/GreenNormalText';
-import { SubTitle } from '../shared/componets/text/SubTitle';
 
 class JobsListScreen extends Component {
   static navigationOptions = {
@@ -238,8 +236,83 @@ class JobsListScreen extends Component {
     CustomToast(err, 'danger');
   };
 
+  _renderItem = ({ item }) => {
+    const { t } = this.props;
+    const location = item.location || {};
+    const created = item.created
+      ? moment(item.created)
+        .tz(moment.tz.guess())
+        .format('LLLL')
+      : t('JOBS.notProvided');
+    const employee = item.employee
+      ? `${item.employee.first_name} ${item.employee.last_name}`
+      : t('JOBS.jobNotAssigned');
+    const type = item.job_type && item.job_type.name ? item.job_type.name : t('JOBS.notAssigned');
+    return (
+      <Card>
+        <TouchableOpacity onPress={() => this.goToJobDetails(item.id)} style={styles.listItem}>
+          <View
+            style={[
+              styles.containerTitle,
+              {
+                flexDirection: item.title.length < 18 ? 'row' : 'column',
+              },
+            ]}>
+            <Text style={[styles.issueName, styles.textTitleJob]}>
+              {`${item.title.toUpperCase()} `}
+            </Text>
+            <Text style={styles.textDateJob}>{created}</Text>
+          </View>
+          <View style={styles.containerEmployee}>
+            <Left>
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}>
+                <Icon
+                  name="assignment-ind"
+                  style={styles.iconEmployeAndLocation}
+                  type="MaterialIcons"
+                />
+                <Text style={styles.textStyle}>{employee}</Text>
+              </View>
+            </Left>
+            <Right>
+              <Text style={styles.textStyle}>{type}</Text>
+            </Right>
+          </View>
+          <View style={styles.containerAddress}>
+            <Icon name="location-on" style={styles.iconEmployeAndLocation} type="MaterialIcons" />
+            <Text style={styles.textStyle}>{`${location.name}, ${location.address}, ${
+              location.city
+            }, ${location.state}`}</Text>
+          </View>
+          <View
+            style={{
+              flexDirection: 'row-reverse',
+            }}>
+            <TouchableOpacity style={styles.containerIconFooter}>
+              <Icon
+                name="dots-horizontal"
+                style={styles.iconsFooter}
+                type="MaterialCommunityIcons"
+              />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.containerIconFooter}>
+              <Icon name="comment" style={styles.iconsFooter} type="MaterialIcons" />
+            </TouchableOpacity>
+            <TouchableOpacity style={styles.containerIconFooter}>
+              <Icon name="pencil" style={styles.iconsFooter} type="MaterialCommunityIcons" />
+            </TouchableOpacity>
+          </View>
+        </TouchableOpacity>
+      </Card>
+    );
+  };
+
   render() {
     const { t } = this.props;
+    // console.log('withhh ',Dimensions.get('window').width)
 
     return (
       <Container>
@@ -247,62 +320,31 @@ class JobsListScreen extends Component {
 
         <CustomHeader
           leftButton={'openDrawer'}
-          title={t('JOBS.jobs')}
+          title={t('JOBS.jobsList')}
           rightButton={{ icon: 'md-add', handler: this.goToCreateJob }}
         />
 
         {this.state.emptyJobs ? <CenteredText text={`${t('JOBS.emptyJobs')}`} /> : null}
-
-        {Array.isArray(this.state.jobs) ? (
-          <FlatList
-            onRefresh={this.refreshData}
-            refreshing={this.state.isRefreshing}
-            onEndReached={this.getNextPage}
-            data={this.state.jobs}
-            extraData={this.state}
-            keyExtractor={(job) => String(job.id)}
-            ListFooterComponent={() =>
-              this.state.isLoadingPage ? <Spinner color={BLUE_MAIN} /> : null
-            }
-            renderItem={({ item }) => {
-              const location = item.location || {};
-              const created = item.created
-                ? moment(item.created)
-                  .tz(moment.tz.guess())
-                  .format('LLLL')
-                : t('JOBS.notProvided');
-              const employee = item.employee
-                ? `${item.employee.first_name} ${item.employee.last_name}`
-                : t('JOBS.jobNotAssigned');
-              const type =
-                item.job_type && item.job_type.name ? item.job_type.name : t('JOBS.notAssigned');
-              return (
-                <ListItem>
-                  <TouchableOpacity
-                    onPress={() => this.goToJobDetails(item.id)}
-                    style={styles.listItem}>
-                    <Text style={[styles.issueName, styles.textLeft]}>{`${item.title} `}</Text>
-                    <Text style={styles.textLeft}>{created}</Text>
-                    <Text style={styles.textLeft}>
-                      <SubTitle>Employee: {` `}</SubTitle>
-                      <Text style={styles.fieldworkerName}>{employee}</Text>
-                    </Text>
-                    <Text style={styles.textLeft}>
-                      <Text style={styles.textLeft}>{type}</Text>
-                    </Text>
-
-                    <Text style={styles.textLeft}>
-                      <SubTitle>Customer Information: {` `}</SubTitle>
-                      <Text style={styles.fieldworkerName}>{`${location.name}, ${
-                        location.address
-                      }, ${location.city}, ${location.state}`}</Text>
-                    </Text>
-                  </TouchableOpacity>
-                </ListItem>
-              );
-            }}
-          />
-        ) : null}
+        <View style={styles.containerFlatList}>
+          {Array.isArray(this.state.jobs) ? (
+            <FlatList
+              onRefresh={this.refreshData}
+              refreshing={this.state.isRefreshing}
+              onEndReached={this.getNextPage}
+              data={this.state.jobs}
+              extraData={this.state}
+              keyExtractor={(job) => String(job.id)}
+              ListFooterComponent={() =>
+                this.state.isLoadingPage ? <Spinner color={BLUE_MAIN} /> : null
+              }
+              renderItem={this._renderItem}
+            />
+          ) : (
+            <View style={styles.emptyJobs}>
+              <Text style={styles.emptyJobsText}>{t('JOBS.jobEmpty')}</Text>
+            </View>
+          )}
+        </View>
       </Container>
     );
   }

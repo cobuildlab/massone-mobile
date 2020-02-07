@@ -1,12 +1,8 @@
 import Flux from 'flux-state';
 import authStore from './authStore';
-import {
-  loginValidator,
-  forgotPasswordValidator,
-  resetPasswordValidator,
-} from './validators';
+import { loginValidator, forgotPasswordValidator, resetPasswordValidator } from './validators';
 import { postData, deleteData } from '../utils/fetch';
-import { log, error } from 'pure-logger';
+import { log } from 'pure-logger';
 
 /**
  * Login action
@@ -26,7 +22,7 @@ const login = (username, password) => {
       Flux.dispatchEvent('Login', data);
     })
     .catch((err) => {
-      error(`login`, err);
+      log(`login`, err);
       Flux.dispatchEvent('AuthStoreError', err);
     });
 };
@@ -129,11 +125,4 @@ const resetPassword = (code, password, repeatPassword) => {
     });
 };
 
-export {
-  login,
-  setStoredUser,
-  logout,
-  logoutOnUnautorized,
-  forgotPassword,
-  resetPassword,
-};
+export { login, setStoredUser, logout, logoutOnUnautorized, forgotPassword, resetPassword };
