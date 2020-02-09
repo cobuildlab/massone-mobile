@@ -15,7 +15,22 @@ class CustomHeader extends Component {
     const { leftButton, title, rightButton } = this.props;
 
     return (
-      <Header style={ifIphoneX({ paddingTop: 40, marginTop: 0, height: 85 }, {})}>
+      <Header
+        style={ifIphoneX(
+          {
+            paddingTop: 40,
+            marginTop: 0,
+            height: 85,
+            backgroundColor: 'white',
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.43,
+            shadowRadius: 1.62,
+          },
+          { backgroundColor: 'white' },
+        )}>
         {leftButton === 'goBack' || leftButton === 'openDrawer' ? (
           <Left>
             <Button title={'Left Action'} transparent onPress={this.leftButtonHandler}>

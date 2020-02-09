@@ -191,5 +191,7 @@ export default {
     customers: 'Customers',
     notAsigned: 'Not asigned',
     jobNotAssigned: 'Job Not Assigned',
+    jobEmpty: 'You have no pending jobs',
+    jobsList: 'Jobs List',
   },
 };
