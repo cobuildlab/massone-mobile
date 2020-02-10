@@ -132,7 +132,7 @@ export default {
     selectReason: 'Select a reason',
     invalidMessage: 'Invalid message',
     emptyMessage: 'Enter your message',
-    typeMessage: 'Type your message',
+    typeMessage: 'Type a message',
     invalidReason: 'You must specify a reason',
     optionalComments: 'Optional comments',
     jobHistory: 'Job history',
