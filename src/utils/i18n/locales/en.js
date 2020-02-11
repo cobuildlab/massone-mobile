@@ -69,6 +69,8 @@ export default {
     invalidAlertEmployee: 'Invalid alert employee',
     invalidEmailCustomer: 'Invalid email customer',
     selectPriority: 'Select priority',
+    sePriority: 'Priority',
+    seStatus: 'Status',
     selectStatus: 'Select status',
     selectJobType: 'Select job type',
     selectEmployee: 'Select fieldworker',

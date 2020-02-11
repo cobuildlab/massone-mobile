@@ -217,11 +217,7 @@ class CommentsScreen extends Component {
                   </Left>
 
                   <Right>
-                    <Text note>
-                      {moment(comment.created)
-                        .tz(moment.tz.guess())
-                        .format('LT')}
-                    </Text>
+                    <Text note>{moment(comment.created).fromNow()}</Text>
                   </Right>
                 </CardItem>
               </Card>

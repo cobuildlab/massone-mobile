@@ -241,6 +241,11 @@ class JobsListScreen extends Component {
     navigation.navigate('Comments', { jobId: id });
   };
 
+  goToJobEdit = (id) => {
+    const { navigation } = this.props;
+    navigation.navigate('JobEdit', { jobId: id });
+  };
+
   _renderItem = ({ item }) => {
     const { t } = this.props;
     const location = item.location || {};
@@ -308,7 +313,9 @@ class JobsListScreen extends Component {
               style={styles.containerIconFooter}>
               <Icon name="comment" style={styles.iconsFooter} type="MaterialIcons" />
             </TouchableOpacity>
-            <TouchableOpacity style={styles.containerIconFooter}>
+            <TouchableOpacity
+              onPress={() => this.goToJobEdit(item.id)}
+              style={styles.containerIconFooter}>
               <Icon name="pencil" style={styles.iconsFooter} type="MaterialCommunityIcons" />
             </TouchableOpacity>
           </View>
