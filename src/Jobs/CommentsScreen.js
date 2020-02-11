@@ -25,7 +25,7 @@ import ImagePicker from 'react-native-image-picker';
 import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
 import { BLUE_MAIN } from '../constants/colorPalette';
 import { LOG, WARN, sortByDate } from '../utils';
-import { getBottomSpace } from 'react-native-iphone-x-helper';
+import { getBottomSpace, isIphoneX } from 'react-native-iphone-x-helper';
 
 const IMAGE_PICKER_OPTIONS = {
   mediaType: 'photo',
@@ -47,6 +47,7 @@ class CommentsScreen extends Component {
       isLoadingPage: false,
       selectedImage: {},
       selectedFile: {},
+      attachFile: false,
       comments: [],
       nextUrl: '',
       message: '',
@@ -118,8 +119,16 @@ class CommentsScreen extends Component {
     });
   };
 
+  visibleAttachFile = () => {
+    const { attachFile } = this.state;
+    this.setState({
+      attachFile: !attachFile,
+    });
+  };
+
   render() {
     const { t } = this.props;
+    const { attachFile } = this.state;
 
     return (
       <KeyboardAvoidingView behavior={'padding'} style={[{ flex: 1 }]}>
@@ -147,7 +156,9 @@ class CommentsScreen extends Component {
                   <Left>
                     <Body>
                       {comment.owner ? (
-                        <Text>{`${comment.owner.first_name} ${comment.owner.last_name}`}</Text>
+                        <Text style={styles.nameEmployee}>{`${comment.owner.first_name} ${
+                          comment.owner.last_name
+                        }`}</Text>
                       ) : null}
 
                       {comment.owner &&
@@ -218,28 +229,39 @@ class CommentsScreen extends Component {
           />
         ) : null}
         <View>
-          <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-            <Button title={'SELECT IMAGE'} onPress={this.selectImage} dark transparent>
-              <Icon active name="md-image" />
-            </Button>
-            <Button title={'OPEN CAMERA'} onPress={this.openCamera} dark transparent>
-              <Icon active name="md-camera" />
-            </Button>
+          {attachFile && (
+            <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
+              <Button title={'SELECT IMAGE'} onPress={this.selectImage} dark transparent>
+                <Icon active name="md-image" />
+              </Button>
+              <Button title={'OPEN CAMERA'} onPress={this.openCamera} dark transparent>
+                <Icon active name="md-camera" />
+              </Button>
+            </View>
+          )}
+          <View style={[styles.boxComment, { marginBottom: isIphoneX() ? getBottomSpace() : 5 }]}>
+            <Item style={styles.item}>
+              <Input
+                ref={(input) => (this.input = input)}
+                multiline
+                style={{
+                  padding: 15,
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}
+                returnKeyType={'next'}
+                value={this.state.message}
+                placeholder={t('JOBS.typeMessage')}
+                onChangeText={(text) => this.setState({ message: text })}
+              />
+              <TouchableOpacity onPress={this.visibleAttachFile}>
+                <Icon name="attach-file" type="MaterialIcons" style={styles.iconBlue} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.addComment}>
+                <Icon active name="md-send" style={styles.iconBlue} />
+              </TouchableOpacity>
+            </Item>
           </View>
-
-          <Item style={[styles.item, { marginBottom: getBottomSpace() }]}>
-            <Input
-              ref={(input) => (this.input = input)}
-              multiline
-              returnKeyType={'next'}
-              value={this.state.message}
-              placeholder={t('JOBS.typeMessage')}
-              onChangeText={(text) => this.setState({ message: text })}
-            />
-            <TouchableOpacity onPress={this.addComment}>
-              <Icon active name="md-send" style={styles.iconBlue} />
-            </TouchableOpacity>
-          </Item>
           {this.state.selectedImage.uri ? (
             <View style={styles.imageView}>
               <TouchableOpacity onPress={this.deleteImage}>

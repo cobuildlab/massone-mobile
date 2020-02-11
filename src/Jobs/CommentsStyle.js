@@ -11,6 +11,16 @@ export default StyleSheet.create({
     borderTopWidth: 0,
     borderBottomWidth: 0,
   },
+  boxComment: {
+    marginHorizontal: 15,
+    borderColor: '#537DBF',
+    borderRadius: 18,
+    borderWidth: 1.5,
+  },
+  nameEmployee: {
+    color: '#537DBF',
+    fontWeight: 'bold',
+  },
   iconBlue: {
     color: BLUE_MAIN,
     fontSize: 32,
