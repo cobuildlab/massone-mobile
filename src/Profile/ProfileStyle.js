@@ -1,4 +1,4 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Dimensions } from 'react-native';
 import { BLUE_MAIN, VIOLET, GRAY_DARK } from '../constants/colorPalette';
 
 export default StyleSheet.create({
@@ -7,6 +7,22 @@ export default StyleSheet.create({
   // },
   titleHeader: {
     fontSize: 18,
+  },
+  textValue: {
+    color: '#BBBBBB',
+    fontSize: Dimensions.get('window').width <= 360 ? 12 : 14,
+  },
+  containerField: {
+    flexDirection: 'row',
+    width: '100%',
+    paddingBottom: 20,
+    alignItems: 'center',
+  },
+  containerKey: {
+    width: '28%',
+  },
+  containerValue: {
+    width: '72%',
   },
   listItem: {
     width: '95%',
@@ -39,9 +55,5 @@ export default StyleSheet.create({
     marginLeft: 2,
     marginRight: 4,
   },
-  textData: {
-    marginTop: 5,
-    marginBottom: 10,
-    marginLeft: 5,
-  },
+  textData: {},
 });

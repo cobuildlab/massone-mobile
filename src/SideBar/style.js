@@ -1,20 +1,49 @@
 import { StyleSheet } from 'react-native';
-import {
-  BLUE_MAIN,
-  WHITE_MAIN,
-  BLUE_SECONDARY,
-} from '../constants/colorPalette';
+import { BLUE_MAIN, WHITE_MAIN } from '../constants/colorPalette';
 
 export default StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: BLUE_MAIN,
   },
+  containerLoading: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   viewLogo: {
     width: 190,
     height: 170,
     marginTop: 33,
     resizeMode: 'contain',
+  },
+  iconMenu: {
+    fontSize: 20,
+    color: '#fff',
+  },
+  logoutText: {
+    color: 'white',
+    fontWeight: '500',
+  },
+  buttonLogout: {
+    flexDirection: 'row',
+    paddingHorizontal: 27,
+    paddingVertical: 10,
+    // borderColor: 'red',
+    // borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  containerLogout: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    alignItems: 'center',
+    marginBottom: 20,
+  },
+  iconLogout: {
+    color: 'white',
+    fontSize: 25,
+    marginRight: 5,
   },
   logoSideBar: {
     alignItems: 'center',
@@ -31,11 +60,10 @@ export default StyleSheet.create({
   },
   itemMenu: {
     width: '95%',
-    paddingTop: 10,
-    paddingBottom: 10,
+    paddingVertical: 14,
     paddingLeft: 15,
     paddingRight: 15,
-    borderBottomColor: BLUE_SECONDARY,
+    borderBottomColor: 'white',
     borderBottomWidth: 1,
     marginLeft: 5,
     marginRight: 5,

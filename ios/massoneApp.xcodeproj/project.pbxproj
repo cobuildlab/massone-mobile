@@ -5,6 +5,7 @@
 	};
 	objectVersion = 46;
 	objects = {
+
 /* Begin PBXBuildFile section */
 		00C302E51ABCBA2D00DB3ED1 /* libRCTActionSheet.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302AC1ABCB8CE00DB3ED1 /* libRCTActionSheet.a */; };
 		00C302E71ABCBA2D00DB3ED1 /* libRCTGeolocation.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 00C302BA1ABCB90400DB3ED1 /* libRCTGeolocation.a */; };
@@ -55,6 +56,7 @@
 		BC06051D64B64B4F83D8927C /* EvilIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = F99A1EF2E8BB42CFBDDD5304 /* EvilIcons.ttf */; };
 		BD5BE4E1226E5A3A00382732 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = BD5BE4B5226E5A3A00382732 /* GoogleService-Info.plist */; };
 		CD7E4BEAAB954A37B05ADEB6 /* Octicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D881CB8C088A470BACDBB1EB /* Octicons.ttf */; };
+		CEA5886923F465E3003E1799 /* libBVLinearGradient.a in Frameworks */ = {isa = PBXBuildFile; fileRef = CEA5883B23F46540003E1799 /* libBVLinearGradient.a */; };
 		D1A12689EBAC4B81962F7E17 /* rubicon-icon-font.ttf in Resources */ = {isa = PBXBuildFile; fileRef = D3DCAAA511524C26989466F4 /* rubicon-icon-font.ttf */; };
 		D3FB5DD5B3CB49AF8F849749 /* SimpleLineIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1D80F7A51C3A4A33A3505A2C /* SimpleLineIcons.ttf */; };
 		D64E0E82C64D4223AD5E85D6 /* libRNDocumentPicker.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B255E5A2EF34E74BD195168 /* libRNDocumentPicker.a */; };
@@ -379,6 +381,20 @@
 			remoteGlobalIDString = 014A3B5C1C6CF33500B6D375;
 			remoteInfo = RNImagePicker;
 		};
+		CEA5883A23F46540003E1799 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEA5883523F46540003E1799 /* BVLinearGradient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 134814201AA4EA6300B7C361;
+			remoteInfo = BVLinearGradient;
+		};
+		CEA5883C23F46540003E1799 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = CEA5883523F46540003E1799 /* BVLinearGradient.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 64AA15081EF7F30100718508;
+			remoteInfo = "BVLinearGradient-tvOS";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -439,6 +455,7 @@
 		BD2C8FF3227088D800B80965 /* massoneApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = massoneApp.entitlements; path = massoneApp/massoneApp.entitlements; sourceTree = "<group>"; };
 		BD5BE4B5226E5A3A00382732 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		C9878D11F81340DE97B3892C /* Zocial.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = Zocial.ttf; path = "../node_modules/native-base/Fonts/Zocial.ttf"; sourceTree = "<group>"; };
+		CEA5883523F46540003E1799 /* BVLinearGradient.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = BVLinearGradient.xcodeproj; path = "../node_modules/react-native-linear-gradient/BVLinearGradient.xcodeproj"; sourceTree = "<group>"; };
 		D3DCAAA511524C26989466F4 /* rubicon-icon-font.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "rubicon-icon-font.ttf"; path = "../node_modules/native-base/Fonts/rubicon-icon-font.ttf"; sourceTree = "<group>"; };
 		D6FE5B4D02024E9D971CAFD0 /* FontAwesome.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = FontAwesome.ttf; path = "../node_modules/native-base/Fonts/FontAwesome.ttf"; sourceTree = "<group>"; };
 		D7969B69475B4CA6BBBB20A7 /* RNFirebase.xcodeproj */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = "wrapper.pb-project"; name = RNFirebase.xcodeproj; path = "../node_modules/react-native-firebase/ios/RNFirebase.xcodeproj"; sourceTree = "<group>"; };
@@ -461,6 +478,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CEA5886923F465E3003E1799 /* libBVLinearGradient.a in Frameworks */,
 				ADBDB9381DFEBF1600ED6528 /* libRCTBlob.a in Frameworks */,
 				11D1A2F320CAFA9E000508D9 /* libRCTAnimation.a in Frameworks */,
 				146834051AC3E58100842450 /* libReact.a in Frameworks */,
@@ -694,6 +712,7 @@
 		832341AE1AAA6A7D00B99B32 /* Libraries */ = {
 			isa = PBXGroup;
 			children = (
+				CEA5883523F46540003E1799 /* BVLinearGradient.xcodeproj */,
 				5E91572D1DD0AC6500FF2AA8 /* RCTAnimation.xcodeproj */,
 				146833FF1AC3E56700842450 /* React.xcodeproj */,
 				00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */,
@@ -823,6 +842,15 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		CEA5883623F46540003E1799 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				CEA5883B23F46540003E1799 /* libBVLinearGradient.a */,
+				CEA5883D23F46540003E1799 /* libBVLinearGradient.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -946,6 +974,10 @@
 			productRefGroup = 83CBBA001A601CBA00E9B192 /* Products */;
 			projectDirPath = "";
 			projectReferences = (
+				{
+					ProductGroup = CEA5883623F46540003E1799 /* Products */;
+					ProjectRef = CEA5883523F46540003E1799 /* BVLinearGradient.xcodeproj */;
+				},
 				{
 					ProductGroup = 00C302A81ABCB8CE00DB3ED1 /* Products */;
 					ProjectRef = 00C302A71ABCB8CE00DB3ED1 /* RCTActionSheet.xcodeproj */;
@@ -1329,6 +1361,20 @@
 			fileType = archive.ar;
 			path = libRNImagePicker.a;
 			remoteRef = BD878956226E578900F317DF /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CEA5883B23F46540003E1799 /* libBVLinearGradient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBVLinearGradient.a;
+			remoteRef = CEA5883A23F46540003E1799 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		CEA5883D23F46540003E1799 /* libBVLinearGradient.a */ = {
+			isa = PBXReferenceProxy;
+			fileType = archive.ar;
+			path = libBVLinearGradient.a;
+			remoteRef = CEA5883C23F46540003E1799 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 /* End PBXReferenceProxy section */

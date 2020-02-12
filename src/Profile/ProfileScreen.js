@@ -1,14 +1,6 @@
 import React, { Component } from 'react';
 import { View, Alert } from 'react-native';
-import {
-  Title,
-  Body,
-  Card,
-  CardItem,
-  Text,
-  Content,
-  Container,
-} from 'native-base';
+import { Body, Card, CardItem, Text, Content, Container } from 'native-base';
 import styles from './ProfileStyle';
 import * as authActions from '../Auth/actions';
 import authStore from '../Auth/authStore';
@@ -44,13 +36,13 @@ class ProfileScreen extends Component {
 
   render() {
     const { t } = this.props;
-
+    console.log('userrr ', this.state.user);
     return (
       <Container>
         <CustomHeader
           leftButton={'openDrawer'}
           title={'Profile'}
-          rightButton={{ icon: 'ios-log-out', handler: this.logout }}
+          // rightButton={{ icon: 'ios-log-out', handler: this.logout }}
         />
 
         <Content>
@@ -58,20 +50,38 @@ class ProfileScreen extends Component {
             <Card transparent>
               <CardItem>
                 <Body>
-                  <Title>{`${t('AUTH.username')}:`}</Title>
-                  <Text style={styles.textData}>
-                    {this.state.user.username}
-                  </Text>
-                  <Title>{`${t('AUTH.firstName')}:`}</Title>
-                  <Text style={styles.textData}>
-                    {this.state.user.first_name}
-                  </Text>
-                  <Title>{`${t('AUTH.lastName')}:`}</Title>
-                  <Text style={styles.textData}>
-                    {this.state.user.last_name}
-                  </Text>
-                  <Title>{`${t('AUTH.email')}:`}</Title>
-                  <Text style={styles.textData}>{this.state.user.email}</Text>
+                  <View style={styles.containerField}>
+                    <View style={styles.containerKey}>
+                      <Text style={styles.textValue}>{`${t('AUTH.username')}`}</Text>
+                    </View>
+                    <View style={styles.containerValue}>
+                      <Text style={styles.textData}>{this.state.user.username}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerField}>
+                    <View style={styles.containerKey}>
+                      <Text style={styles.textValue}>{`${t('AUTH.firstName')}`}</Text>
+                    </View>
+                    <View style={styles.containerValue}>
+                      <Text style={styles.textData}>{this.state.user.first_name}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerField}>
+                    <View style={styles.containerKey}>
+                      <Text style={styles.textValue}>{`${t('AUTH.lastName')}`}</Text>
+                    </View>
+                    <View style={styles.containerValue}>
+                      <Text style={styles.textData}>{this.state.user.last_name}</Text>
+                    </View>
+                  </View>
+                  <View style={styles.containerField}>
+                    <View style={styles.containerKey}>
+                      <Text style={styles.textValue}>{`${t('AUTH.email')}`}</Text>
+                    </View>
+                    <View style={styles.containerValue}>
+                      <Text style={styles.textData}>{this.state.user.email}</Text>
+                    </View>
+                  </View>
                 </Body>
               </CardItem>
             </Card>
