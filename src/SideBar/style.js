@@ -20,6 +20,7 @@ export default StyleSheet.create({
   iconMenu: {
     fontSize: 20,
     color: '#fff',
+    paddingRight: 20,
   },
   logoutText: {
     color: 'white',
@@ -60,6 +61,8 @@ export default StyleSheet.create({
   },
   itemMenu: {
     width: '95%',
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingVertical: 14,
     paddingLeft: 15,
     paddingRight: 15,

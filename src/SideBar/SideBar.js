@@ -81,9 +81,8 @@ class SideBar extends Component {
                   this.props.navigation.navigate(route.key);
                   this.props.navigation.closeDrawer();
                 }}>
-                <Text style={styles.textItemMenu}>
-                  {icon} {route.routeName}
-                </Text>
+                {icon}
+                <Text style={styles.textItemMenu}>{route.routeName}</Text>
               </TouchableOpacity>
             );
           })}
