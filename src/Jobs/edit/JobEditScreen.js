@@ -272,7 +272,7 @@ class JobEditScreen extends Component {
                 <TouchableOpacity onPress={this.showStartDatePicker}>
                   <Text style={styles.textLabelDate}>
                     {job.date_start
-                      ? moment(job.date_start).format('DD | MMM | YYYY')
+                      ? moment(job.date_start).format('DD  |  MMM  |  YYYY')
                       : t('JOBS.notProvided')}
                   </Text>
                 </TouchableOpacity>
@@ -292,7 +292,7 @@ class JobEditScreen extends Component {
                 <TouchableOpacity onPress={this.showEndDatePicker}>
                   <Text style={styles.textLabelDateGray}>
                     {job.date_finish
-                      ? moment(job.date_finish).format('DD | MMM | YYYY')
+                      ? moment(job.date_finish).format('DD  |  MMM  |  YYYY')
                       : t('JOBS.notProvided')}
                   </Text>
                 </TouchableOpacity>
@@ -357,6 +357,9 @@ class JobEditScreen extends Component {
                       placeholder={t('JOB_EDIT.selectStatus')}
                       headerBackButtonText={t('APP.goBack')}
                       iosHeader={t('JOBS.selectStatus')}
+                      textStyle={{
+                        color: job.status ? '#000000' : '#BBBBBB',
+                      }}
                       iosIcon={<Icon name="ios-arrow-down" />}
                       style={{ width: '84%', marginVertical: 2 }}
                       selectedValue={job.status}
@@ -387,6 +390,10 @@ class JobEditScreen extends Component {
                       placeholder={t('JOB_EDIT.selectJobType')}
                       headerBackButtonText={t('APP.goBack')}
                       iosHeader={t('JOBS.selectJobType')}
+                      textStyle={{
+                        color: job.job_type ? '#000000' : '#BBBBBB',
+                        fontFamily: 'Arial',
+                      }}
                       iosIcon={<Icon name="ios-arrow-down" />}
                       style={{ width: '86%', marginVertical: 2 }}
                       selectedValue={job.job_type}
@@ -413,7 +420,13 @@ class JobEditScreen extends Component {
                 }}>
                 <ListItem button noIndentBodyText onPress={this.goToSearchLocation}>
                   <Body style={{ marginVertical: 3 }}>
-                    <Text>{job.location ? job.location.name : t('JOB_EDIT.selectLocation')}</Text>
+                    <Text
+                      style={{
+                        color: job.location ? '#000000' : '#BBBBBB',
+                        fontFamily: 'Arial',
+                      }}>
+                      {job.location ? job.location.name : t('JOB_EDIT.selectLocation')}
+                    </Text>
                   </Body>
                   {job.location && job.location.id ? (
                     <TouchableOpacity onPress={this.deleteLocation}>
@@ -440,7 +453,13 @@ class JobEditScreen extends Component {
                 }}>
                 <ListItem button noIndentBodyText onPress={this.goToSearchEmployee}>
                   <Body style={{ marginVertical: 3 }}>
-                    <Text>{fieldworkerText}</Text>
+                    <Text
+                      style={{
+                        color: employee && employee.id ? '#000000' : '#BBBBBB',
+                        fontFamily: 'Arial',
+                      }}>
+                      {fieldworkerText}
+                    </Text>
                   </Body>
                   {employee && employee.id ? (
                     <TouchableOpacity onPress={this.deleteEmployee}>
@@ -459,7 +478,7 @@ class JobEditScreen extends Component {
             <View style={styles.containerSwitch}>
               <View style={styles.viewSwitch}>
                 <Switch
-                  thumbColor={BLUE_MAIN}
+                  thumbColor={job.alert_employee ? BLUE_MAIN : '#BBBBBB'}
                   onValueChange={() => this.onChangeBoolean('alert_employee')}
                   value={job.alert_employee}
                   trackColor={{
@@ -474,7 +493,7 @@ class JobEditScreen extends Component {
               </View>
               <View style={styles.viewSwitch}>
                 <Switch
-                  thumbColor={BLUE_MAIN}
+                  thumbColor={job.email_customer ? BLUE_MAIN : '#BBBBBB'}
                   trackColor={{
                     true: '#CAEDFA',
                     false: '#BBBBBB',

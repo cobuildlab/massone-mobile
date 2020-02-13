@@ -53,7 +53,8 @@ const styles = StyleSheet.create({
   },
   textLabel: {
     color: '#BBBBBB',
-    fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
+    fontFamily: 'Roboto',
+    fontSize: Dimensions.get('window').width <= 360 ? 10 : 13,
   },
   textLabelDate: {
     color: '#000000',
@@ -61,11 +62,13 @@ const styles = StyleSheet.create({
   },
   textLabelDateGray: {
     color: '#BBBBBB',
+    fontFamily: 'Roboto',
     fontSize: Dimensions.get('window').width <= 360 ? 16 : 18,
   },
   textValueInput: {
     color: '#000000',
-    fontSize: Dimensions.get('window').width <= 360 ? 14 : 16,
+    fontFamily: 'Arial',
+    fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
   },
   flexTwo: {
     flex: 0.34,
