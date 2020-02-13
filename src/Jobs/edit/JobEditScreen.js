@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Slider, View, StyleSheet, Dimensions, TouchableOpacity, Switch } from 'react-native';
+import { Slider, View, TouchableOpacity, Switch, Dimensions, Platform } from 'react-native';
 import { Body, Item, Input, Text, Icon, Container, ListItem, Picker } from 'native-base';
 import { BLUE_MAIN } from '../../constants/colorPalette';
 import { CustomHeader, Loading, CustomToast } from '../../utils/components';
@@ -13,138 +13,7 @@ import { JOB_STATUS_LIST, JOB_CLOSED, JOB_DISPATCH } from './jobStatus';
 import { JOB_PRIORITY_LIST } from './jobPriority';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import { ScrollView } from 'react-native-gesture-handler';
-
-const styles = StyleSheet.create({
-  containerContent: {
-    flex: 1,
-    // borderWidth: 1,
-    paddingHorizontal: 18,
-    // borderColor: 'red',
-  },
-  flexOne: {
-    flex: 2,
-    // borderColor: 'blue',
-    justifyContent: 'space-between',
-    // borderWidth: 2,
-  },
-  fieldsText: {
-    width: '100%',
-    flexDirection: 'row',
-    // justifyContent: 'center',
-    alignItems: 'center',
-  },
-  fieldsTextSelects: {
-    flexDirection: 'row',
-    // justifyContent: 'center',
-    alignItems: 'center',
-    width: '100%',
-  },
-  containerTextDownSlider: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  TextDownSlider: {
-    color: '#BBBBBB',
-    fontSize: Dimensions.get('window').width <= 360 ? 12 : 14,
-  },
-  TextDownSliderActive: {
-    color: BLUE_MAIN,
-    fontWeight: 'bold',
-    fontSize: Dimensions.get('window').width <= 360 ? 12 : 14,
-  },
-  containerTextSlider: {
-    width: '24%',
-  },
-  containerSlider: {
-    width: '76%',
-  },
-  fieldsSliderAndText: {
-    flexDirection: 'row',
-    width: '100%',
-    // justifyContent: 'center',
-    alignItems: 'center',
-  },
-  textLabel: {
-    color: '#BBBBBB',
-    fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
-  },
-  textLabelDate: {
-    color: '#000000',
-    fontSize: Dimensions.get('window').width <= 360 ? 16 : 18,
-  },
-  textLabelDateGray: {
-    color: '#BBBBBB',
-    fontSize: Dimensions.get('window').width <= 360 ? 16 : 18,
-  },
-  textValueInput: {
-    color: '#000000',
-    fontSize: Dimensions.get('window').width <= 360 ? 14 : 16,
-  },
-  flexTwo: {
-    flex: 0.34,
-    // borderColor: 'green',
-    justifyContent: 'space-around',
-    alignItems: 'center',
-    // borderWidth: 2,
-  },
-  //buttons
-  containerButtonsBotton: {
-    flexDirection: 'row',
-    paddingHorizontal: 20,
-    width: '100%',
-    justifyContent: 'space-between',
-  },
-  buttonCancel: {
-    borderColor: '#D75452',
-    width: '44%',
-    alignItems: 'center',
-    borderRadius: 30,
-    paddingVertical: 12,
-    borderWidth: 2,
-  },
-  buttonSave: {
-    borderColor: BLUE_MAIN,
-    backgroundColor: BLUE_MAIN,
-    width: '44%',
-    alignItems: 'center',
-    borderRadius: 30,
-    paddingVertical: 12,
-    borderWidth: 2,
-  },
-  textButtonCancel: {
-    color: '#D75452',
-    fontWeight: '500',
-  },
-  textButtonSave: {
-    color: 'white',
-    fontWeight: '500',
-  },
-  textSwitchActive: {
-    fontSize: 13,
-  },
-  textSwitchInative: {
-    fontSize: 13,
-    color: '#BBBBBB',
-  },
-  containerSwitch: {
-    flexDirection: 'row',
-    paddingHorizontal: 10,
-    width: '100%',
-    justifyContent: 'space-between',
-  },
-  viewSwitch: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  iconSearch: {
-    fontSize: Dimensions.get('window').width <= 360 ? 17 : 21,
-    color: BLUE_MAIN,
-  },
-  iconClose: {
-    fontSize: Dimensions.get('window').width <= 360 ? 17 : 21,
-    color: '#D75452',
-  },
-});
+import styles from './styles';
 
 class JobEditScreen extends Component {
   static navigationOptions = {
@@ -312,9 +181,9 @@ class JobEditScreen extends Component {
 
   valueChangePriority = (val) => {
     let valInt = '';
-    if (val < 1.79) valInt = 'Low';
-    if (val > 1.8) valInt = 'Medium';
-    if (val > 2.8) valInt = 'High';
+    if (val <= 1.79) valInt = 'Low';
+    if (val >= 1.8) valInt = 'Medium';
+    if (val > 2.7) valInt = 'High';
 
     this.onChangeText('priority', valInt);
   };
@@ -403,7 +272,7 @@ class JobEditScreen extends Component {
                 <TouchableOpacity onPress={this.showStartDatePicker}>
                   <Text style={styles.textLabelDate}>
                     {job.date_start
-                      ? moment(job.date_start).format('DD | MMM | YYYY')
+                      ? moment(job.date_start).format('DD  |  MMM  |  YYYY')
                       : t('JOBS.notProvided')}
                   </Text>
                 </TouchableOpacity>
@@ -423,7 +292,7 @@ class JobEditScreen extends Component {
                 <TouchableOpacity onPress={this.showEndDatePicker}>
                   <Text style={styles.textLabelDateGray}>
                     {job.date_finish
-                      ? moment(job.date_finish).format('DD | MMM | YYYY')
+                      ? moment(job.date_finish).format('DD  |  MMM  |  YYYY')
                       : t('JOBS.notProvided')}
                   </Text>
                 </TouchableOpacity>
@@ -480,16 +349,20 @@ class JobEditScreen extends Component {
               </View>
               <View
                 style={{
-                  width: '76%',
+                  width: Platform.OS === 'ios' ? '68%' : '76%',
                 }}>
                 {Array.isArray(statusList) ? (
-                  <Item>
+                  <Item style={styles.borderNonePicker}>
                     <Picker
                       placeholder={t('JOB_EDIT.selectStatus')}
                       headerBackButtonText={t('APP.goBack')}
                       iosHeader={t('JOBS.selectStatus')}
-                      iosIcon={<Icon name="ios-arrow-down" />}
-                      style={{ width: '84%', marginVertical: 2 }}
+                      textStyle={{
+                        color: job.status ? '#000000' : '#BBBBBB',
+                        fontFamily: 'Arial',
+                        fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
+                      }}
+                      style={styles.pickerStyle}
                       selectedValue={job.status}
                       onValueChange={(value) => this.onChangeText('status', value)}>
                       <Picker.Item label={t('JOB_EDIT.selectStatus')} value={null} />
@@ -500,6 +373,14 @@ class JobEditScreen extends Component {
                   </Item>
                 ) : null}
               </View>
+              {Platform.OS === 'ios' && (
+                <View
+                  style={{
+                    width: '8%',
+                  }}>
+                  <Icon name="ios-arrow-down" style={{ fontSize: 16 }} />
+                </View>
+              )}
             </View>
             <View style={styles.fieldsTextSelects}>
               <View
@@ -510,16 +391,20 @@ class JobEditScreen extends Component {
               </View>
               <View
                 style={{
-                  width: '76%',
+                  width: Platform.OS === 'ios' ? '68%' : '76%',
                 }}>
                 {Array.isArray(jobTypeList) ? (
-                  <Item>
+                  <Item style={styles.borderNonePicker}>
                     <Picker
                       placeholder={t('JOB_EDIT.selectJobType')}
                       headerBackButtonText={t('APP.goBack')}
                       iosHeader={t('JOBS.selectJobType')}
-                      iosIcon={<Icon name="ios-arrow-down" />}
-                      style={{ width: '86%', marginVertical: 2 }}
+                      textStyle={{
+                        color: job.job_type ? '#000000' : '#BBBBBB',
+                        fontFamily: 'Arial',
+                        fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
+                      }}
+                      style={styles.pickerStyle}
                       selectedValue={job.job_type}
                       onValueChange={(value) => this.onChangeText('job_type', value)}>
                       <Picker.Item label={t('JOB_EDIT.selectJobType')} value={null} />
@@ -530,21 +415,40 @@ class JobEditScreen extends Component {
                   </Item>
                 ) : null}
               </View>
+              {Platform.OS === 'ios' && (
+                <View
+                  style={{
+                    width: '8%',
+                  }}>
+                  <Icon name="ios-arrow-down" style={{ fontSize: 16 }} />
+                </View>
+              )}
             </View>
             <View style={styles.fieldsTextSelects}>
               <View
                 style={{
-                  width: '24%',
+                  width: Platform.OS === 'ios' ? '24%' : '22%',
                 }}>
                 <Text style={styles.textLabel}>Customer</Text>
               </View>
               <View
                 style={{
-                  width: '76%',
+                  width: Platform.OS === 'ios' ? '76%' : '78%',
                 }}>
-                <ListItem button noIndentBodyText onPress={this.goToSearchLocation}>
+                <ListItem
+                  style={styles.borderNonePicker}
+                  button
+                  noIndentBodyText
+                  onPress={this.goToSearchLocation}>
                   <Body style={{ marginVertical: 3 }}>
-                    <Text>{job.location ? job.location.name : t('JOB_EDIT.selectLocation')}</Text>
+                    <Text
+                      style={{
+                        color: job.location ? '#000000' : '#BBBBBB',
+                        fontFamily: 'Arial',
+                        fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
+                      }}>
+                      {job.location ? job.location.name : t('JOB_EDIT.selectLocation')}
+                    </Text>
                   </Body>
                   {job.location && job.location.id ? (
                     <TouchableOpacity onPress={this.deleteLocation}>
@@ -561,17 +465,28 @@ class JobEditScreen extends Component {
             <View style={styles.fieldsTextSelects}>
               <View
                 style={{
-                  width: '24%',
+                  width: Platform.OS === 'ios' ? '24%' : '22%',
                 }}>
                 <Text style={styles.textLabel}>Fieldworker</Text>
               </View>
               <View
                 style={{
-                  width: '76%',
+                  width: Platform.OS === 'ios' ? '76%' : '78%',
                 }}>
-                <ListItem button noIndentBodyText onPress={this.goToSearchEmployee}>
+                <ListItem
+                  style={styles.borderNonePicker}
+                  button
+                  noIndentBodyText
+                  onPress={this.goToSearchEmployee}>
                   <Body style={{ marginVertical: 3 }}>
-                    <Text>{fieldworkerText}</Text>
+                    <Text
+                      style={{
+                        color: employee && employee.id ? '#000000' : '#BBBBBB',
+                        fontFamily: 'Arial',
+                        fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
+                      }}>
+                      {fieldworkerText}
+                    </Text>
                   </Body>
                   {employee && employee.id ? (
                     <TouchableOpacity onPress={this.deleteEmployee}>
@@ -590,7 +505,7 @@ class JobEditScreen extends Component {
             <View style={styles.containerSwitch}>
               <View style={styles.viewSwitch}>
                 <Switch
-                  thumbColor={BLUE_MAIN}
+                  thumbColor={job.alert_employee ? BLUE_MAIN : '#BBBBBB'}
                   onValueChange={() => this.onChangeBoolean('alert_employee')}
                   value={job.alert_employee}
                   trackColor={{
@@ -605,7 +520,7 @@ class JobEditScreen extends Component {
               </View>
               <View style={styles.viewSwitch}>
                 <Switch
-                  thumbColor={BLUE_MAIN}
+                  thumbColor={job.email_customer ? BLUE_MAIN : '#BBBBBB'}
                   trackColor={{
                     true: '#CAEDFA',
                     false: '#BBBBBB',

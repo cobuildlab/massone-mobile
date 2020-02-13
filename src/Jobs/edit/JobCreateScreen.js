@@ -1,21 +1,14 @@
 import React, { Component } from 'react';
 import {
-  Body,
-  Item,
-  Input,
-  Label,
-  Text,
-  Button,
-  Icon,
-  Content,
-  Container,
-  Form,
-  Grid,
-  Col,
-  ListItem,
-  Picker,
-  CheckBox,
-} from 'native-base';
+  View,
+  TouchableOpacity,
+  Slider,
+  ScrollView,
+  Switch,
+  Dimensions,
+  Platform,
+} from 'react-native';
+import { Body, Item, Input, Text, Icon, Container, ListItem, Picker } from 'native-base';
 import { BLUE_MAIN } from '../../constants/colorPalette';
 import { CustomHeader, Loading, CustomToast } from '../../utils/components';
 import { withNamespaces } from 'react-i18next';
@@ -24,6 +17,7 @@ import jobStore from '../jobStore';
 import moment from 'moment';
 // import { LOG } from '../../utils';
 import { withNavigation } from 'react-navigation';
+import styles from './styles';
 import { JOB_STATUS_LIST, JOB_CLOSED, JOB_DISPATCH, JOB_OPEN } from './jobStatus';
 import { JOB_MEDIUM, JOB_PRIORITY_LIST } from './jobPriority';
 import DateTimePicker from 'react-native-modal-datetime-picker';
@@ -69,13 +63,8 @@ class JobCreateScreen extends Component {
       });
     });
     this.getJobTypesSubscription = jobStore.subscribe('GetJobTypes', (jobTypeList) => {
-      const { job } = this.state;
-      if (job.job_type === null) {
-        job.job_type = jobTypeList[0].id;
-        this.setState({ jobTypeList, job });
-      } else {
-        this.setState({ jobTypeList });
-      }
+      // const { job } = this.state;
+      this.setState({ jobTypeList });
     });
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
     this.getJobTypes();
@@ -200,194 +189,372 @@ class JobCreateScreen extends Component {
     this.hideEndDatePicker();
   };
 
+  valueChangePriority = (val) => {
+    let valInt = '';
+    if (val <= 1.79) valInt = 'Low';
+    if (val >= 1.8) valInt = 'Medium';
+    if (val > 2.7) valInt = 'High';
+
+    this.onChangeText('priority', valInt);
+  };
+
   render() {
     const { t } = this.props;
-    const { job, statusList, priorityList, jobTypeList } = this.state;
+    const { job, statusList, jobTypeList } = this.state;
     const { employee } = job;
     const fieldworkerText = employee
       ? `${employee.first_name} ${employee.last_name}`
       : t('JOB_EDIT.selectEmployee');
 
+    console.log('widhtthtth ', Dimensions.get('window').width);
     return (
       <Container>
         {this.state.isLoading ? <Loading /> : null}
         <CustomHeader leftButton={'goBack'} title={t('JOB_EDIT.createJob')} />
-        <Content>
-          <DateTimePicker
-            mode={'datetime'}
-            isVisible={this.state.isStartDatePickerVisible}
-            onConfirm={this.onStartDatePicked}
-            onCancel={this.hideStartDatePicker}
-          />
+        <DateTimePicker
+          mode={'datetime'}
+          isVisible={this.state.isStartDatePickerVisible}
+          onConfirm={this.onStartDatePicked}
+          onCancel={this.hideStartDatePicker}
+        />
 
-          <DateTimePicker
-            mode={'datetime'}
-            isVisible={this.state.isEndDatePickerVisible}
-            onConfirm={this.onEndDatePicked}
-            onCancel={this.hideEndDatePicker}
-          />
-
-          <Form>
-            <Item stackedLabel>
-              <Label>{t('JOB_EDIT.issue')}</Label>
-              <Input
-                value={job.title}
-                placeholder={t('JOB_EDIT.issue')}
-                onChangeText={(value) => this.onChangeText('title', value)}
-              />
-            </Item>
-            <Item stackedLabel>
-              <Label>{t('JOB_EDIT.description')}</Label>
-              <Input
-                multiline
-                value={job.description}
-                placeholder={t('JOB_EDIT.description')}
-                onChangeText={(value) => this.onChangeText('description', value)}
-              />
-            </Item>
-            <ListItem onPress={this.showStartDatePicker} button noIndentBodyText>
-              <Body style={{ marginVertical: 10 }}>
-                <Text>
-                  <Text style={{ color: '#575757' }}>{`${t('JOBS.startDate')} `}</Text>
-                  {job.date_start
-                    ? moment(job.date_start)
-                      .tz(moment.tz.guess())
-                      .format('L LTS')
-                    : t('JOBS.notProvided')}
-                </Text>
-              </Body>
-            </ListItem>
-            <ListItem onPress={this.showEndDatePicker} button noIndentBodyText>
-              <Body style={{ marginVertical: 10 }}>
-                <Text>
-                  <Text style={{ color: '#575757' }}>{`${t('JOBS.endDate')} `}</Text>
-                  {job.date_finish
-                    ? moment(job.date_finish)
-                      .tz(moment.tz.guess())
-                      .format('L LTS')
-                    : t('JOBS.notProvided')}
-                </Text>
-              </Body>
-            </ListItem>
-            {Array.isArray(priorityList) ? (
-              <Item>
-                <Picker
-                  placeholder={t('JOB_EDIT.selectPriority')}
-                  headerBackButtonText={t('APP.goBack')}
-                  iosHeader={t('JOB_EDIT.selectPriority')}
-                  iosIcon={<Icon name="ios-arrow-down" />}
-                  style={{ width: undefined, marginVertical: 10 }}
-                  selectedValue={job.priority}
-                  onValueChange={(value) => this.onChangeText('priority', value)}>
-                  <Picker.Item label={t('JOB_EDIT.selectPriority')} value={null} />
-                  {priorityList.map((priority) => (
-                    <Picker.Item key={priority} label={priority} value={priority} />
-                  ))}
-                </Picker>
-              </Item>
-            ) : null}
-            {Array.isArray(statusList) ? (
-              <Item>
-                <Picker
-                  enabled={false}
-                  placeholder={t('JOB_EDIT.selectStatus')}
-                  headerBackButtonText={t('APP.goBack')}
-                  iosHeader={t('JOBS.selectStatus')}
-                  iosIcon={<Icon name="ios-arrow-down" />}
-                  style={{ width: undefined, marginVertical: 10 }}
-                  selectedValue={job.status}
-                  onValueChange={(value) => this.onChangeText('status', value)}>
-                  {statusList.map((status) => (
-                    <Picker.Item key={status} label={status} value={status} />
-                  ))}
-                </Picker>
-              </Item>
-            ) : null}
-            {Array.isArray(jobTypeList) ? (
-              <Item>
-                <Picker
-                  placeholder={t('JOB_EDIT.selectJobType')}
-                  headerBackButtonText={t('APP.goBack')}
-                  iosHeader={t('JOBS.selectJobType')}
-                  iosIcon={<Icon name="ios-arrow-down" />}
-                  style={{ width: undefined, marginVertical: 10 }}
-                  selectedValue={job.job_type}
-                  onValueChange={(value) => this.onChangeText('job_type', value)}>
-                  <Picker.Item label={t('JOB_EDIT.selectJobType')} value={null} />
-                  {jobTypeList.map((type) => (
-                    <Picker.Item key={type.id} label={type.name} value={type.id} />
-                  ))}
-                </Picker>
-              </Item>
-            ) : null}
-            <ListItem button noIndentBodyText onPress={this.goToSearchLocation}>
-              <Body style={{ marginVertical: 10 }}>
-                <Text>{job.location ? job.location.name : t('JOB_EDIT.selectCustomer')}</Text>
-              </Body>
-              {job.location && job.location.id ? (
-                <Button title={'DELETE LOCATION'} onPress={this.deleteLocation} danger>
-                  <Icon name="md-close" />
-                </Button>
-              ) : (
-                <Button title={'SEARCH'} onPress={this.goToSearchLocation} primary>
-                  <Text>{t('JOBS.search')}</Text>
-                </Button>
+        <DateTimePicker
+          mode={'datetime'}
+          isVisible={this.state.isEndDatePickerVisible}
+          onConfirm={this.onEndDatePicked}
+          onCancel={this.hideEndDatePicker}
+        />
+        <View style={styles.containerContent}>
+          <ScrollView contentContainerStyle={styles.flexOne}>
+            <View style={styles.fieldsText}>
+              <View
+                style={{
+                  width: '24%',
+                }}>
+                <Text style={styles.textLabel}>{t('JOB_EDIT.issue')}</Text>
+              </View>
+              <View
+                style={{
+                  width: '76%',
+                  height: 40,
+                }}>
+                <Input
+                  value={job.title}
+                  autoCorrect={false}
+                  style={styles.textValueInput}
+                  placeholder={t('JOB_EDIT.issue')}
+                  onChangeText={(value) => this.onChangeText('title', value)}
+                />
+              </View>
+            </View>
+            <View style={[styles.fieldsText]}>
+              <View
+                style={{
+                  width: '24%',
+                }}>
+                <Text style={styles.textLabel}>{t('JOB_EDIT.description')}</Text>
+              </View>
+              <View
+                style={{
+                  width: '76%',
+                  height: 40,
+                }}>
+                <Input
+                  multiline
+                  value={job.description}
+                  autoCorrect={false}
+                  style={styles.textValueInput}
+                  placeholder={t('JOB_EDIT.description')}
+                  onChangeText={(value) => this.onChangeText('description', value)}
+                />
+              </View>
+            </View>
+            <View style={styles.fieldsText}>
+              <View
+                style={{
+                  width: '24%',
+                }}>
+                <Text style={styles.textLabel}>{`${t('JOBS.startDate')} `}</Text>
+              </View>
+              <View
+                style={{
+                  width: '76%',
+                }}>
+                <TouchableOpacity onPress={this.showStartDatePicker}>
+                  <Text style={styles.textLabelDateGray}>
+                    {job.date_start
+                      ? moment(job.date_start).format('DD  |  MMM  |  YYYY')
+                      : t('JOBS.notProvided')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.fieldsText}>
+              <View
+                style={{
+                  width: '24%',
+                }}>
+                <Text style={styles.textLabel}>{`${t('JOBS.endDate')} `}</Text>
+              </View>
+              <View
+                style={{
+                  width: '76%',
+                }}>
+                <TouchableOpacity onPress={this.showEndDatePicker}>
+                  <Text style={styles.textLabelDateGray}>
+                    {job.date_finish
+                      ? moment(job.date_finish).format('DD  |  MMM  |  YYYY')
+                      : t('JOBS.notProvided')}
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+            <View style={styles.fieldsSliderAndText}>
+              <View style={styles.containerTextSlider}>
+                <Text style={styles.textLabel}>{`${t('JOB_EDIT.sePriority')} `}</Text>
+              </View>
+              <View style={styles.containerSlider}>
+                <Slider
+                  style={{
+                    width: '100%',
+                    height: 40,
+                  }}
+                  minimumValue={1}
+                  onValueChange={(val) => this.valueChangePriority(val)}
+                  value={job.priority === 'Low' ? 1 : job.priority === 'Medium' ? 2 : 3}
+                  thumbTintColor={BLUE_MAIN}
+                  maximumValue={3}
+                  minimumTrackTintColor={BLUE_MAIN}
+                  maximumTrackTintColor="#D5DBDB"
+                />
+                <View style={styles.containerTextDownSlider}>
+                  <Text
+                    style={
+                      job.priority === 'Low' ? styles.TextDownSliderActive : styles.TextDownSlider
+                    }>
+                    Low
+                  </Text>
+                  <Text
+                    style={
+                      job.priority === 'Medium'
+                        ? styles.TextDownSliderActive
+                        : styles.TextDownSlider
+                    }>
+                    Medium
+                  </Text>
+                  <Text
+                    style={
+                      job.priority === 'High' ? styles.TextDownSliderActive : styles.TextDownSlider
+                    }>
+                    High
+                  </Text>
+                </View>
+              </View>
+            </View>
+            <View style={styles.fieldsTextSelects}>
+              <View
+                style={{
+                  width: '24%',
+                }}>
+                <Text style={styles.textLabel}>Status</Text>
+              </View>
+              <View
+                style={{
+                  width: Platform.OS === 'ios' ? '68%' : '76%',
+                }}>
+                {Array.isArray(statusList) ? (
+                  <Item style={styles.borderNonePicker}>
+                    <Picker
+                      enabled={false}
+                      placeholder={t('JOB_EDIT.selectStatus')}
+                      headerBackButtonText={t('APP.goBack')}
+                      iosHeader={t('JOBS.selectStatus')}
+                      textStyle={{
+                        color: job.status ? '#000000' : '#BBBBBB',
+                        fontFamily: 'Arial',
+                        fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
+                      }}
+                      style={styles.pickerStyle}
+                      selectedValue={job.status}
+                      onValueChange={(value) => this.onChangeText('status', value)}>
+                      {statusList.map((status) => (
+                        <Picker.Item key={status} label={status} value={status} />
+                      ))}
+                    </Picker>
+                  </Item>
+                ) : null}
+              </View>
+              {Platform.OS === 'ios' && (
+                <View
+                  style={{
+                    width: '8%',
+                  }}>
+                  <Icon name="ios-arrow-down" style={{ fontSize: 16 }} />
+                </View>
               )}
-            </ListItem>
-            <ListItem button noIndentBodyText onPress={this.goToSearchEmployee}>
-              <Body style={{ marginVertical: 15 }}>
-                <Text>{fieldworkerText}</Text>
-              </Body>
-              {employee && employee.id ? (
-                <Button title={'DELETE EMPLOYEE'} onPress={this.deleteEmployee} danger>
-                  <Icon name="md-close" />
-                </Button>
-              ) : (
-                <Button title={'SEARCH'} onPress={this.goToSearchEmployee} primary>
-                  <Text>{t('JOBS.search')}</Text>
-                </Button>
+            </View>
+            <View style={styles.fieldsTextSelects}>
+              <View
+                style={{
+                  width: '24%',
+                }}>
+                <Text style={styles.textLabel}>Job Type</Text>
+              </View>
+              <View
+                style={{
+                  width: Platform.OS === 'ios' ? '68%' : '76%',
+                }}>
+                {Array.isArray(jobTypeList) ? (
+                  <Item style={styles.borderNonePicker}>
+                    <Picker
+                      placeholder={t('JOB_EDIT.selectJobType')}
+                      headerBackButtonText={t('APP.goBack')}
+                      textStyle={{
+                        color: job.job_type ? '#000000' : '#BBBBBB',
+                        fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
+                        fontFamily: 'Arial',
+                      }}
+                      iosHeader={t('JOBS.selectJobType')}
+                      style={styles.pickerStyle}
+                      selectedValue={job.job_type}
+                      onValueChange={(value) => this.onChangeText('job_type', value)}>
+                      <Picker.Item label={t('JOB_EDIT.selectJobType')} value={null} />
+                      {jobTypeList.map((type) => (
+                        <Picker.Item key={type.id} label={type.name} value={type.id} />
+                      ))}
+                    </Picker>
+                  </Item>
+                ) : null}
+              </View>
+              {Platform.OS === 'ios' && (
+                <View
+                  style={{
+                    width: '8%',
+                  }}>
+                  <Icon name="ios-arrow-down" style={{ fontSize: 16 }} />
+                </View>
               )}
-            </ListItem>
-            <ListItem button onPress={() => this.onChangeBoolean('alert_employee')}>
-              <CheckBox
-                style={{ marginVertical: 10 }}
-                onPress={() => this.onChangeBoolean('alert_employee')}
-                checked={job.alert_employee}
-                color={BLUE_MAIN}
-              />
-              <Body>
-                <Text>{t('JOB_EDIT.alertEmployee')}</Text>
-              </Body>
-            </ListItem>
-            <ListItem button onPress={() => this.onChangeBoolean('email_customer')}>
-              <CheckBox
-                style={{ marginVertical: 10 }}
-                onPress={() => this.onChangeBoolean('email_customer')}
-                checked={job.email_customer}
-                color={BLUE_MAIN}
-              />
-              <Body>
-                <Text>{t('JOB_EDIT.emailCustomer')}</Text>
-              </Body>
-            </ListItem>
-          </Form>
-
-          <Grid style={{ marginVertical: 10 }}>
-            <Col size={1} />
-            <Col size={4}>
-              <Button title={'CANCEL'} block danger onPress={this.goBack}>
-                <Text>{t('APP.cancel')}</Text>
-              </Button>
-            </Col>
-            <Col size={1} />
-            <Col size={4}>
-              <Button title={'SAVE'} block primary onPress={this.onSave}>
-                <Text>{t('APP.save')}</Text>
-              </Button>
-            </Col>
-            <Col size={1} />
-          </Grid>
-        </Content>
+            </View>
+            <View style={styles.fieldsTextSelects}>
+              <View
+                style={{
+                  width: Platform.OS === 'ios' ? '24%' : '22%',
+                }}>
+                <Text style={styles.textLabel}>Customer</Text>
+              </View>
+              <View
+                style={{
+                  width: Platform.OS === 'ios' ? '76%' : '78%',
+                }}>
+                <ListItem
+                  style={styles.borderNonePicker}
+                  button
+                  noIndentBodyText
+                  onPress={this.goToSearchLocation}>
+                  <Body style={{ marginVertical: 3 }}>
+                    <Text
+                      style={{
+                        color: job.location ? '#000000' : '#BBBBBB',
+                        fontFamily: 'Arial',
+                        fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
+                      }}>
+                      {job.location ? job.location.name : t('JOB_EDIT.selectLocation')}
+                    </Text>
+                  </Body>
+                  {job.location && job.location.id ? (
+                    <TouchableOpacity onPress={this.deleteLocation}>
+                      <Icon name="close" style={styles.iconClose} type="MaterialIcons" />
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity onPress={this.goToSearchLocation}>
+                      <Icon name="search" style={styles.iconSearch} type="MaterialIcons" />
+                    </TouchableOpacity>
+                  )}
+                </ListItem>
+              </View>
+            </View>
+            <View style={styles.fieldsTextSelects}>
+              <View
+                style={{
+                  width: Platform.OS === 'ios' ? '24%' : '22%',
+                }}>
+                <Text style={styles.textLabel}>Fieldworker</Text>
+              </View>
+              <View
+                style={{
+                  width: Platform.OS === 'ios' ? '76%' : '78%',
+                }}>
+                <ListItem
+                  style={styles.borderNonePicker}
+                  button
+                  noIndentBodyText
+                  onPress={this.goToSearchEmployee}>
+                  <Body>
+                    <Text
+                      style={{
+                        color: employee && employee.id ? '#000000' : '#BBBBBB',
+                        fontFamily: 'Arial',
+                        fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
+                      }}>
+                      {fieldworkerText}
+                    </Text>
+                  </Body>
+                  {employee && employee.id ? (
+                    <TouchableOpacity onPress={this.deleteEmployee}>
+                      <Icon name="close" style={styles.iconClose} type="MaterialIcons" />
+                    </TouchableOpacity>
+                  ) : (
+                    <TouchableOpacity onPress={this.goToSearchEmployee}>
+                      <Icon name="search" style={styles.iconSearch} type="MaterialIcons" />
+                    </TouchableOpacity>
+                  )}
+                </ListItem>
+              </View>
+            </View>
+          </ScrollView>
+          <View style={styles.flexTwo}>
+            <View style={styles.containerSwitch}>
+              <View style={styles.viewSwitch}>
+                <Switch
+                  thumbColor={job.alert_employee ? BLUE_MAIN : '#BBBBBB'}
+                  onValueChange={() => this.onChangeBoolean('alert_employee')}
+                  value={job.alert_employee}
+                  trackColor={{
+                    true: '#CAEDFA',
+                    false: '#BBBBBB',
+                  }}
+                />
+                <Text
+                  style={job.alert_employee ? styles.textSwitchActive : styles.textSwitchInative}>
+                  {t('JOB_EDIT.alertEmployee')}
+                </Text>
+              </View>
+              <View style={styles.viewSwitch}>
+                <Switch
+                  thumbColor={job.email_customer ? BLUE_MAIN : '#BBBBBB'}
+                  trackColor={{
+                    true: '#CAEDFA',
+                    false: '#BBBBBB',
+                  }}
+                  onValueChange={() => this.onChangeBoolean('email_customer')}
+                  value={job.email_customer}
+                />
+                <Text
+                  style={job.email_customer ? styles.textSwitchActive : styles.textSwitchInative}>
+                  {t('JOB_EDIT.emailCustomer')}
+                </Text>
+              </View>
+            </View>
+            <View style={styles.containerButtonsBotton}>
+              <TouchableOpacity onPress={this.goBack} style={styles.buttonCancel}>
+                <Text style={styles.textButtonCancel}>{t('APP.cancel')}</Text>
+              </TouchableOpacity>
+              <TouchableOpacity onPress={this.onSave} style={styles.buttonSave}>
+                <Text style={styles.textButtonSave}>{t('APP.save')}</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
       </Container>
     );
   }
