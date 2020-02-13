@@ -11,7 +11,9 @@ import 'moment/locale/es';
 
 moment.locale(i18n.language);
 
-let dynamicAppName = 'massoneFieldworker';
-if (Platform.OS === 'ios') dynamicAppName = 'massoneApp';
+const dynamicAppName = Platform.select({
+  ios: () => 'massoneApp',
+  android: () => 'massoneFieldworker',
+})();
 
 AppRegistry.registerComponent(dynamicAppName, () => App);

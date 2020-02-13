@@ -148,6 +148,7 @@ android {
 }
 
 dependencies {
+    compile project(':react-native-linear-gradient')
     compile project(':react-native-view-pdf')
     compile project(':react-native-signature-capture')
     compile project(':react-native-image-picker')
