@@ -5,14 +5,24 @@ const styles = StyleSheet.create({
   containerContent: {
     flex: 1,
     // borderWidth: 1,
-    paddingHorizontal: 18,
+    paddingHorizontal: 20,
     // borderColor: 'red',
   },
   flexOne: {
     flex: 2,
+    marginTop: 13,
     // borderColor: 'blue',
     justifyContent: 'space-between',
     // borderWidth: 2,
+  },
+  pickerStyle: {
+    width:
+      Dimensions.get('window').width <= 360
+        ? 200
+        : Dimensions.get('window').width >= 400
+          ? 245
+          : 225,
+    marginVertical: 2,
   },
   fieldsText: {
     width: '100%',
@@ -32,12 +42,14 @@ const styles = StyleSheet.create({
   },
   TextDownSlider: {
     color: '#BBBBBB',
-    fontSize: Dimensions.get('window').width <= 360 ? 12 : 14,
+    fontFamily: 'Arial',
+    fontSize: Dimensions.get('window').width <= 360 ? 7 : 9,
   },
   TextDownSliderActive: {
     color: BLUE_MAIN,
     fontWeight: 'bold',
-    fontSize: Dimensions.get('window').width <= 360 ? 12 : 14,
+    fontFamily: 'Arial',
+    fontSize: Dimensions.get('window').width <= 360 ? 7 : 9,
   },
   containerTextSlider: {
     width: '24%',
@@ -110,10 +122,12 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
   textSwitchActive: {
-    fontSize: 13,
+    marginLeft: 7,
+    fontSize: Dimensions.get('window').width <= 360 ? 11 : 12,
   },
   textSwitchInative: {
-    fontSize: 13,
+    marginLeft: 7,
+    fontSize: Dimensions.get('window').width <= 360 ? 11 : 12,
     color: '#BBBBBB',
   },
   containerSwitch: {
@@ -121,6 +135,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     width: '100%',
     justifyContent: 'space-between',
+  },
+  borderNonePicker: {
+    borderColor: 'transparent',
   },
   viewSwitch: {
     flexDirection: 'row',
