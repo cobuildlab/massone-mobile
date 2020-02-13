@@ -1,5 +1,5 @@
 import { StyleSheet, Dimensions } from 'react-native';
-import { BLUE_MAIN, VIOLET, GRAY_DARK } from '../constants/colorPalette';
+import { BLUE_MAIN, VIOLET } from '../constants/colorPalette';
 
 export default StyleSheet.create({
   // bgHeader: {
@@ -10,7 +10,8 @@ export default StyleSheet.create({
   },
   textValue: {
     color: '#BBBBBB',
-    fontSize: Dimensions.get('window').width <= 360 ? 12 : 14,
+    fontFamily: 'Roboto',
+    fontSize: Dimensions.get('window').width <= 360 ? 10 : 12,
   },
   containerField: {
     flexDirection: 'row',
@@ -19,10 +20,11 @@ export default StyleSheet.create({
     alignItems: 'center',
   },
   containerKey: {
-    width: '28%',
+    width: '25%',
+    marginLeft: 15,
   },
   containerValue: {
-    width: '72%',
+    width: '75%',
   },
   listItem: {
     width: '95%',
@@ -44,16 +46,15 @@ export default StyleSheet.create({
     marginLeft: 5,
     marginBottom: 3,
   },
-  textDate: {
-    fontSize: 14,
-    color: GRAY_DARK,
-    fontWeight: '700',
-    marginRight: 4,
-  },
   textNumDate: {
     fontSize: 14,
     marginLeft: 2,
     marginRight: 4,
   },
-  textData: {},
+  textData: {
+    fontSize: Dimensions.get('window').width <= 360 ? 16 : 18,
+    color: '#000000',
+    fontFamily: 'Roboto',
+    fontWeight: 'normal',
+  },
 });
