@@ -1,5 +1,5 @@
 import React from 'react';
-import { Root, StyleProvider } from 'native-base';
+import {Root, StyleProvider} from 'native-base';
 import {
   createSwitchNavigator,
   createStackNavigator,
@@ -7,7 +7,7 @@ import {
   createDrawerNavigator,
 } from 'react-navigation';
 import getTheme from './native-base-theme/components';
-import { LoginScreen, ForgotScreen, RecoverScreen } from './src/Auth';
+import {LoginScreen, ForgotScreen, RecoverScreen} from './src/Auth';
 import {
   JobsListScreen,
   JobDetailsScreen,

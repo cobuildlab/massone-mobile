@@ -1,6 +1,6 @@
-import React, { Component } from 'react';
-import { TouchableOpacity, FlatList, Alert, View } from 'react-native';
-import { Text, Container, Spinner, Icon, Card, Left, Right } from 'native-base';
+import React, {Component} from 'react';
+import {TouchableOpacity, FlatList, Alert, View} from 'react-native';
+import {Text, Container, Spinner, Icon, Card, Left, Right} from 'native-base';
 import jobStore from './jobStore';
 import authStore from '../Auth/authStore';
 import fcmStore from './fcmStore';
@@ -8,11 +8,16 @@ import * as jobActions from './actions';
 import * as authActions from '../Auth/actions';
 import * as fcmActions from './fcmActions';
 import styles from './JobsListStyle';
-import { CustomHeader, CustomToast, Loading, CenteredText } from '../utils/components';
-import { BLUE_MAIN } from '../constants/colorPalette';
-import { LOG, WARN, sortByDate } from '../utils';
+import {
+  CustomHeader,
+  CustomToast,
+  Loading,
+  CenteredText,
+} from '../utils/components';
+import {BLUE_MAIN} from '../constants/colorPalette';
+import {LOG, WARN, sortByDate} from '../utils';
 import moment from 'moment';
-import { withNamespaces } from 'react-i18next';
+import {withNamespaces} from 'react-i18next';
 import firebase from 'react-native-firebase';
 
 class JobsListScreen extends Component {
@@ -29,7 +34,7 @@ class JobsListScreen extends Component {
     firebase
       .messaging()
       .hasPermission()
-      .then((enabled) => {
+      .then(enabled => {
         if (enabled) {
           LOG(this, 'firebase has permission');
         } else {
