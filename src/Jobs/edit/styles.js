@@ -101,7 +101,7 @@ const styles = StyleSheet.create({
     width: '44%',
     alignItems: 'center',
     borderRadius: 30,
-    paddingVertical: 12,
+    paddingVertical: Dimensions.get('window').width <= 360 ? 8 : 12,
     borderWidth: 2,
   },
   buttonSave: {
@@ -110,7 +110,7 @@ const styles = StyleSheet.create({
     width: '44%',
     alignItems: 'center',
     borderRadius: 30,
-    paddingVertical: 12,
+    paddingVertical: Dimensions.get('window').width <= 360 ? 8 : 12,
     borderWidth: 2,
   },
   textButtonCancel: {

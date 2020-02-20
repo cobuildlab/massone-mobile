@@ -1,6 +1,6 @@
-import React, {Component} from 'react';
-import {TouchableOpacity, FlatList, Alert, View} from 'react-native';
-import {Text, Container, Spinner, Icon, Card, Left, Right} from 'native-base';
+import React, { Component } from 'react';
+import { TouchableOpacity, FlatList, Alert, View } from 'react-native';
+import { Text, Container, Spinner, Icon, Card, Left, Right } from 'native-base';
 import jobStore from './jobStore';
 import authStore from '../Auth/authStore';
 import fcmStore from './fcmStore';
@@ -8,16 +8,11 @@ import * as jobActions from './actions';
 import * as authActions from '../Auth/actions';
 import * as fcmActions from './fcmActions';
 import styles from './JobsListStyle';
-import {
-  CustomHeader,
-  CustomToast,
-  Loading,
-  CenteredText,
-} from '../utils/components';
-import {BLUE_MAIN} from '../constants/colorPalette';
-import {LOG, WARN, sortByDate} from '../utils';
+import { CustomHeader, CustomToast, Loading, CenteredText } from '../utils/components';
+import { BLUE_MAIN } from '../constants/colorPalette';
+import { LOG, WARN, sortByDate, validateRoles } from '../utils';
 import moment from 'moment';
-import {withNamespaces} from 'react-i18next';
+import { withNamespaces } from 'react-i18next';
 import firebase from 'react-native-firebase';
 
 class JobsListScreen extends Component {
@@ -34,7 +29,7 @@ class JobsListScreen extends Component {
     firebase
       .messaging()
       .hasPermission()
-      .then(enabled => {
+      .then((enabled) => {
         if (enabled) {
           LOG(this, 'firebase has permission');
         } else {
@@ -251,6 +246,30 @@ class JobsListScreen extends Component {
     navigation.navigate('JobEdit', { jobId: id });
   };
 
+  deleteJob = (jobEntry) => {
+    Alert.alert(this.props.t('JOBS.wantToDeleteJob'), jobEntry.title, [
+      {
+        text: this.props.t('APP.cancel'),
+        onPress: () => {
+          LOG(this, 'Cancel deleteJob');
+        },
+      },
+      {
+        text: this.props.t('JOBS.delete'),
+        onPress: () => {
+          this.setState({ isLoading: true }, () => {
+            jobActions.deleteJob(jobEntry.id);
+          });
+        },
+      },
+    ]);
+  };
+
+  goToJobHistory = (job) => {
+    const { navigation } = this.props;
+    navigation.navigate('JobHistory', { job: job });
+  };
+
   _renderItem = ({ item }) => {
     const { t } = this.props;
     const location = item.location || {};
@@ -298,31 +317,43 @@ class JobsListScreen extends Component {
           </View>
           <View style={styles.containerAddress}>
             <Icon name="location-on" style={styles.iconEmployeAndLocation} type="MaterialIcons" />
-            <Text style={styles.textStyle}>{`${location.name}, ${location.address}, ${
-              location.city
-            }, ${location.state}`}</Text>
+            <Text
+              style={
+                styles.textStyle
+              }>{`${location.name}, ${location.address}, ${location.city}, ${location.state}`}</Text>
           </View>
           <View
             style={{
               flexDirection: 'row-reverse',
             }}>
-            <TouchableOpacity style={styles.containerIconFooter}>
+            <TouchableOpacity
+              onPress={() => this.goToJobHistory(item)}
+              style={styles.containerIconFooter}>
               <Icon
-                name="dots-horizontal"
+                name="book-open-page-variant"
                 style={styles.iconsFooter}
                 type="MaterialCommunityIcons"
               />
             </TouchableOpacity>
+            {validateRoles(['Admin']) && (
+              <TouchableOpacity
+                onPress={() => this.deleteJob(item)}
+                style={styles.containerIconFooter}>
+                <Icon name="delete" style={styles.iconsFooter} type="MaterialIcons" />
+              </TouchableOpacity>
+            )}
             <TouchableOpacity
               onPress={() => this.goToComments(item.id)}
               style={styles.containerIconFooter}>
               <Icon name="comment" style={styles.iconsFooter} type="MaterialIcons" />
             </TouchableOpacity>
-            <TouchableOpacity
-              onPress={() => this.goToJobEdit(item.id)}
-              style={styles.containerIconFooter}>
-              <Icon name="pencil" style={styles.iconsFooter} type="MaterialCommunityIcons" />
-            </TouchableOpacity>
+            {validateRoles(['Admin', 'Massone']) && (
+              <TouchableOpacity
+                onPress={() => this.goToJobEdit(item.id)}
+                style={styles.containerIconFooter}>
+                <Icon name="pencil" style={styles.iconsFooter} type="MaterialCommunityIcons" />
+              </TouchableOpacity>
+            )}
           </View>
         </TouchableOpacity>
       </Card>
