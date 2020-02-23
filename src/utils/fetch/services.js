@@ -1,8 +1,8 @@
 import authStore from '../../Auth/authStore';
-import { API_URL } from 'react-native-dotenv';
+import {API_URL} from 'react-native-dotenv';
 import * as authActions from '../../Auth/actions';
-import { checkInternetConnection } from 'react-native-offline';
-import { i18n } from '../i18n';
+import {checkInternetConnection} from 'react-native-offline';
+import {i18n} from '../i18n';
 
 /**
  * POST method fetch

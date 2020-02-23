@@ -1,28 +1,13 @@
 import React, { Component } from 'react';
-import { Alert } from 'react-native';
-import {
-  Body,
-  Card,
-  Text,
-  CardItem,
-  Button,
-  Icon,
-  Title,
-  Content,
-  Container,
-  Footer,
-  Grid,
-  Col,
-  FooterTab,
-} from 'native-base';
+import { Alert, View, TouchableOpacity } from 'react-native';
+import { Card, Text, Container } from 'native-base';
 import styles from './JobDetailsStyle';
-import { BLUE_MAIN } from '../constants/colorPalette';
 import { CustomHeader, Loading, CustomToast } from '../utils/components';
 import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
 import moment from 'moment';
-import { LOG, validateRoles } from '../utils';
+import { LOG } from '../utils';
 
 class JobDetailsScreen extends Component {
   static navigationOptions = {
@@ -85,194 +70,166 @@ class JobDetailsScreen extends Component {
   render() {
     const { t } = this.props;
     const { employee } = this.state.job;
-
+    const created = this.state.job.date_start
+      ? moment(this.state.job.date_start)
+        .tz(moment.tz.guess())
+        .format('LLLL')
+      : t('JOBS.notProvided');
     return (
       <Container>
         {this.state.isLoading ? <Loading /> : null}
-
         <CustomHeader
           leftButton={'goBack'}
           title={t('JOBS.jobDetails')}
           rightButton={{ icon: 'md-mail', handler: this.goToComments }}
         />
-
-        <Content>
-          <Card transparent>
-            <CardItem>
-              <Body>
-                <Title>{t('JOBS.issue')}</Title>
-                <Text style={styles.textData}>{this.state.job.title}</Text>
-                <Title>{t('JOBS.description')}</Title>
-                <Text style={styles.textData}>{this.state.job.description}</Text>
-                {this.state.job.location ? (
-                  <>
-                    <Title>{t('JOBS.customer')}</Title>
-                    <Text style={styles.textData}>{this.state.job.location.name}</Text>
-                    <Title>{t('JOBS.address')}</Title>
-                    <Text style={styles.textData}>
-                      {`${this.state.job.location.address}, ${this.state.job.location.city}`}
-                    </Text>
-                  </>
-                ) : null}
-                {this.state.job.location ? (
-                  <>
-                    <Title>{t('JOBS.contact')}</Title>
-                    <Text style={styles.textDataContact}>
-                      <Text>{this.state.job.location.name}</Text>
-                      <Text>
-                        {' '}
-                        <Icon
-                          type="MaterialIcons"
-                          name="phone"
-                          style={{
-                            color: BLUE_MAIN,
-                            fontSize: 14,
-                            marginTop: 5,
-                          }}
-                        />{' '}
-                        {this.state.job.location.phone_number}
-                      </Text>
-                    </Text>
-                  </>
-                ) : null}
-                {this.state.job.job_type ? (
-                  <>
-                    <Title>{t('JOBS.type')}</Title>
-                    <Text style={styles.textData}>{this.state.job.job_type.name}</Text>
-                  </>
-                ) : null}
-                <Title>{t('JOBS.status')}</Title>
-                <Text style={styles.textData}>{this.state.job.status}</Text>
-                <Title>{t('JOBS.priority')}</Title>
-                <Text style={styles.textData}>{this.state.job.priority}</Text>
-                <Title>{t('JOBS.startDate')}</Title>
-                <Text style={styles.textData}>
+        <View style={styles.containerFlex}>
+          <Card style={styles.cardContainer}>
+            <View>
+              <View style={styles.containerIssue}>
+                <Text style={styles.keyTitle}>{t('JOBS.issue')}</Text>
+                <Text style={styles.keyTitle}>{created}</Text>
+              </View>
+              <View style={styles.valueContainer}>
+                <Text style={styles.jobTitleStyle}>{this.state.job.title}</Text>
+              </View>
+            </View>
+            <View>
+              <View>
+                <Text style={styles.keyTitle}>{t('JOBS.description')}</Text>
+              </View>
+              <View style={styles.valueContainer}>
+                <Text style={styles.keyValue}>{this.state.job.description}</Text>
+              </View>
+            </View>
+            {this.state.job.location ? (
+              <>
+                <View>
+                  <View>
+                    <Text style={styles.keyTitle}>{t('JOBS.customer')}</Text>
+                  </View>
+                  <View style={styles.valueContainer}>
+                    <Text style={styles.keyValue}>{this.state.job.location.name}</Text>
+                  </View>
+                </View>
+                <View>
+                  <View>
+                    <Text style={styles.keyTitle}>{t('JOBS.address')}</Text>
+                  </View>
+                  <View style={styles.valueContainer}>
+                    <Text
+                      style={
+                        styles.keyValue
+                      }>{`${this.state.job.location.address}, ${this.state.job.location.city}`}</Text>
+                  </View>
+                </View>
+                <View>
+                  <View>
+                    <Text style={styles.keyTitle}>{t('JOBS.contact')}</Text>
+                  </View>
+                  <View style={[styles.valueContainer, { flexDirection: 'row' }]}>
+                    <Text style={styles.keyValue}>{this.state.job.location.name}</Text>
+                    <Text> </Text>
+                    <Text style={styles.keyValue}>{this.state.job.location.phone_number}</Text>
+                  </View>
+                </View>
+              </>
+            ) : null}
+            {this.state.job.job_type ? (
+              <View>
+                <View>
+                  <Text style={styles.keyTitle}>{t('JOBS.type')}</Text>
+                </View>
+                <View style={styles.valueContainer}>
+                  <Text style={styles.keyValue}>{this.state.job.job_type.name}</Text>
+                </View>
+              </View>
+            ) : null}
+            <View style={styles.containerDoubleRow}>
+              <View style={styles.widthDouble}>
+                <Text style={styles.keyTitle}>{t('JOBS.status')}</Text>
+                <Text style={styles.keyValue}>{this.state.job.status}</Text>
+              </View>
+              <View style={styles.widthDouble}>
+                <Text style={styles.keyTitle}>{t('JOBS.priority')}</Text>
+                <Text style={styles.keyValue}>{this.state.job.priority}</Text>
+              </View>
+            </View>
+            <View style={styles.containerDoubleRow}>
+              <View style={styles.widthDouble}>
+                <Text style={styles.keyTitle}>{t('JOBS.startDate')}</Text>
+                <Text style={styles.keyValue}>
                   {this.state.job.date_start
-                    ? moment(this.state.job.date_start)
-                      .tz(moment.tz.guess())
-                      .format('L LTS')
+                    ? moment(this.state.job.date_start).format('DD | MMM | YYYY')
                     : t('JOBS.notProvided')}
                 </Text>
-                <Title>{t('JOBS.endDate')}</Title>
-                <Text style={styles.textData}>
+              </View>
+              <View style={styles.widthDouble}>
+                <Text style={styles.keyTitle}>{t('JOBS.endDate')}</Text>
+                <Text style={styles.keyValue}>
                   {this.state.job.date_finish
-                    ? moment(this.state.job.date_finish)
-                      .tz(moment.tz.guess())
-                      .format('L LTS')
+                    ? moment(this.state.job.date_finish).format('DD | MMM | YYYY')
                     : t('JOBS.notProvided')}
                 </Text>
-                <Title>{t('JOBS.fieldworker')}:</Title>
-                <Text style={styles.textData}>
+              </View>
+            </View>
+            <View>
+              <View>
+                <Text style={styles.keyTitle}>{t('JOBS.fieldworker')}</Text>
+              </View>
+              <View style={[styles.valueContainer, { flexDirection: 'row' }]}>
+                <Text style={styles.keyValue}>
                   {employee ? (
                     <>{`${employee.first_name} ${employee.last_name}`}</>
                   ) : (
                     'Not assigned'
                   )}
                 </Text>
-
-                <Grid>
-                  {validateRoles(['Admin', 'Massone']) ? (
-                    <Col>
-                      <Button
-                        title={'EDIT'}
-                        style={{ marginHorizontal: 10 }}
-                        bordered
-                        block
-                        onPress={this.goToJobEdit}>
-                        <Text>{t('JOBS.edit')}</Text>
-                      </Button>
-                    </Col>
-                  ) : null}
-                  <Col>
-                    <Button
-                      title={'HISTORY'}
-                      style={{ marginHorizontal: 10 }}
-                      bordered
-                      block
-                      onPress={this.goToJobHistory}>
-                      <Text>{t('JOBS.history')}</Text>
-                    </Button>
-                  </Col>
-                  {validateRoles(['Admin']) ? (
-                    <Col>
-                      <Button
-                        title={'DELETE'}
-                        style={{ marginHorizontal: 10 }}
-                        bordered
-                        block
-                        danger
-                        onPress={this.deleteJob}>
-                        <Text>{t('JOBS.delete')}</Text>
-                      </Button>
-                    </Col>
-                  ) : null}
-                </Grid>
-              </Body>
-            </CardItem>
+              </View>
+            </View>
+            {this.state.job.status &&
+            this.state.job.status !== 'Paused' &&
+            this.state.job.status !== 'Closed' ? (
+                <>
+                  <View style={styles.containerBtnOptions}>
+                    {this.state.job.status === 'Dispatch' ? (
+                      <TouchableOpacity style={styles.btnPrimary} onPress={this.acceptJob}>
+                        <Text style={styles.textButton}>{t('JOBS.acceptJob')}</Text>
+                      </TouchableOpacity>
+                    ) : null}
+                    {this.state.job.status === 'Accept' ? (
+                      <TouchableOpacity style={styles.btnPrimary} onPress={this.startDrive}>
+                        <Text style={styles.textButton}>{t('JOBS.startDrive')}</Text>
+                      </TouchableOpacity>
+                    ) : null}
+                    {this.state.job.status === 'Start Drive Time' ? (
+                      <TouchableOpacity style={styles.btnPrimary} onPress={this.endDrive}>
+                        <Text style={styles.textButton}>{t('JOBS.endDrive')}</Text>
+                      </TouchableOpacity>
+                    ) : null}
+                    {this.state.job.status === 'End Drive Time' ? (
+                      <TouchableOpacity style={styles.btnPrimary} onPress={this.startJob}>
+                        <Text style={styles.textButton}>{t('JOBS.startJob')}</Text>
+                      </TouchableOpacity>
+                    ) : null}
+                    {this.state.job.status === 'Start' ? (
+                      <TouchableOpacity style={styles.btnDanger} onPress={this.goToPauseJob}>
+                        <Text style={styles.textButtonDanger}>{t('JOBS.pauseJob')}</Text>
+                      </TouchableOpacity>
+                    ) : null}
+                    {this.state.job.status === 'Start' ? (
+                      <TouchableOpacity style={styles.btnPrimary} onPress={this.goToCloseJob}>
+                        <Text style={styles.textButton}>{t('JOBS.closeJob')}</Text>
+                      </TouchableOpacity>
+                    ) : null}
+                  </View>
+                </>
+              ) : null}
           </Card>
-        </Content>
-        {this.state.job.status &&
-        this.state.job.status !== 'Paused' &&
-        this.state.job.status !== 'Closed' ? (
-            <Footer>
-              <FooterTab>
-                {this.state.job.status === 'Dispatch' ? (
-                  <Button title={'Accept'} onPress={this.acceptJob} primary transparent>
-                    <Text>{t('JOBS.acceptJob')}</Text>
-                  </Button>
-                ) : null}
-                {this.state.job.status === 'Accept' ? (
-                  <Button title={'Start Drive'} onPress={this.startDrive} primary transparent>
-                    <Text>{t('JOBS.startDrive')}</Text>
-                  </Button>
-                ) : null}
-                {this.state.job.status === 'Start Drive Time' ? (
-                  <Button title={'End Drive'} onPress={this.endDrive} primary transparent>
-                    <Text>{t('JOBS.endDrive')}</Text>
-                  </Button>
-                ) : null}
-                {this.state.job.status === 'End Drive Time' ? (
-                  <Button title={'Start Job'} onPress={this.startJob} primary transparent>
-                    <Text>{t('JOBS.startJob')}</Text>
-                  </Button>
-                ) : null}
-                {this.state.job.status === 'Start' ? (
-                  <Button title={'Pause Job'} onPress={this.goToPauseJob} danger transparent>
-                    <Text>{t('JOBS.pauseJob')}</Text>
-                  </Button>
-                ) : null}
-                {this.state.job.status === 'Start' ? (
-                  <Button title={'Close Job'} onPress={this.goToCloseJob} primary transparent>
-                    <Text>{t('JOBS.closeJob')}</Text>
-                  </Button>
-                ) : null}
-              </FooterTab>
-            </Footer>
-          ) : null}
+        </View>
       </Container>
     );
   }
-
-  deleteJob = () => {
-    if (!this.state.job || !this.state.job.title) return;
-
-    Alert.alert(this.props.t('JOBS.wantToDeleteJob'), this.state.job.title, [
-      {
-        text: this.props.t('APP.cancel'),
-        onPress: () => {
-          LOG(this, 'Cancel deleteJob');
-        },
-      },
-      {
-        text: this.props.t('JOBS.delete'),
-        onPress: () => {
-          this.setState({ isLoading: true }, () => {
-            jobActions.deleteJob(this.state.job.id);
-          });
-        },
-      },
-    ]);
-  };
 
   acceptJob = () => {
     if (!this.state.job || !this.state.job.title) return;
@@ -368,11 +325,6 @@ class JobDetailsScreen extends Component {
     if (!this.state.job || !this.state.job.id) return;
 
     this.props.navigation.navigate('JobHistory', { job: this.state.job });
-  };
-
-  goToJobEdit = () => {
-    if (!this.state.job || !this.state.job.id) return;
-    this.props.navigation.navigate('JobEdit', { jobId: this.state.job.id });
   };
 
   goToCloseJob = () => {

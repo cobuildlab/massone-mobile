@@ -1,6 +1,7 @@
 import React from 'react';
-import { AsyncStorage, StyleSheet, Image, View } from 'react-native';
-import { LOG } from './utils';
+import {StyleSheet, Image, View} from 'react-native';
+import AsyncStorage from '@react-native-community/async-storage';
+import {LOG} from './utils';
 import authStore from './Auth/authStore';
 import * as authActions from './Auth/actions';
 import LOGO_IMG from './assets/image/logoBlue.png';
