@@ -1,24 +1,15 @@
-import React, {Component} from 'react';
-import {View, Text, Image, TouchableOpacity, Linking} from 'react-native';
-import {
-  Content,
-  ListItem,
-  Body,
-  CheckBox,
-  Left,
-  Right,
-  Button,
-  Input,
-} from 'native-base';
+import React, { Component } from 'react';
+import { View, Text, Image, TouchableOpacity, Linking } from 'react-native';
+import { Content, ListItem, Body, CheckBox, Left, Right, Button, Input } from 'native-base';
 import styles from './style';
 import ButtomComponet from '../shared/componets/ButtomBlue';
 import * as authActions from './actions';
 import authStore from './authStore';
-import {LOG} from '../utils';
-import {CustomToast, Loading} from '../utils/components';
-import {BG_MOBILE_IMG, LOGO_WHITE} from '../assets/image/';
-import {withNamespaces} from 'react-i18next';
-import {BLUE_MAIN} from '../constants/colorPalette';
+import { LOG } from '../utils';
+import { CustomToast, Loading } from '../utils/components';
+import { BG_MOBILE_IMG, LOGO_WHITE } from '../assets/image/';
+import { withNamespaces } from 'react-i18next';
+import { BLUE_MAIN } from '../constants/colorPalette';
 
 class LoginScreen extends Component {
   static navigationOptions = {
@@ -37,10 +28,7 @@ class LoginScreen extends Component {
 
   componentDidMount() {
     this.loginSubscription = authStore.subscribe('Login', this.loginHandler);
-    this.authStoreError = authStore.subscribe(
-      'AuthStoreError',
-      this.errorHandler,
-    );
+    this.authStoreError = authStore.subscribe('AuthStoreError', this.errorHandler);
   }
 
   componentWillUnmount() {
@@ -91,6 +79,7 @@ class LoginScreen extends Component {
             />
             <Input
               style={styles.inputLogin}
+              autoCapitalize="none"
               value={this.state.password}
               placeholderTextColor="#fff"
               placeholder="Password"

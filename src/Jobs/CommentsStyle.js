@@ -11,6 +11,11 @@ export default StyleSheet.create({
     borderTopWidth: 0,
     borderBottomWidth: 0,
   },
+  viewEmptyComment: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   boxComment: {
     marginHorizontal: 15,
     borderColor: '#537DBF',
