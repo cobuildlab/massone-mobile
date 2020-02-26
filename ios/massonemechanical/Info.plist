@@ -37,8 +37,14 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Massone Fieldworker Mobile App requires access to your Camera to allow you to upload Photos and Pictures in the Jobs that you are executing. As well as sharing this information with your Contractor</string>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Massone Fieldworker Mobile App requires access to your location to allow you to share your position with your Contractor. In that way the Contractor can track the time spent to reach any Job that you want to know and receive the proper compensation for it.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string></string>
+	<string>Massone Fieldworker Mobile App requires access to your location to allow you to share your position with your Contractor. In that way the Contractor can track the time spent to reach any Job that you want to know and receive the proper compensation for it.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Massone Fieldworker Mobile App requires access to your Photo Library to allow you to upload Photos and Pictures in the Jobs that you are executing. As well as sharing this information with your Contractor</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>AntDesign.ttf</string>
@@ -73,6 +79,9 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationLandscapeLeft</string>
+		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>

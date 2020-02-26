@@ -101,6 +101,7 @@
 		CE4B260723FDBDD4004FB4F8 /* SimpleLineIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = SimpleLineIcons.ttf; path = "../../node_modules/native-base/Fonts/SimpleLineIcons.ttf"; sourceTree = "<group>"; };
 		CE4B260823FDBDD4004FB4F8 /* Fontisto.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; name = Fontisto.ttf; path = "../../node_modules/native-base/Fonts/Fontisto.ttf"; sourceTree = "<group>"; };
 		CE81BEC323FB24F4006A73A7 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		CE929BFB2406EDA500F8D714 /* Massone Fieldworker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "Massone Fieldworker.entitlements"; path = "massonemechanical/Massone Fieldworker.entitlements"; sourceTree = "<group>"; };
 		D2417FEBE40BB6556AA273C5 /* Pods-massonemechanical.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-massonemechanical.release.xcconfig"; path = "Target Support Files/Pods-massonemechanical/Pods-massonemechanical.release.xcconfig"; sourceTree = "<group>"; };
 		E025BAD1C63F4E7C5F5464B2 /* Pods-massonemechanicalTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-massonemechanicalTests.release.xcconfig"; path = "Target Support Files/Pods-massonemechanicalTests/Pods-massonemechanicalTests.release.xcconfig"; sourceTree = "<group>"; };
 		E4F65605052753F363684C77 /* libPods-massonemechanical-tvOS.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-massonemechanical-tvOS.a"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -165,6 +166,7 @@
 		13B07FAE1A68108700A75B9A /* massonemechanical */ = {
 			isa = PBXGroup;
 			children = (
+				CE929BFB2406EDA500F8D714 /* Massone Fieldworker.entitlements */,
 				CE81BEC323FB24F4006A73A7 /* GoogleService-Info.plist */,
 				008F07F21AC5B25A0029DE68 /* main.jsbundle */,
 				13B07FAF1A68108700A75B9A /* AppDelegate.h */,
@@ -717,7 +719,8 @@
 			baseConfigurationReference = A21910F476B01DDA8AE0BD20 /* Pods-massonemechanical.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 17;
+				CODE_SIGN_ENTITLEMENTS = "massonemechanical/Massone Fieldworker.entitlements";
+				CURRENT_PROJECT_VERSION = 18;
 				DEAD_CODE_STRIPPING = NO;
 				DEVELOPMENT_TEAM = 4STCLHYTV3;
 				INFOPLIST_FILE = massonemechanical/Info.plist;
@@ -730,6 +733,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.massonemechanical.fieldworker;
 				PRODUCT_NAME = "Massone Fieldworker";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -739,7 +743,8 @@
 			baseConfigurationReference = D2417FEBE40BB6556AA273C5 /* Pods-massonemechanical.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 17;
+				CODE_SIGN_ENTITLEMENTS = "massonemechanical/Massone Fieldworker.entitlements";
+				CURRENT_PROJECT_VERSION = 18;
 				DEVELOPMENT_TEAM = 4STCLHYTV3;
 				INFOPLIST_FILE = massonemechanical/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -751,6 +756,7 @@
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.massonemechanical.fieldworker;
 				PRODUCT_NAME = "Massone Fieldworker";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;
