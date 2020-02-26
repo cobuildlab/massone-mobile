@@ -136,7 +136,11 @@ class CommentsScreen extends Component {
 
         {this.state.isLoading ? <Loading /> : null}
 
-        {this.state.emptyComments ? <CenteredText text={`${t('JOBS.emptyComments')}`} /> : null}
+        {this.state.emptyComments ? (
+          <View style={styles.viewEmptyComment}>
+            <CenteredText text={`${t('JOBS.emptyComments')}`} />
+          </View>
+        ) : null}
         {Array.isArray(this.state.comments) ? (
           <FlatList
             ref={(flatList) => (this.flatList = flatList)}
