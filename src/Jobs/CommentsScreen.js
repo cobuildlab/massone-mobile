@@ -1,5 +1,5 @@
 import React, { Component, Fragment } from 'react';
-import { TouchableOpacity, Image, FlatList, KeyboardAvoidingView } from 'react-native';
+import { TouchableOpacity, Image, FlatList, KeyboardAvoidingView, Platform } from 'react-native';
 import {
   Input,
   Spinner,
@@ -131,7 +131,7 @@ class CommentsScreen extends Component {
     const { attachFile } = this.state;
 
     return (
-      <KeyboardAvoidingView behavior={'padding'} style={[{ flex: 1 }]}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' && 'padding'} style={[{ flex: 1 }]}>
         <CustomHeader leftButton={'goBack'} title={t('JOBS.jobComments')} />
 
         {this.state.isLoading ? <Loading /> : null}
@@ -156,9 +156,10 @@ class CommentsScreen extends Component {
                   <Left>
                     <Body>
                       {comment.owner ? (
-                        <Text style={styles.nameEmployee}>{`${comment.owner.first_name} ${
-                          comment.owner.last_name
-                        }`}</Text>
+                        <Text
+                          style={
+                            styles.nameEmployee
+                          }>{`${comment.owner.first_name} ${comment.owner.last_name}`}</Text>
                       ) : null}
 
                       {comment.owner &&

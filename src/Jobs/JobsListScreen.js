@@ -318,9 +318,12 @@ class JobsListScreen extends Component {
           <View style={styles.containerAddress}>
             <Icon name="location-on" style={styles.iconEmployeAndLocation} type="MaterialIcons" />
             <Text
-              style={
-                styles.textStyle
-              }>{`${location.name}, ${location.address}, ${location.city}, ${location.state}`}</Text>
+              style={[
+                styles.textStyle,
+                {
+                  width: '98%',
+                },
+              ]}>{`${location.name}, ${location.address}, ${location.city}, ${location.state}`}</Text>
           </View>
           <View
             style={{
