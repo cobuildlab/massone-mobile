@@ -222,7 +222,9 @@ class CloseJobScreen extends Component {
               <Label>{t('JOBS.laborHoursLabel')}</Label>
               <Input
                 value={this.state.laborHours}
-                // keyboardType={'numeric'}
+                keyboardType={'numeric'}
+                maxLength={5}
+                returnKeyType="done"
                 placeholder={t('JOBS.laborHoursPlaceholder')}
                 onChangeText={(laborHours) => this.setState({ laborHours })}
               />
@@ -231,7 +233,9 @@ class CloseJobScreen extends Component {
               <Label>{t('JOBS.laborOvertime')}</Label>
               <Input
                 value={this.state.laborOvertime}
-                // keyboardType={'numeric'}
+                keyboardType={'numeric'}
+                returnKeyType="done"
+                maxLength={5}
                 placeholder={t('JOBS.laborOvertimePlaceholder')}
                 onChangeText={(laborOvertime) => this.setState({ laborOvertime })}
               />
@@ -396,6 +400,8 @@ class CloseJobScreen extends Component {
               this.state.equipmentUsed || null,
               this.state.refrigerantInventory || null,
               this.state.signature,
+              parseFloat(this.state.laborHours),
+              parseFloat(this.state.laborOvertime) || 0,
             );
           });
         },

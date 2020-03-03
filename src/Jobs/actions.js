@@ -110,6 +110,7 @@ export const getJobsForAdmin = () => {
 const getJobs = (urlParams = '') => {
   getData(`/job/users/${urlParams}`)
     .then((data) => {
+      // console.log('data entry jobss ',data)
       Flux.dispatchEvent('GetJobs', data);
     })
     .catch((err) => {
@@ -313,6 +314,8 @@ const closeJob = (
   equipmentUsed,
   refrigerantInventory,
   signature,
+  worked_time,
+  worked_overtime,
 ) => {
   try {
     closeJobValidator(
@@ -344,6 +347,8 @@ const closeJob = (
     materials,
     equipment_used: equipmentUsed,
     refrigerant_inventory: refrigerantInventory,
+    worked_time,
+    worked_overtime,
   };
 
   if (parts.length > 0) payload.parts = parts;
