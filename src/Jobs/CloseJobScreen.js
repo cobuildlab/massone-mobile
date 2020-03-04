@@ -293,7 +293,7 @@ class CloseJobScreen extends Component {
                   iosHeader="Select hour"
                   iosIcon={<Icon name="arrow-down" />}
                   style={{ width: undefined }}
-                  selectedValue={selectedHoursLabor}
+                  selectedValue={selectedHoursLaborOvertime}
                   onValueChange={(hour) => {
                     this.setState({
                       selectedHoursLaborOvertime: hour,
@@ -307,7 +307,7 @@ class CloseJobScreen extends Component {
                   iosHeader="Select min"
                   iosIcon={<Icon name="arrow-down" />}
                   style={{ width: undefined }}
-                  selectedValue={selectedMinutesLabor}
+                  selectedValue={selectedMinutesLaborOvertime}
                   onValueChange={(min) => {
                     let newMin = min;
                     if (newMin < 10) {
