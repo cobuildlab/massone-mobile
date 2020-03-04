@@ -16,6 +16,7 @@ import {
   Body,
   View,
   Icon,
+  Picker,
 } from 'native-base';
 import { BLUE_MAIN } from '../constants/colorPalette';
 import { CustomHeader, Loading } from '../utils/components';
@@ -45,13 +46,17 @@ class CloseJobScreen extends Component {
       workCompleted: false,
       workPerformed: '',
       parts: [],
-      laborHours: null,
-      laborOvertime: null,
+      laborHours: 1,
+      laborOvertime: 1,
       materials: '',
       equipmentUsed: '',
       refrigerantInventory: '',
       signature: '',
       jobTimes: {},
+      selectedHoursLabor: 1,
+      selectedMinutesLabor: 0,
+      selectedHoursLaborOvertime: 1,
+      selectedMinutesLaborOvertime: 0,
       /*
       Service order form
        */
@@ -97,9 +102,28 @@ class CloseJobScreen extends Component {
     this.setState({ isLoading: false, isRefreshing: false });
   };
 
+  hoursSet = () => {
+    return Array.from(Array(24), (e, val) => {
+      let valItera = val + 1;
+      return <Picker.Item key={valItera} label={`${valItera} hour`} value={valItera} />;
+    });
+  };
+
+  minSet = () => {
+    return Array.from(Array(12), (e, val) => {
+      const valItera = val * 5;
+      return <Picker.Item key={valItera} label={`${valItera} min`} value={valItera} />;
+    });
+  };
+
   render() {
     const { t } = this.props;
-
+    const {
+      selectedHoursLabor,
+      selectedMinutesLabor,
+      selectedHoursLaborOvertime,
+      selectedMinutesLaborOvertime,
+    } = this.state;
     return (
       <Container>
         {this.state.isLoading ? <Loading /> : null}
@@ -220,25 +244,83 @@ class CloseJobScreen extends Component {
                 </Text>
               ) : null}
               <Label>{t('JOBS.laborHoursLabel')}</Label>
-              <Input
-                value={this.state.laborHours}
-                keyboardType={'numeric'}
-                maxLength={5}
-                returnKeyType="done"
-                placeholder={t('JOBS.laborHoursPlaceholder')}
-                onChangeText={(laborHours) => this.setState({ laborHours })}
-              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}>
+                <Picker
+                  mode="dropdown"
+                  iosHeader="Select hour"
+                  iosIcon={<Icon name="arrow-down" />}
+                  style={{ width: undefined }}
+                  selectedValue={selectedHoursLabor}
+                  onValueChange={(hour) => {
+                    this.setState({
+                      selectedHoursLabor: hour,
+                      laborHours: `${hour}.${selectedMinutesLabor}`,
+                    });
+                  }}>
+                  {this.hoursSet()}
+                </Picker>
+                <Picker
+                  mode="dropdown"
+                  iosHeader="Select min"
+                  iosIcon={<Icon name="arrow-down" />}
+                  style={{ width: undefined }}
+                  selectedValue={selectedMinutesLabor}
+                  onValueChange={(min) => {
+                    let newMin = min;
+                    if (newMin < 10) {
+                      newMin = `0${newMin}`;
+                    }
+                    this.setState({
+                      selectedMinutesLabor: min,
+                      laborHours: `${selectedHoursLabor}.${newMin}`,
+                    });
+                  }}>
+                  {this.minSet()}
+                </Picker>
+              </View>
             </Item>
             <Item stackedLabel>
               <Label>{t('JOBS.laborOvertime')}</Label>
-              <Input
-                value={this.state.laborOvertime}
-                keyboardType={'numeric'}
-                returnKeyType="done"
-                maxLength={5}
-                placeholder={t('JOBS.laborOvertimePlaceholder')}
-                onChangeText={(laborOvertime) => this.setState({ laborOvertime })}
-              />
+              <View
+                style={{
+                  flexDirection: 'row',
+                }}>
+                <Picker
+                  mode="dropdown"
+                  iosHeader="Select hour"
+                  iosIcon={<Icon name="arrow-down" />}
+                  style={{ width: undefined }}
+                  selectedValue={selectedHoursLabor}
+                  onValueChange={(hour) => {
+                    this.setState({
+                      selectedHoursLaborOvertime: hour,
+                      laborOvertime: `${hour}.${selectedMinutesLaborOvertime}`,
+                    });
+                  }}>
+                  {this.hoursSet()}
+                </Picker>
+                <Picker
+                  mode="dropdown"
+                  iosHeader="Select min"
+                  iosIcon={<Icon name="arrow-down" />}
+                  style={{ width: undefined }}
+                  selectedValue={selectedMinutesLabor}
+                  onValueChange={(min) => {
+                    let newMin = min;
+                    if (newMin < 10) {
+                      newMin = `0${newMin}`;
+                    }
+                    this.setState({
+                      selectedMinutesLaborOvertime: min,
+                      laborOvertime: `${selectedHoursLaborOvertime}.${newMin}`,
+                    });
+                  }}>
+                  {this.minSet()}
+                </Picker>
+              </View>
             </Item>
             <Item stackedLabel>
               <Label>{t('JOBS.materials')}</Label>
