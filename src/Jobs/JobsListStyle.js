@@ -12,6 +12,11 @@ export default StyleSheet.create({
     flex: 1,
     marginHorizontal: 12,
   },
+  emptyJobsView: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   containerTitle: {
     justifyContent: 'space-between',
     paddingBottom: 7,

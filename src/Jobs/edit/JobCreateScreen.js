@@ -206,7 +206,7 @@ class JobCreateScreen extends Component {
       ? `${employee.first_name} ${employee.last_name}`
       : t('JOB_EDIT.selectEmployee');
 
-    console.log('widhtthtth ', Dimensions.get('window').width);
+    // console.log('widhtthtth ', Dimensions.get('window').width);
     return (
       <Container>
         {this.state.isLoading ? <Loading /> : null}

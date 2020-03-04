@@ -78,13 +78,13 @@ const closeJobValidator = (
   completionNotes,
   workCompleted,
   workPerformed,
-  parts,
-  laborHours,
-  laborOvertime,
+  // parts,
+  // laborHours,
+  // laborOvertime,
   materials,
   equipmentUsed,
-  refrigerantInventory,
-  signature,
+  // refrigerantInventory,
+  // signature,
 ) => {
   if (!isValidInteger(jobId)) {
     throw new Error(i18n.t('JOBS.invalidJob'));
@@ -115,9 +115,9 @@ const closeJobValidator = (
   //   }
   // }
 
-  if (!isValidInteger(laborHours)) {
-    throw new Error(i18n.t('JOBS.emptyLaborHours'));
-  }
+  // if (!isValidInteger(laborHours)) {
+  //   throw new Error(i18n.t('JOBS.emptyLaborHours'));
+  // }
 
   // if (!isValidInteger(laborOvertime, true)) {
   //   throw new Error(i18n.t('JOBS.emptyLabourOvertime'));

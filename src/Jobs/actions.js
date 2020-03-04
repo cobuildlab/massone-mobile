@@ -59,6 +59,7 @@ export const createJob = (data) => {
       Flux.dispatchEvent('CreateJob', data);
     })
     .catch((err) => {
+      console.log('ERRORR AL crear JON ', err);
       Flux.dispatchEvent('JobStoreError', err);
     });
 };
@@ -129,6 +130,18 @@ const getJob = (jobId) => {
       Flux.dispatchEvent('GetJob', data);
     })
     .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+const getLastFiveJobs = (customerId) => {
+  getData(`/customer/lasts-jobs/?customer=${customerId}`)
+    .then((data) => {
+      console.log(`last jobs `, data);
+      Flux.dispatchEvent('GetLastJobs', data);
+    })
+    .catch((err) => {
+      console.log('errorr last jobss ', err);
       Flux.dispatchEvent('JobStoreError', err);
     });
 };
@@ -342,8 +355,8 @@ const closeJob = (
     completion_notes: completionNotes,
     work_completed: workCompleted,
     work_performed: workPerformed,
-    labor_hours: laborHours,
-    labor_overtime: laborOvertime,
+    labor_hours: 1,
+    labor_overtime: 1,
     materials,
     equipment_used: equipmentUsed,
     refrigerant_inventory: refrigerantInventory,
@@ -474,6 +487,7 @@ export const getJobTypes = () => {
 };
 
 export {
+  getLastFiveJobs,
   getJobs,
   getJob,
   getJobHistory,
