@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { isValidString, isValidNumber, isValidInteger } from '../utils';
 import { i18n } from '../utils/i18n';
 
@@ -78,13 +79,13 @@ const closeJobValidator = (
   completionNotes,
   workCompleted,
   workPerformed,
-  // parts,
-  // laborHours,
-  // laborOvertime,
+  parts,
+  laborHours,
+  laborOvertime,
   materials,
   equipmentUsed,
-  // refrigerantInventory,
-  // signature,
+  refrigerantInventory,
+  signature,
 ) => {
   if (!isValidInteger(jobId)) {
     throw new Error(i18n.t('JOBS.invalidJob'));
