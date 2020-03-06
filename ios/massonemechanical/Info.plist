@@ -37,8 +37,6 @@
 			</dict>
 		</dict>
 	</dict>
-	<key>UIUserInterfaceStyle</key>
-	<string>Light</string>
 	<key>NSCameraUsageDescription</key>
 	<string>Massone Fieldworker Mobile App requires access to your Camera to allow you to upload Photos and Pictures in the Jobs that you are executing. As well as sharing this information with your Contractor</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -85,6 +83,8 @@
 		<string>UIInterfaceOrientationLandscapeRight</string>
 		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>
