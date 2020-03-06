@@ -126,7 +126,7 @@ const getJobs = (urlParams = '') => {
 const getJob = (jobId) => {
   getData(`/job/users/${jobId}/`)
     .then((data) => {
-      console.log(`DEBUG:job:`, data);
+      // console.log(`DEBUG:job:`, data);
       Flux.dispatchEvent('GetJob', data);
     })
     .catch((err) => {
@@ -137,7 +137,7 @@ const getJob = (jobId) => {
 const getLastFiveJobs = (customerId) => {
   getData(`/customer/lasts-jobs/?customer=${customerId}`)
     .then((data) => {
-      console.log(`last jobs `, data);
+      // console.log(`last jobs `, data);
       Flux.dispatchEvent('GetLastJobs', data);
     })
     .catch((err) => {

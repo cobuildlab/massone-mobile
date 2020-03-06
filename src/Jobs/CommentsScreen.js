@@ -250,6 +250,7 @@ class CommentsScreen extends Component {
                   justifyContent: 'center',
                   alignItems: 'center',
                 }}
+                autoCorrect={false}
                 returnKeyType={'next'}
                 value={this.state.message}
                 placeholder={t('JOBS.typeMessage')}

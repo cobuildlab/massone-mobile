@@ -60,7 +60,7 @@ class JobDetailsScreen extends Component {
 
   getJobHandler = (job) => {
     this.setState({ isLoading: false, job }, () => {
-      this.getLastJobs(job.customer.id);
+      this.getLastJobs(job.owner.id);
     });
   };
 
