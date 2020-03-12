@@ -7,7 +7,7 @@ import { withNamespaces } from 'react-i18next';
 const styles = StyleSheet.create({
   content: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: 'white',
     justifyContent: 'center',
     alignItems: 'center',
   },

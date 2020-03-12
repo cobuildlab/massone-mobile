@@ -377,7 +377,11 @@ class JobsListScreen extends Component {
           rightButton={{ icon: 'md-add', handler: this.goToCreateJob }}
         />
 
-        {this.state.emptyJobs ? <CenteredText text={`${t('JOBS.emptyJobs')}`} /> : null}
+        {this.state.emptyJobs ? (
+          <View style={styles.emptyJobsView}>
+            <CenteredText text={`${t('JOBS.emptyJobs')}`} />
+          </View>
+        ) : null}
         <View style={styles.containerFlatList}>
           {Array.isArray(this.state.jobs) ? (
             <FlatList

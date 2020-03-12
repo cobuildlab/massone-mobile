@@ -15,9 +15,18 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     fontSize: Dimensions.get('window').width <= 360 ? 18 : 19,
   },
+  textLastJobs: {
+    color: '#537DBF',
+    marginTop: 10,
+    textAlign: 'center',
+    fontFamily: 'Arial',
+    fontWeight: 'bold',
+    fontSize: Dimensions.get('window').width <= 360 ? 18 : 19,
+  },
   containerBtnOptions: {
     flexDirection: 'row',
     width: '100%',
+    paddingBottom: 20,
     justifyContent: 'space-around',
   },
   widthDouble: {
@@ -28,13 +37,14 @@ export default StyleSheet.create({
     justifyContent: 'space-between',
   },
   cardContainer: {
-    height: '95%',
+    // height: '96%',
+    height: 290,
     justifyContent: 'space-around',
     padding: 15,
   },
   containerFlex: {
-    flex: 1,
-    height: '100%',
+    // flex: 1,
+    // height: '100%',
     // borderColor: 'red',
     // borderWidth: 1,
     padding: 12,

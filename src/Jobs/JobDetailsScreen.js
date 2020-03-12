@@ -1,6 +1,7 @@
+/* eslint-disable react/jsx-key */
 import React, { Component } from 'react';
-import { Alert, View, TouchableOpacity } from 'react-native';
-import { Card, Text, Container } from 'native-base';
+import { Alert, View, TouchableOpacity, RefreshControl } from 'react-native';
+import { Card, Text, Content } from 'native-base';
 import styles from './JobDetailsStyle';
 import { CustomHeader, Loading, CustomToast } from '../utils/components';
 import { withNamespaces } from 'react-i18next';
@@ -19,6 +20,8 @@ class JobDetailsScreen extends Component {
     this.state = {
       isLoading: false,
       job: {},
+      lastFiveJobs: [],
+      loadingLastJobs: true,
       jobId: props.navigation.getParam('jobId', null),
     };
   }
@@ -26,6 +29,7 @@ class JobDetailsScreen extends Component {
   componentDidMount() {
     this.getJobSubscription = jobStore.subscribe('GetJob', this.getJobHandler);
     this.acceptJobSubscription = jobStore.subscribe('AcceptJob', this.updateJobHandler);
+    this.getLastJobsSubscription = jobStore.subscribe('GetLastJobs', this.getLastJobsHandler);
     this.pauseJobSubscription = jobStore.subscribe('PauseJob', this.updateJobHandler);
     this.startDriveSubscription = jobStore.subscribe('StartDrive', this.updateJobHandler);
     this.endDriveSubscription = jobStore.subscribe('EndDrive', this.updateJobHandler);
@@ -50,11 +54,21 @@ class JobDetailsScreen extends Component {
     this.startJobSubscription.unsubscribe();
     this.closeJobSubscription.unsubscribe();
     this.deleteJobSubscription.unsubscribe();
+    this.getLastJobsSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
   }
 
   getJobHandler = (job) => {
-    this.setState({ isLoading: false, job });
+    this.setState({ isLoading: false, job }, () => {
+      this.getLastJobs(job.owner.id);
+    });
+  };
+
+  getLastJobsHandler = (lastJobs) => {
+    this.setState({
+      lastFiveJobs: lastJobs,
+      loadingLastJobs: false,
+    });
   };
 
   updateJobHandler = (data) => {
@@ -69,6 +83,7 @@ class JobDetailsScreen extends Component {
 
   render() {
     const { t } = this.props;
+    const { lastFiveJobs } = this.state;
     const { employee } = this.state.job;
     const created = this.state.job.date_start
       ? moment(this.state.job.date_start)
@@ -76,14 +91,21 @@ class JobDetailsScreen extends Component {
         .format('LLLL')
       : t('JOBS.notProvided');
     return (
-      <Container>
+      <View
+        style={{
+          flex: 1,
+        }}>
         {this.state.isLoading ? <Loading /> : null}
         <CustomHeader
           leftButton={'goBack'}
           title={t('JOBS.jobDetails')}
           rightButton={{ icon: 'md-mail', handler: this.goToComments }}
         />
-        <View style={styles.containerFlex}>
+        <Content
+          refreshControl={
+            <RefreshControl refreshing={this.state.isLoading} onRefresh={this.reloadData} />
+          }
+          contentContainerStyle={styles.containerFlex}>
           <Card style={styles.cardContainer}>
             <View>
               <View style={styles.containerIssue}>
@@ -100,59 +122,6 @@ class JobDetailsScreen extends Component {
               </View>
               <View style={styles.valueContainer}>
                 <Text style={styles.keyValue}>{this.state.job.description}</Text>
-              </View>
-            </View>
-            {this.state.job.location ? (
-              <>
-                <View>
-                  <View>
-                    <Text style={styles.keyTitle}>{t('JOBS.customer')}</Text>
-                  </View>
-                  <View style={styles.valueContainer}>
-                    <Text style={styles.keyValue}>{this.state.job.location.name}</Text>
-                  </View>
-                </View>
-                <View>
-                  <View>
-                    <Text style={styles.keyTitle}>{t('JOBS.address')}</Text>
-                  </View>
-                  <View style={styles.valueContainer}>
-                    <Text
-                      style={
-                        styles.keyValue
-                      }>{`${this.state.job.location.address}, ${this.state.job.location.city}`}</Text>
-                  </View>
-                </View>
-                <View>
-                  <View>
-                    <Text style={styles.keyTitle}>{t('JOBS.contact')}</Text>
-                  </View>
-                  <View style={[styles.valueContainer, { flexDirection: 'row' }]}>
-                    <Text style={styles.keyValue}>{this.state.job.location.name}</Text>
-                    <Text> </Text>
-                    <Text style={styles.keyValue}>{this.state.job.location.phone_number}</Text>
-                  </View>
-                </View>
-              </>
-            ) : null}
-            {this.state.job.job_type ? (
-              <View>
-                <View>
-                  <Text style={styles.keyTitle}>{t('JOBS.type')}</Text>
-                </View>
-                <View style={styles.valueContainer}>
-                  <Text style={styles.keyValue}>{this.state.job.job_type.name}</Text>
-                </View>
-              </View>
-            ) : null}
-            <View style={styles.containerDoubleRow}>
-              <View style={styles.widthDouble}>
-                <Text style={styles.keyTitle}>{t('JOBS.status')}</Text>
-                <Text style={styles.keyValue}>{this.state.job.status}</Text>
-              </View>
-              <View style={styles.widthDouble}>
-                <Text style={styles.keyTitle}>{t('JOBS.priority')}</Text>
-                <Text style={styles.keyValue}>{this.state.job.priority}</Text>
               </View>
             </View>
             <View style={styles.containerDoubleRow}>
@@ -187,47 +156,113 @@ class JobDetailsScreen extends Component {
                 </Text>
               </View>
             </View>
-            {this.state.job.status &&
-            this.state.job.status !== 'Paused' &&
-            this.state.job.status !== 'Closed' ? (
-                <>
-                  <View style={styles.containerBtnOptions}>
-                    {this.state.job.status === 'Dispatch' ? (
-                      <TouchableOpacity style={styles.btnPrimary} onPress={this.acceptJob}>
-                        <Text style={styles.textButton}>{t('JOBS.acceptJob')}</Text>
-                      </TouchableOpacity>
-                    ) : null}
-                    {this.state.job.status === 'Accept' ? (
-                      <TouchableOpacity style={styles.btnPrimary} onPress={this.startDrive}>
-                        <Text style={styles.textButton}>{t('JOBS.startDrive')}</Text>
-                      </TouchableOpacity>
-                    ) : null}
-                    {this.state.job.status === 'Start Drive Time' ? (
-                      <TouchableOpacity style={styles.btnPrimary} onPress={this.endDrive}>
-                        <Text style={styles.textButton}>{t('JOBS.endDrive')}</Text>
-                      </TouchableOpacity>
-                    ) : null}
-                    {this.state.job.status === 'End Drive Time' ? (
-                      <TouchableOpacity style={styles.btnPrimary} onPress={this.startJob}>
-                        <Text style={styles.textButton}>{t('JOBS.startJob')}</Text>
-                      </TouchableOpacity>
-                    ) : null}
-                    {this.state.job.status === 'Start' ? (
-                      <TouchableOpacity style={styles.btnDanger} onPress={this.goToPauseJob}>
-                        <Text style={styles.textButtonDanger}>{t('JOBS.pauseJob')}</Text>
-                      </TouchableOpacity>
-                    ) : null}
-                    {this.state.job.status === 'Start' ? (
-                      <TouchableOpacity style={styles.btnPrimary} onPress={this.goToCloseJob}>
-                        <Text style={styles.textButton}>{t('JOBS.closeJob')}</Text>
-                      </TouchableOpacity>
-                    ) : null}
-                  </View>
-                </>
-              ) : null}
           </Card>
-        </View>
-      </Container>
+          {lastFiveJobs && lastFiveJobs.results && lastFiveJobs.results.length > 0 && (
+            <>
+              <Text style={styles.textLastJobs}>The last five jobs</Text>
+              {lastFiveJobs.results.map((item) => {
+                const { employee } = item;
+                const created = item.date_start
+                  ? moment(item.date_start)
+                    .tz(moment.tz.guess())
+                    .format('LLLL')
+                  : t('JOBS.notProvided');
+                return (
+                  <Card style={styles.cardContainer}>
+                    <View>
+                      <View style={styles.containerIssue}>
+                        <Text style={styles.keyTitle}>{t('JOBS.issue')}</Text>
+                        <Text style={styles.keyTitle}>{created}</Text>
+                      </View>
+                      <View style={styles.valueContainer}>
+                        <Text style={styles.jobTitleStyle}>{item.title}</Text>
+                      </View>
+                    </View>
+                    <View>
+                      <View>
+                        <Text style={styles.keyTitle}>{t('JOBS.description')}</Text>
+                      </View>
+                      <View style={styles.valueContainer}>
+                        <Text style={styles.keyValue}>{item.description}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.containerDoubleRow}>
+                      <View style={styles.widthDouble}>
+                        <Text style={styles.keyTitle}>{t('JOBS.startDate')}</Text>
+                        <Text style={styles.keyValue}>
+                          {item.date_start
+                            ? moment(item.date_start).format('DD | MMM | YYYY')
+                            : t('JOBS.notProvided')}
+                        </Text>
+                      </View>
+                      <View style={styles.widthDouble}>
+                        <Text style={styles.keyTitle}>{t('JOBS.endDate')}</Text>
+                        <Text style={styles.keyValue}>
+                          {item.date_finish
+                            ? moment(item.date_finish).format('DD | MMM | YYYY')
+                            : t('JOBS.notProvided')}
+                        </Text>
+                      </View>
+                    </View>
+                    <View>
+                      <View>
+                        <Text style={styles.keyTitle}>{t('JOBS.fieldworker')}</Text>
+                      </View>
+                      <View style={[styles.valueContainer, { flexDirection: 'row' }]}>
+                        <Text style={styles.keyValue}>
+                          {employee ? (
+                            <>{`${employee.first_name} ${employee.last_name}`}</>
+                          ) : (
+                            'Not assigned'
+                          )}
+                        </Text>
+                      </View>
+                    </View>
+                  </Card>
+                );
+              })}
+            </>
+          )}
+        </Content>
+        {this.state.job.status &&
+        this.state.job.status !== 'Paused' &&
+        this.state.job.status !== 'Closed' ? (
+            <>
+              <View style={styles.containerBtnOptions}>
+                {this.state.job.status === 'Dispatch' ? (
+                  <TouchableOpacity style={styles.btnPrimary} onPress={this.acceptJob}>
+                    <Text style={styles.textButton}>{t('JOBS.acceptJob')}</Text>
+                  </TouchableOpacity>
+                ) : null}
+                {this.state.job.status === 'Accept' ? (
+                  <TouchableOpacity style={styles.btnPrimary} onPress={this.startDrive}>
+                    <Text style={styles.textButton}>{t('JOBS.startDrive')}</Text>
+                  </TouchableOpacity>
+                ) : null}
+                {this.state.job.status === 'Start Drive Time' ? (
+                  <TouchableOpacity style={styles.btnPrimary} onPress={this.endDrive}>
+                    <Text style={styles.textButton}>{t('JOBS.endDrive')}</Text>
+                  </TouchableOpacity>
+                ) : null}
+                {this.state.job.status === 'End Drive Time' ? (
+                  <TouchableOpacity style={styles.btnPrimary} onPress={this.startJob}>
+                    <Text style={styles.textButton}>{t('JOBS.startJob')}</Text>
+                  </TouchableOpacity>
+                ) : null}
+                {this.state.job.status === 'Start' ? (
+                  <TouchableOpacity style={styles.btnDanger} onPress={this.goToPauseJob}>
+                    <Text style={styles.textButtonDanger}>{t('JOBS.pauseJob')}</Text>
+                  </TouchableOpacity>
+                ) : null}
+                {this.state.job.status === 'Start' ? (
+                  <TouchableOpacity style={styles.btnPrimary} onPress={this.goToCloseJob}>
+                    <Text style={styles.textButton}>{t('JOBS.closeJob')}</Text>
+                  </TouchableOpacity>
+                ) : null}
+              </View>
+            </>
+          ) : null}
+      </View>
     );
   }
 
@@ -342,6 +377,16 @@ class JobDetailsScreen extends Component {
     this.setState({ isLoading: true }, () => {
       this.getJob();
     });
+  };
+
+  reloadData = () => {
+    this.setState({ isLoading: true }, () => {
+      this.getJob();
+    });
+  };
+
+  getLastJobs = (id) => {
+    jobActions.getLastFiveJobs(id);
   };
 
   getJob = () => {

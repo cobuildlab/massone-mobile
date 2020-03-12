@@ -59,6 +59,7 @@ export const createJob = (data) => {
       Flux.dispatchEvent('CreateJob', data);
     })
     .catch((err) => {
+      console.log('ERRORR AL crear JON ', err);
       Flux.dispatchEvent('JobStoreError', err);
     });
 };
@@ -110,6 +111,7 @@ export const getJobsForAdmin = () => {
 const getJobs = (urlParams = '') => {
   getData(`/job/users/${urlParams}`)
     .then((data) => {
+      // console.log('data entry jobss ',data)
       Flux.dispatchEvent('GetJobs', data);
     })
     .catch((err) => {
@@ -124,10 +126,22 @@ const getJobs = (urlParams = '') => {
 const getJob = (jobId) => {
   getData(`/job/users/${jobId}/`)
     .then((data) => {
-      console.log(`DEBUG:job:`, data);
+      // console.log(`DEBUG:job:`, data);
       Flux.dispatchEvent('GetJob', data);
     })
     .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+const getLastFiveJobs = (customerId) => {
+  getData(`/customer/lasts-jobs/?customer=${customerId}`)
+    .then((data) => {
+      // console.log(`last jobs `, data);
+      Flux.dispatchEvent('GetLastJobs', data);
+    })
+    .catch((err) => {
+      console.log('errorr last jobss ', err);
       Flux.dispatchEvent('JobStoreError', err);
     });
 };
@@ -313,6 +327,8 @@ const closeJob = (
   equipmentUsed,
   refrigerantInventory,
   signature,
+  worked_time,
+  worked_overtime,
 ) => {
   try {
     closeJobValidator(
@@ -339,11 +355,13 @@ const closeJob = (
     completion_notes: completionNotes,
     work_completed: workCompleted,
     work_performed: workPerformed,
-    labor_hours: laborHours,
-    labor_overtime: laborOvertime,
+    labor_hours: 1,
+    labor_overtime: 1,
     materials,
     equipment_used: equipmentUsed,
     refrigerant_inventory: refrigerantInventory,
+    worked_time,
+    worked_overtime,
   };
 
   if (parts.length > 0) payload.parts = parts;
@@ -469,6 +487,7 @@ export const getJobTypes = () => {
 };
 
 export {
+  getLastFiveJobs,
   getJobs,
   getJob,
   getJobHistory,
