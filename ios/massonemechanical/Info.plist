@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>en</string>
 	<key>CFBundleDisplayName</key>
-	<string>Massone Mechanical Fieldworker</string>
+	<string>$(PRODUCT_NAME)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -37,6 +37,8 @@
 			</dict>
 		</dict>
 	</dict>
+	<key>NSCameraUsageDescription</key>
+	<string>Massone Fieldworker Mobile App requires access to your Camera to allow you to upload Photos and Pictures in the Jobs that you are executing. As well as sharing this information with your Contractor</string>
 	<key>NSLocationAlwaysUsageDescription</key>
 	<string>Massone Fieldworker Mobile App requires access to your location to allow you to share your position with your Contractor. In that way the Contractor can track the time spent to reach any Job that you want to know and receive the proper compensation for it.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
@@ -45,10 +47,14 @@
 	<string>Massone Fieldworker Mobile App requires access to your Photo Library to allow you to upload Photos and Pictures in the Jobs that you are executing. As well as sharing this information with your Contractor</string>
 	<key>UIAppFonts</key>
 	<array>
+		<string>AntDesign.ttf</string>
 		<string>Entypo.ttf</string>
 		<string>EvilIcons.ttf</string>
 		<string>Feather.ttf</string>
 		<string>FontAwesome.ttf</string>
+		<string>FontAwesome5_Brands.ttf</string>
+		<string>FontAwesome5_Regular.ttf</string>
+		<string>FontAwesome5_Solid.ttf</string>
 		<string>Foundation.ttf</string>
 		<string>Ionicons.ttf</string>
 		<string>MaterialCommunityIcons.ttf</string>
@@ -59,6 +65,10 @@
 		<string>rubicon-icon-font.ttf</string>
 		<string>SimpleLineIcons.ttf</string>
 		<string>Zocial.ttf</string>
+		<string>Roboto-Black.ttf</string>
+		<string>Roboto-Bold.ttf</string>
+		<string>Roboto-Medium.ttf</string>
+		<string>Roboto-Regular.ttf</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
@@ -69,14 +79,12 @@
 	<key>UISupportedInterfaceOrientations</key>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
-	</array>
-	<key>UISupportedInterfaceOrientations~ipad</key>
-	<array>
-		<string>UIInterfaceOrientationPortrait</string>
-		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
+	<key>UIUserInterfaceStyle</key>
+	<string>Light</string>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
 </dict>

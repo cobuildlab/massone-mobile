@@ -28,6 +28,7 @@ class CustomHeader extends Component {
             },
             shadowOpacity: 0.43,
             shadowRadius: 1.62,
+            elevation: 12,
           },
           { backgroundColor: 'white' },
         )}>

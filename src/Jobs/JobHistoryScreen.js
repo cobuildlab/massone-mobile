@@ -1,15 +1,10 @@
 import React, { Component, Fragment } from 'react';
 import { View, FlatList } from 'react-native';
-import { Text, Container, Spinner, ListItem } from 'native-base';
+import { Text, Container, Spinner, Card, Icon } from 'native-base';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
 import styles from './JobHistoryStyle';
-import {
-  CustomHeader,
-  CustomToast,
-  Loading,
-  CenteredText,
-} from '../utils/components';
+import { CustomHeader, CustomToast, Loading, CenteredText } from '../utils/components';
 import { BLUE_MAIN } from '../constants/colorPalette';
 import { WARN, sortByDate } from '../utils';
 import moment from 'moment';
@@ -35,10 +30,7 @@ class JobsHistoryScreen extends Component {
   }
 
   componentDidMount() {
-    this.getJobHistorySubscription = jobStore.subscribe(
-      'GetJobHistory',
-      this.getJobHistoryHandler,
-    );
+    this.getJobHistorySubscription = jobStore.subscribe('GetJobHistory', this.getJobHistoryHandler);
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
     this.loadData();
@@ -78,6 +70,58 @@ class JobsHistoryScreen extends Component {
     CustomToast(err, 'danger');
   };
 
+  _renderItem = ({ item: history }) => (
+    <Card style={styles.listItem}>
+      <View style={styles.viewListItem}>
+        {history.owner ? (
+          <>
+            <View style={styles.containerOwner}>
+              <Icon
+                name="assignment-ind"
+                style={styles.iconEmployeAndLocation}
+                type="MaterialIcons"
+              />
+              <Text
+                style={
+                  styles.textOwner
+                }>{`${history.owner.first_name} ${history.owner.last_name}`}</Text>
+            </View>
+
+            {Array.isArray(history.owner.user_types) && history.owner.user_types.length ? (
+              <Text style={styles.rolesMainText}>
+                {history.owner.user_types.map((role, index, array) => {
+                  const isLast = index === array.length - 1;
+
+                  return (
+                    <Fragment key={role}>
+                      <Text small style={styles.rolesText}>
+                        {role}
+                        {!isLast ? ', ' : ''}
+                      </Text>
+                    </Fragment>
+                  );
+                })}
+              </Text>
+            ) : null}
+          </>
+        ) : null}
+        <View>
+          <Text style={styles.textActionHistory}>{history.action}</Text>
+        </View>
+        <View
+          style={{
+            flexDirection: 'row-reverse',
+          }}>
+          <Text style={styles.textCreated}>
+            {moment(history.created)
+              .tz(moment.tz.guess())
+              .format('LLLL')}
+          </Text>
+        </View>
+      </View>
+    </Card>
+  );
+
   render() {
     const { t } = this.props;
 
@@ -87,63 +131,28 @@ class JobsHistoryScreen extends Component {
 
         <CustomHeader leftButton={'goBack'} title={t('JOBS.jobHistory')} />
 
-        {this.state.emptyJobHistory ? (
-          <CenteredText text={`${t('JOBS.emptyJobHistory')}`} />
-        ) : null}
-
-        {Array.isArray(this.state.jobHistory) ? (
-          <FlatList
-            style={styles.list}
-            onRefresh={this.refreshData}
-            refreshing={this.state.isRefreshing}
-            onEndReached={this.getNextPage}
-            data={this.state.jobHistory}
-            extraData={this.state}
-            keyExtractor={(history) => String(history.id)}
-            ListFooterComponent={() =>
-              this.state.isLoadingPage ? <Spinner color={BLUE_MAIN} /> : null
-            }
-            renderItem={({ item: history }) => (
-              <ListItem style={styles.listItem}>
-                <View style={styles.viewListItem}>
-                  {history.owner ? (
-                    <>
-                      <Text style={styles.textOwner}>{`${
-                        history.owner.first_name
-                      } ${history.owner.last_name}`}</Text>
-
-                      {Array.isArray(history.owner.user_types) &&
-                      history.owner.user_types.length ? (
-                          <Text style={styles.rolesMainText}>
-                            {history.owner.user_types.map(
-                              (role, index, array) => {
-                                const isLast = index === array.length - 1;
-
-                                return (
-                                  <Fragment key={role}>
-                                    <Text small style={styles.rolesText}>
-                                      {role}
-                                      {!isLast ? ', ' : ''}
-                                    </Text>
-                                  </Fragment>
-                                );
-                              },
-                            )}
-                          </Text>
-                        ) : null}
-                    </>
-                  ) : null}
-                  <Text note>{history.action}</Text>
-                  <Text style={styles.textCreated}>
-                    {moment(history.created)
-                      .tz(moment.tz.guess())
-                      .format('LLL')}
-                  </Text>
-                </View>
-              </ListItem>
-            )}
-          />
-        ) : null}
+        {this.state.emptyJobHistory ? <CenteredText text={`${t('JOBS.emptyJobHistory')}`} /> : null}
+        <View
+          style={{
+            flex: 1,
+            paddingHorizontal: 15,
+          }}>
+          {Array.isArray(this.state.jobHistory) ? (
+            <FlatList
+              style={styles.list}
+              onRefresh={this.refreshData}
+              refreshing={this.state.isRefreshing}
+              onEndReached={this.getNextPage}
+              data={this.state.jobHistory}
+              extraData={this.state}
+              keyExtractor={(history) => String(history.id)}
+              ListFooterComponent={() =>
+                this.state.isLoadingPage ? <Spinner color={BLUE_MAIN} /> : null
+              }
+              renderItem={this._renderItem}
+            />
+          ) : null}
+        </View>
       </Container>
     );
   }

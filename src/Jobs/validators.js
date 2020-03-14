@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { isValidString, isValidNumber, isValidInteger } from '../utils';
 import { i18n } from '../utils/i18n';
 
@@ -115,9 +116,9 @@ const closeJobValidator = (
   //   }
   // }
 
-  if (!isValidInteger(laborHours)) {
-    throw new Error(i18n.t('JOBS.emptyLaborHours'));
-  }
+  // if (!isValidInteger(laborHours)) {
+  //   throw new Error(i18n.t('JOBS.emptyLaborHours'));
+  // }
 
   // if (!isValidInteger(laborOvertime, true)) {
   //   throw new Error(i18n.t('JOBS.emptyLabourOvertime'));

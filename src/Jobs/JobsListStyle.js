@@ -12,6 +12,11 @@ export default StyleSheet.create({
     flex: 1,
     marginHorizontal: 12,
   },
+  emptyJobsView: {
+    flex: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   containerTitle: {
     justifyContent: 'space-between',
     paddingBottom: 7,
@@ -42,7 +47,11 @@ export default StyleSheet.create({
   containerIconFooter: {
     justifyContent: 'center',
     alignItems: 'center',
-    padding: 5,
+    // padding: 5,
+    paddingHorizontal: 7,
+    paddingVertical: 4,
+    // borderColor: 'red',
+    // borderWidth: 0.5,
   },
   iconsFooter: {
     color: '#BBBBBB',

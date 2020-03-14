@@ -1,6 +1,6 @@
 import i18next from 'i18next';
-import { reactI18nextModule } from 'react-i18next';
-import { en, es } from './locales';
+import {reactI18nextModule} from 'react-i18next';
+import {en, es} from './locales';
 
 i18next.use(reactI18nextModule).init({
   lng: 'en',

@@ -1,8 +1,12 @@
 import Flux from 'flux-state';
 import authStore from './authStore';
-import { loginValidator, forgotPasswordValidator, resetPasswordValidator } from './validators';
-import { postData, deleteData } from '../utils/fetch';
-import { log } from 'pure-logger';
+import {
+  loginValidator,
+  forgotPasswordValidator,
+  resetPasswordValidator,
+} from './validators';
+import {postData, deleteData} from '../utils/fetch';
+import {log} from 'pure-logger';
 
 /**
  * Login action

@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
-import { View, TouchableOpacity, Slider, ScrollView, Switch } from 'react-native';
+import {
+  View,
+  TouchableOpacity,
+  Slider,
+  ScrollView,
+  Switch,
+  Dimensions,
+  Platform,
+} from 'react-native';
 import { Body, Item, Input, Text, Icon, Container, ListItem, Picker } from 'native-base';
 import { BLUE_MAIN } from '../../constants/colorPalette';
 import { CustomHeader, Loading, CustomToast } from '../../utils/components';
@@ -198,6 +206,7 @@ class JobCreateScreen extends Component {
       ? `${employee.first_name} ${employee.last_name}`
       : t('JOB_EDIT.selectEmployee');
 
+    // console.log('widhtthtth ', Dimensions.get('window').width);
     return (
       <Container>
         {this.state.isLoading ? <Loading /> : null}
@@ -351,10 +360,10 @@ class JobCreateScreen extends Component {
               </View>
               <View
                 style={{
-                  width: '76%',
+                  width: Platform.OS === 'ios' ? '68%' : '76%',
                 }}>
                 {Array.isArray(statusList) ? (
-                  <Item>
+                  <Item style={styles.borderNonePicker}>
                     <Picker
                       enabled={false}
                       placeholder={t('JOB_EDIT.selectStatus')}
@@ -362,9 +371,10 @@ class JobCreateScreen extends Component {
                       iosHeader={t('JOBS.selectStatus')}
                       textStyle={{
                         color: job.status ? '#000000' : '#BBBBBB',
+                        fontFamily: 'Arial',
+                        fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
                       }}
-                      iosIcon={<Icon name="ios-arrow-down" />}
-                      style={{ width: '84%', marginVertical: 2 }}
+                      style={styles.pickerStyle}
                       selectedValue={job.status}
                       onValueChange={(value) => this.onChangeText('status', value)}>
                       {statusList.map((status) => (
@@ -374,6 +384,14 @@ class JobCreateScreen extends Component {
                   </Item>
                 ) : null}
               </View>
+              {Platform.OS === 'ios' && (
+                <View
+                  style={{
+                    width: '8%',
+                  }}>
+                  <Icon name="ios-arrow-down" style={{ fontSize: 16 }} />
+                </View>
+              )}
             </View>
             <View style={styles.fieldsTextSelects}>
               <View
@@ -384,20 +402,20 @@ class JobCreateScreen extends Component {
               </View>
               <View
                 style={{
-                  width: '76%',
+                  width: Platform.OS === 'ios' ? '68%' : '76%',
                 }}>
                 {Array.isArray(jobTypeList) ? (
-                  <Item>
+                  <Item style={styles.borderNonePicker}>
                     <Picker
                       placeholder={t('JOB_EDIT.selectJobType')}
                       headerBackButtonText={t('APP.goBack')}
                       textStyle={{
                         color: job.job_type ? '#000000' : '#BBBBBB',
+                        fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
                         fontFamily: 'Arial',
                       }}
                       iosHeader={t('JOBS.selectJobType')}
-                      iosIcon={<Icon name="ios-arrow-down" />}
-                      style={{ width: '86%', marginVertical: 2 }}
+                      style={styles.pickerStyle}
                       selectedValue={job.job_type}
                       onValueChange={(value) => this.onChangeText('job_type', value)}>
                       <Picker.Item label={t('JOB_EDIT.selectJobType')} value={null} />
@@ -408,24 +426,37 @@ class JobCreateScreen extends Component {
                   </Item>
                 ) : null}
               </View>
+              {Platform.OS === 'ios' && (
+                <View
+                  style={{
+                    width: '8%',
+                  }}>
+                  <Icon name="ios-arrow-down" style={{ fontSize: 16 }} />
+                </View>
+              )}
             </View>
             <View style={styles.fieldsTextSelects}>
               <View
                 style={{
-                  width: '24%',
+                  width: Platform.OS === 'ios' ? '24%' : '22%',
                 }}>
                 <Text style={styles.textLabel}>Customer</Text>
               </View>
               <View
                 style={{
-                  width: '76%',
+                  width: Platform.OS === 'ios' ? '76%' : '78%',
                 }}>
-                <ListItem button noIndentBodyText onPress={this.goToSearchLocation}>
+                <ListItem
+                  style={styles.borderNonePicker}
+                  button
+                  noIndentBodyText
+                  onPress={this.goToSearchLocation}>
                   <Body style={{ marginVertical: 3 }}>
                     <Text
                       style={{
                         color: job.location ? '#000000' : '#BBBBBB',
                         fontFamily: 'Arial',
+                        fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
                       }}>
                       {job.location ? job.location.name : t('JOB_EDIT.selectLocation')}
                     </Text>
@@ -445,20 +476,25 @@ class JobCreateScreen extends Component {
             <View style={styles.fieldsTextSelects}>
               <View
                 style={{
-                  width: '24%',
+                  width: Platform.OS === 'ios' ? '24%' : '22%',
                 }}>
                 <Text style={styles.textLabel}>Fieldworker</Text>
               </View>
               <View
                 style={{
-                  width: '76%',
+                  width: Platform.OS === 'ios' ? '76%' : '78%',
                 }}>
-                <ListItem button noIndentBodyText onPress={this.goToSearchEmployee}>
-                  <Body style={{ marginVertical: 3 }}>
+                <ListItem
+                  style={styles.borderNonePicker}
+                  button
+                  noIndentBodyText
+                  onPress={this.goToSearchEmployee}>
+                  <Body>
                     <Text
                       style={{
                         color: employee && employee.id ? '#000000' : '#BBBBBB',
                         fontFamily: 'Arial',
+                        fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
                       }}>
                       {fieldworkerText}
                     </Text>

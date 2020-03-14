@@ -79,6 +79,7 @@ class LoginScreen extends Component {
             />
             <Input
               style={styles.inputLogin}
+              autoCapitalize="none"
               value={this.state.password}
               placeholderTextColor="#fff"
               placeholder="Password"
