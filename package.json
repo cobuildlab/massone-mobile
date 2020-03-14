@@ -6,7 +6,9 @@
     "start": "node node_modules/react-native/local-cli/cli.js start",
     "android": "react-native run-android",
     "ios": "react-native run-ios",
-    "test": "jest"
+    "test": "jest",
+    "eslint": "eslint src/**/*.js",
+    "flow": "flow check --all"
   },
   "dependencies": {
     "flux": "^3.1.3",
@@ -35,16 +37,41 @@
   "devDependencies": {
     "babel-eslint": "^10.0.1",
     "babel-jest": "23.6.0",
-    "eslint": "^5.9.0",
-    "eslint-plugin-react": "^7.11.1",
-    "husky": "^1.2.0",
+    "eslint": "6.4.0",
     "jest": "23.6.0",
-    "lint-staged": "^8.1.0",
     "metro-react-native-babel-preset": "0.49.2",
-    "prettier": "^1.15.2",
-    "react-test-renderer": "16.6.1"
+    "react-test-renderer": "16.6.1",
+    "eslint-config-prettier": "^6.9.0",
+    "eslint-config-react-app": "^5.1.0",
+    "eslint-config-standard": "^14.1.0",
+    "eslint-plugin-flowtype": "^4.6.0",
+    "eslint-plugin-import": "^2.20.0",
+    "eslint-plugin-jsdoc": "^22.0.1",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-prettier": "^3.1.2",
+    "eslint-plugin-promise": "^4.2.1",
+    "eslint-plugin-react": "^7.18.0",
+    "eslint-plugin-react-hooks": "^2.3.0",
+    "flow-bin": "^0.116.0",
+    "husky": "^4.0.10",
+    "jest-fetch-mock": "^3.0.1",
+    "lint-staged": "^9.5.0",
+    "mock-apollo-client": "^0.2.0",
+    "prettier": "^1.19.1"
   },
   "jest": {
     "preset": "react-native"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "eslint --fix",
+      "git add"
+    ]
   }
 }
