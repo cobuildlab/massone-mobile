@@ -59,36 +59,41 @@ class SideBar extends Component {
           </View>
         </View>
         <View>
-          {routes
-            .filter((rou) =>
-              rou.key === 'Admin' && validateRoles(['Admin']) ? rou : rou.key !== 'Admin',
-            )
-            .map((route) => {
-              let icon;
-              if (route.key == 'Jobs') {
-                icon = <Icon name="wrench" type="MaterialCommunityIcons" style={styles.iconMenu} />;
-              }
-              if (route.key == 'Profile') {
-                icon = <Icon name="user-circle" type="FontAwesome" style={styles.iconMenu} />;
-              }
-              if (route.key == 'Admin') {
-                icon = <Icon name="pencil" type="MaterialCommunityIcons" style={styles.iconMenu} />;
-              }
+          {routes &&
+            routes
+              .filter((rou) =>
+                rou.key === 'Admin' && validateRoles(['Admin']) ? rou : rou.key !== 'Admin',
+              )
+              .map((route) => {
+                let icon;
+                if (route.key == 'Jobs') {
+                  icon = (
+                    <Icon name="wrench" type="MaterialCommunityIcons" style={styles.iconMenu} />
+                  );
+                }
+                if (route.key == 'Profile') {
+                  icon = <Icon name="user-circle" type="FontAwesome" style={styles.iconMenu} />;
+                }
+                if (route.key == 'Admin') {
+                  icon = (
+                    <Icon name="pencil" type="MaterialCommunityIcons" style={styles.iconMenu} />
+                  );
+                }
 
-              return (
-                <TouchableOpacity
-                  disabled={isLoading}
-                  style={styles.itemMenu}
-                  key={route.key}
-                  onPress={() => {
-                    this.props.navigation.navigate(route.key);
-                    this.props.navigation.closeDrawer();
-                  }}>
-                  {icon}
-                  <Text style={styles.textItemMenu}>{route.routeName}</Text>
-                </TouchableOpacity>
-              );
-            })}
+                return (
+                  <TouchableOpacity
+                    disabled={isLoading}
+                    style={styles.itemMenu}
+                    key={route.key}
+                    onPress={() => {
+                      this.props.navigation.navigate(route.key);
+                      this.props.navigation.closeDrawer();
+                    }}>
+                    {icon}
+                    <Text style={styles.textItemMenu}>{route.routeName}</Text>
+                  </TouchableOpacity>
+                );
+              })}
         </View>
         {isLoading ? (
           <View style={styles.containerLoading}>

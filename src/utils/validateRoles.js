@@ -5,7 +5,7 @@ import authStore from '../Auth/authStore';
  */
 export const validateRoles = (rolesToAllow) => {
   const user = authStore.getState('Login') || {};
-  const roles = user.user_types;
+  const roles = user && user.user_types;
 
   return roles.some((role) => rolesToAllow.includes(role));
 };

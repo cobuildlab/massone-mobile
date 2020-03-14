@@ -60,7 +60,7 @@ class JobDetailsScreen extends Component {
 
   getJobHandler = (job) => {
     this.setState({ isLoading: false, job }, () => {
-      this.getLastJobs(job.owner.id);
+      this.getLastJobs(job.location.id);
     });
   };
 
@@ -90,6 +90,10 @@ class JobDetailsScreen extends Component {
         .tz(moment.tz.guess())
         .format('LLLL')
       : t('JOBS.notProvided');
+    const threePoints =
+      this.state.job.description && this.state.job.description.length > 66 ? '...' : '';
+    const descriptionEntry =
+      this.state.job.description && this.state.job.description.substr(0, 67) + threePoints;
     return (
       <View
         style={{
@@ -121,7 +125,7 @@ class JobDetailsScreen extends Component {
                 <Text style={styles.keyTitle}>{t('JOBS.description')}</Text>
               </View>
               <View style={styles.valueContainer}>
-                <Text style={styles.keyValue}>{this.state.job.description}</Text>
+                <Text style={styles.keyValue}>{descriptionEntry}</Text>
               </View>
             </View>
             <View style={styles.containerDoubleRow}>
@@ -167,6 +171,9 @@ class JobDetailsScreen extends Component {
                     .tz(moment.tz.guess())
                     .format('LLLL')
                   : t('JOBS.notProvided');
+                const threePoints = item.description && item.description.length > 66 ? '...' : '';
+                const description =
+                  item.description && item.description.substr(0, 67) + threePoints;
                 return (
                   <Card style={styles.cardContainer}>
                     <View>
@@ -183,7 +190,7 @@ class JobDetailsScreen extends Component {
                         <Text style={styles.keyTitle}>{t('JOBS.description')}</Text>
                       </View>
                       <View style={styles.valueContainer}>
-                        <Text style={styles.keyValue}>{item.description}</Text>
+                        <Text style={styles.keyValue}>{description}</Text>
                       </View>
                     </View>
                     <View style={styles.containerDoubleRow}>
