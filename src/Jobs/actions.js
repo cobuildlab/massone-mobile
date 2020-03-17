@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-returns */
 import Flux from 'flux-state';
 import { getData, postData, postFormData, putData, deleteData } from '../utils/fetch';
 import { commentJobValidator, pauseJobValidator, closeJobValidator } from './validators';
