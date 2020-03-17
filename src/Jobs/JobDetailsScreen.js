@@ -61,6 +61,7 @@ class JobDetailsScreen extends Component {
   getJobHandler = (job) => {
     this.setState({ isLoading: false, job }, () => {
       this.getLastJobs(job.location.id);
+      this.getAdditionalWorker(job.id);
     });
   };
 
@@ -394,6 +395,10 @@ class JobDetailsScreen extends Component {
 
   getLastJobs = (id) => {
     jobActions.getLastFiveJobs(id);
+  };
+
+  getAdditionalWorker = (id) => {
+    jobActions.getListAdditionalWorkers(id);
   };
 
   getJob = () => {

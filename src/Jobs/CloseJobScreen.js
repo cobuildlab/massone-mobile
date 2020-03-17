@@ -124,6 +124,7 @@ class CloseJobScreen extends Component {
       selectedHoursLaborOvertime,
       selectedMinutesLaborOvertime,
     } = this.state;
+
     return (
       <Container>
         {this.state.isLoading ? <Loading /> : null}
@@ -255,9 +256,11 @@ class CloseJobScreen extends Component {
                   style={{ width: undefined }}
                   selectedValue={selectedHoursLabor}
                   onValueChange={(hour) => {
+                    let newMin = parseInt(selectedMinutesLabor);
+                    newMin = parseFloat(newMin / 60).toFixed(2);
                     this.setState({
                       selectedHoursLabor: hour,
-                      laborHours: `${hour}.${selectedMinutesLabor}`,
+                      laborHours: `${parseInt(hour) + parseFloat(newMin)}`,
                     });
                   }}>
                   {this.hoursSet()}
@@ -269,13 +272,11 @@ class CloseJobScreen extends Component {
                   style={{ width: undefined }}
                   selectedValue={selectedMinutesLabor}
                   onValueChange={(min) => {
-                    let newMin = min;
-                    if (newMin < 10) {
-                      newMin = `0${newMin}`;
-                    }
+                    let newMin = parseInt(min);
+                    newMin = parseFloat(newMin / 60).toFixed(2);
                     this.setState({
                       selectedMinutesLabor: min,
-                      laborHours: `${selectedHoursLabor}.${newMin}`,
+                      laborHours: `${parseInt(selectedHoursLabor) + parseFloat(newMin)}`,
                     });
                   }}>
                   {this.minSet()}
@@ -295,9 +296,11 @@ class CloseJobScreen extends Component {
                   style={{ width: undefined }}
                   selectedValue={selectedHoursLaborOvertime}
                   onValueChange={(hour) => {
+                    let newMin = parseInt(selectedMinutesLaborOvertime);
+                    newMin = parseFloat(newMin / 60).toFixed(2);
                     this.setState({
                       selectedHoursLaborOvertime: hour,
-                      laborOvertime: `${hour}.${selectedMinutesLaborOvertime}`,
+                      laborOvertime: `${parseInt(hour) + parseFloat(newMin)}`,
                     });
                   }}>
                   {this.hoursSet()}
@@ -309,13 +312,11 @@ class CloseJobScreen extends Component {
                   style={{ width: undefined }}
                   selectedValue={selectedMinutesLaborOvertime}
                   onValueChange={(min) => {
-                    let newMin = min;
-                    if (newMin < 10) {
-                      newMin = `0${newMin}`;
-                    }
+                    let newMin = parseInt(min);
+                    newMin = parseFloat(newMin / 60).toFixed(2);
                     this.setState({
                       selectedMinutesLaborOvertime: min,
-                      laborOvertime: `${selectedHoursLaborOvertime}.${newMin}`,
+                      laborOvertime: `${parseInt(selectedHoursLaborOvertime) + parseFloat(newMin)}`,
                     });
                   }}>
                   {this.minSet()}

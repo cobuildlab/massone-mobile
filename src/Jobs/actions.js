@@ -6,6 +6,7 @@ import moment from 'moment';
 
 /**
  * Edit job action
+ *
  * @param  {number} jobId job id
  * @param  {Job} data the job
  */
@@ -34,6 +35,7 @@ export const editJob = (jobId, data) => {
 
 /**
  * Create job action
+ *
  * @param  {Job} data the job
  */
 export const createJob = (data) => {
@@ -66,6 +68,7 @@ export const createJob = (data) => {
 
 /**
  * Action to delete a specific job
+ *
  * @param {number} jobId id of the job to delete
  */
 export const deleteJob = (jobId) => {
@@ -106,6 +109,7 @@ export const getJobsForAdmin = () => {
 
 /**
  * Job list action
+ *
  * @param  {string} urlParams the params for pagination
  */
 const getJobs = (urlParams = '') => {
@@ -121,6 +125,7 @@ const getJobs = (urlParams = '') => {
 
 /**
  * Get job details
+ *
  * @param  {number|string} jobId
  */
 const getJob = (jobId) => {
@@ -136,7 +141,9 @@ const getJob = (jobId) => {
 
 /**
  * The Last Jobs list action
- * @param  {int} urlParams the params for pagination
+ *
+ * @param locationId
+ * @param {int} urlParams the params for pagination
  */
 const getLastFiveJobs = (locationId) => {
   getData(`/location/${locationId}/last-jobs/5/`)
@@ -151,8 +158,26 @@ const getLastFiveJobs = (locationId) => {
 };
 
 /**
+ * The list additional workers action
+ *
+ * @param  {int} urlParams the params for pagination
+ */
+
+const getListAdditionalWorkers = (jobId) => {
+  getData(`/job/${jobId}/additional-worker/`)
+    .then((data) => {
+      console.log(`aditional worker`, data);
+    })
+    .catch((err) => {
+      console.log('ERRORR aditional worker ', err);
+    });
+};
+
+/**
  * Job history list action
- * @param  {string} urlParams the params for pagination
+ *
+ * @param jobId
+ * @param {string} urlParams the params for pagination
  */
 const getJobHistory = (jobId, urlParams = '') => {
   getData(`/job-history/${jobId}/${urlParams}`)
@@ -166,6 +191,7 @@ const getJobHistory = (jobId, urlParams = '') => {
 
 /**
  * Accept job action
+ *
  * @param  {string|number} jobId
  */
 const acceptJob = (jobId) => {
@@ -180,8 +206,10 @@ const acceptJob = (jobId) => {
 
 /**
  * Pause job action
- * @param  {string|number}  jobId
- * @param  {string}         message the reason why you are pausing the job
+ *
+ * @param {string|number} jobId
+ * @param {string} message the reason why you are pausing the job
+ * @param reasonId
  */
 const pauseJob = (jobId, message, reasonId) => {
   try {
@@ -214,9 +242,10 @@ const getPauseJobReason = () => {
 
 /**
  * Comment job action
+ *
  * @param  {string|number}  jobId
  * @param  {string}         message
- * @param  {array}          files
+ * @param  {Array}          files
  */
 const commentJob = (jobId, message, files) => {
   try {
@@ -249,6 +278,7 @@ const commentJob = (jobId, message, files) => {
 
 /**
  * Get job comments list
+ *
  * @param  {string} urlParams MUST contain ?job=
  */
 const getJobComments = (urlParams = '') => {
@@ -263,6 +293,7 @@ const getJobComments = (urlParams = '') => {
 
 /**
  * Start drive job action
+ *
  * @param  {string|number} jobId
  */
 const startDrive = (jobId) => {
@@ -277,6 +308,7 @@ const startDrive = (jobId) => {
 
 /**
  * End drive job action
+ *
  * @param  {string|number} jobId
  */
 const endDrive = (jobId) => {
@@ -291,6 +323,7 @@ const endDrive = (jobId) => {
 
 /**
  * start job action
+ *
  * @param  {string|number} jobId
  */
 const startJob = (jobId) => {
@@ -305,6 +338,7 @@ const startJob = (jobId) => {
 
 /**
  * Create service order to close job
+ *
  * @param {number} jobId
  * @param {string} equipment
  * @param {string} completionNotes
@@ -317,6 +351,8 @@ const startJob = (jobId) => {
  * @param {string} equipmentUsed
  * @param {string} refrigerantInventory
  * @param {base64} signature
+ * @param worked_time
+ * @param worked_overtime
  */
 const closeJob = (
   jobId,
@@ -383,6 +419,7 @@ const closeJob = (
 
 /**
  * Get parts
+ *
  * @param  {string} search
  */
 const getParts = (search = '') => {
@@ -397,6 +434,7 @@ const getParts = (search = '') => {
 
 /**
  * To pass the signature from SignatureScreen to parent route
+ *
  * @param  {base64} signature
  */
 const signature = (signature) => {
@@ -407,7 +445,8 @@ const signature = (signature) => {
 
 /**
  * To pass the part from SearchPartsScreen to parent route
- * @param  {Object} part
+ *
+ * @param  {object} part
  */
 const selectPart = (part) => {
   setTimeout(() => {
@@ -417,6 +456,7 @@ const selectPart = (part) => {
 
 /**
  * Search employees
+ *
  * @param  {string} search
  */
 const searchEmployees = (search = '') => {
@@ -431,7 +471,8 @@ const searchEmployees = (search = '') => {
 
 /**
  * To pass the employee from SearchEmployeeScreen to parent route
- * @param  {Object} employee
+ *
+ * @param  {object} employee
  */
 const selectEmployee = (employee) => {
   setTimeout(() => {
@@ -441,6 +482,7 @@ const selectEmployee = (employee) => {
 
 /**
  * Action to get the Job start-drive, end-drive & start-job times
+ *
  * @param  {number} jobId
  */
 const getJobTimes = (jobId) => {
@@ -455,7 +497,8 @@ const getJobTimes = (jobId) => {
 
 /**
  * Action to perfom a location search
- * @param {String} search the search term
+ *
+ * @param {string} search the search term
  */
 export const searchLocations = (search) => {
   getData(`/locations/search/?q=${search}`)
@@ -469,7 +512,8 @@ export const searchLocations = (search) => {
 
 /**
  * To pass the location from SearchLocationScreen to parent route
- * @param  {Object} location
+ *
+ * @param  {object} location
  */
 export const selectLocation = (location) => {
   setTimeout(() => {
@@ -492,6 +536,7 @@ export const getJobTypes = () => {
 
 export {
   getLastFiveJobs,
+  getListAdditionalWorkers,
   getJobs,
   getJob,
   getJobHistory,
