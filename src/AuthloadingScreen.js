@@ -1,11 +1,14 @@
 import React from 'react';
-import {StyleSheet, Image, View} from 'react-native';
+import { StyleSheet, Image, View, Dimensions } from 'react-native';
 import AsyncStorage from '@react-native-community/async-storage';
-import {LOG} from './utils';
+import { LOG } from './utils';
 import authStore from './Auth/authStore';
 import * as authActions from './Auth/actions';
 import LOGO_IMG from './assets/image/logoBlue.png';
 
+const widthSize = Dimensions.get('window').width;
+const factor = 604 / widthSize;
+const heightSize = 370 / factor;
 class AuthLoadingScreen extends React.Component {
   constructor(props) {
     super(props);
@@ -16,7 +19,7 @@ class AuthLoadingScreen extends React.Component {
 
     setTimeout(() => {
       this.bootstrapAsync();
-    }, 1000);
+    }, 1300);
   }
 
   componentWillUnmount() {
@@ -73,13 +76,10 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     backgroundColor: '#fff',
   },
+  // adapting splash screen
   imgSplash: {
-    width: 201,
-    height: 123,
-    resizeMode: 'center',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
+    width: widthSize - 160,
+    height: heightSize - 95,
   },
 });
 

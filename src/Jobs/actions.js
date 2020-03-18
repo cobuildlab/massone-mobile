@@ -40,7 +40,7 @@ export const editJob = (jobId, data) => {
  * @param  {Job} data the job
  */
 export const createJob = (data) => {
-  console.log(`createJob:data:`, data);
+  console.log(`CREATEJOB:dataaa:`, data);
   try {
     createJobValidator(data);
   } catch (e) {
@@ -62,7 +62,7 @@ export const createJob = (data) => {
       Flux.dispatchEvent('CreateJob', data);
     })
     .catch((err) => {
-      console.log('ERRORR AL crear JON ', err);
+      console.log('ERRORR AL crear JOB ', err);
       Flux.dispatchEvent('JobStoreError', err);
     });
 };
