@@ -1,15 +1,12 @@
 import Flux from 'flux-state';
 import authStore from './authStore';
-import {
-  loginValidator,
-  forgotPasswordValidator,
-  resetPasswordValidator,
-} from './validators';
-import {postData, deleteData} from '../utils/fetch';
-import {log} from 'pure-logger';
+import { loginValidator, forgotPasswordValidator, resetPasswordValidator } from './validators';
+import { postData, deleteData } from '../utils/fetch';
+import { log } from 'pure-logger';
 
 /**
  * Login action
+ *
  * @param  {string} username
  * @param  {string} password
  */
@@ -78,6 +75,7 @@ const logoutOnUnautorized = () => {
 
 /**
  * Action for setting/updating the stored user from AsyncStorage/Flux or to ser user on app first load
+ *
  * @param {object} user
  */
 const setStoredUser = (user) => {
@@ -89,6 +87,7 @@ const setStoredUser = (user) => {
 
 /**
  * Forgot password action
+ *
  * @param  {string} email the email to send the code to recover your password
  */
 const forgotPassword = (email) => {
@@ -109,6 +108,7 @@ const forgotPassword = (email) => {
 
 /**
  * resetPassword action
+ *
  * @param {string]} code   the code from the email
  * @param {string]} password
  * @param {string]} repeatPassword
