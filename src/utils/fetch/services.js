@@ -1,6 +1,6 @@
 import authStore from '../../Auth/authStore';
-// import { API_TEST as API_URL } from 'react-native-dotenv'; // api test
-import { API_URL } from 'react-native-dotenv'; // api prod
+import { API_TEST as API_URL } from 'react-native-dotenv'; // api test
+// import { API_URL } from 'react-native-dotenv'; // api prod
 import * as authActions from '../../Auth/actions';
 import { checkInternetConnection } from 'react-native-offline';
 import { i18n } from '../i18n';

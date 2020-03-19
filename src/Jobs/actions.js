@@ -132,7 +132,7 @@ const getJobs = (urlParams = '') => {
 const getJob = (jobId) => {
   getData(`/job/users/${jobId}/`)
     .then((data) => {
-      // console.log(`DEBUG:jobbbb:`, data);
+      console.log(`DEBUG:jobbbb:`, data);
       Flux.dispatchEvent('GetJob', data);
     })
     .catch((err) => {
@@ -168,12 +168,29 @@ const getListAdditionalWorkers = (jobId) => {
   getData(`/job/${jobId}/additional-worker/`)
     .then((data) => {
       console.log(`aditional worker`, data);
+      Flux.dispatchEvent('GetAdditionalWorkers', data);
     })
     .catch((err) => {
       console.log('ERRORR aditional worker ', err);
+      Flux.dispatchEvent('JobStoreError', err);
     });
 };
-
+/**
+ * Delete additional worker action
+ *
+ * @param workerId
+ * @param {int} urlParams the params for pagination
+ */
+const deleteAdditionalWorker = (workerId) => {
+  deleteData(`/additional-worker/${workerId}/`)
+    .then((res) => {
+      console.log('additional worker was deleted', res);
+      Flux.dispatchEvent('DeleteAdditionalWorker', res);
+    })
+    .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
 /**
  * Job history list action
  *
@@ -537,6 +554,7 @@ export const getJobTypes = () => {
 
 export {
   getLastFiveJobs,
+  deleteAdditionalWorker,
   getListAdditionalWorkers,
   getJobs,
   getJob,
