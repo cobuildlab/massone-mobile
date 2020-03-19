@@ -1,10 +1,11 @@
 import Flux from 'flux-state';
 import AsyncStorage from '@react-native-community/async-storage';
-import {LOG, ERROR, storeErrorHandler} from '../utils';
+import { LOG, ERROR, storeErrorHandler } from '../utils';
 
 /**
  * The Auth store, to handle user authentication events
- * @extends Flux
+ *
+ * @augments Flux
  */
 class AuthStore extends Flux.DashStore {
   constructor() {

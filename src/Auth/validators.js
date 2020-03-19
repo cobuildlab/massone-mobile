@@ -3,6 +3,7 @@ import { i18n } from '../utils/i18n';
 
 /**
  * Login validator
+ *
  * @param  {string} username
  * @param  {string} password
  * @throws {Error} if there is a invalid or missing value
@@ -15,10 +16,11 @@ const loginValidator = (username, password) => {
   if (!isValidString(password)) {
     throw new Error(i18n.t('AUTH.enterYourPassword'));
   }
-}
+};
 
 /**
  * Forgot Password validator
+ *
  * @param  {string} email
  * @throws {Error} When there is a invalid or missing value
  */
@@ -26,10 +28,11 @@ const forgotPasswordValidator = (email) => {
   if (!isValidString(email)) {
     throw new Error(i18n.t('AUTH.enterYourEmail'));
   }
-}
+};
 
 /**
  * Reset Password Validator
+ *
  * @param {string} code           [description]
  * @param {string} password       [description]
  * @param {string} repeatPassword [description]

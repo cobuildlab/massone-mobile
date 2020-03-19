@@ -88,6 +88,9 @@ class JobCreateScreen extends Component {
 
   /**
    * returns the id of the selected object field
+   *
+   * @param fieldName
+   * @param object
    */
   getId = (fieldName, object) => {
     try {
@@ -241,6 +244,7 @@ class JobCreateScreen extends Component {
                 <Input
                   value={job.title}
                   autoCorrect={false}
+                  maxLength={30}
                   style={styles.textValueInput}
                   placeholder={t('JOB_EDIT.issue')}
                   onChangeText={(value) => this.onChangeText('title', value)}

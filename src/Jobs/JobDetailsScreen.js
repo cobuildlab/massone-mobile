@@ -1,7 +1,7 @@
 /* eslint-disable react/jsx-key */
 import React, { Component } from 'react';
 import { Alert, View, TouchableOpacity, RefreshControl } from 'react-native';
-import { Card, Text, Content } from 'native-base';
+import { Card, Text, Content, Icon } from 'native-base';
 import styles from './JobDetailsStyle';
 import { CustomHeader, Loading, CustomToast } from '../utils/components';
 import { withNamespaces } from 'react-i18next';
@@ -21,6 +21,7 @@ class JobDetailsScreen extends Component {
       isLoading: false,
       job: {},
       lastFiveJobs: [],
+      additionalWorkers: [],
       loadingLastJobs: true,
       jobId: props.navigation.getParam('jobId', null),
     };
@@ -28,6 +29,10 @@ class JobDetailsScreen extends Component {
 
   componentDidMount() {
     this.getJobSubscription = jobStore.subscribe('GetJob', this.getJobHandler);
+    this.getAdditionalWorkerSubscription = jobStore.subscribe(
+      'GetAdditionalWorkers',
+      this.getAdditionalWorkersHandler,
+    );
     this.acceptJobSubscription = jobStore.subscribe('AcceptJob', this.updateJobHandler);
     this.getLastJobsSubscription = jobStore.subscribe('GetLastJobs', this.getLastJobsHandler);
     this.pauseJobSubscription = jobStore.subscribe('PauseJob', this.updateJobHandler);
@@ -40,6 +45,9 @@ class JobDetailsScreen extends Component {
       CustomToast(this.props.t('JOBS.jobDeleted'));
       this.props.navigation.goBack();
     });
+    this.deleteAdditionalSubscription = jobStore.subscribe('DeleteAdditionalWorker', () => {
+      CustomToast(this.props.t('JOBS.additionalDeleted'));
+    });
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
     this.firstLoad();
@@ -47,12 +55,14 @@ class JobDetailsScreen extends Component {
 
   componentWillUnmount() {
     this.getJobSubscription.unsubscribe();
+    this.getAdditionalWorkerSubscription.unsubscribe();
     this.acceptJobSubscription.unsubscribe();
     this.pauseJobSubscription.unsubscribe();
     this.startDriveSubscription.unsubscribe();
     this.endDriveSubscription.unsubscribe();
     this.startJobSubscription.unsubscribe();
     this.closeJobSubscription.unsubscribe();
+    this.deleteAdditionalSubscription.unsubscribe();
     this.deleteJobSubscription.unsubscribe();
     this.getLastJobsSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
@@ -61,6 +71,13 @@ class JobDetailsScreen extends Component {
   getJobHandler = (job) => {
     this.setState({ isLoading: false, job }, () => {
       this.getLastJobs(job.location.id);
+      this.getAdditionalWorker(job.id);
+    });
+  };
+
+  getAdditionalWorkersHandler = (workers) => {
+    this.setState({
+      additionalWorkers: workers,
     });
   };
 
@@ -83,7 +100,7 @@ class JobDetailsScreen extends Component {
 
   render() {
     const { t } = this.props;
-    const { lastFiveJobs } = this.state;
+    const { lastFiveJobs, additionalWorkers } = this.state;
     const { employee } = this.state.job;
     const created = this.state.job.date_start
       ? moment(this.state.job.date_start)
@@ -94,6 +111,7 @@ class JobDetailsScreen extends Component {
       this.state.job.description && this.state.job.description.length > 66 ? '...' : '';
     const descriptionEntry =
       this.state.job.description && this.state.job.description.substr(0, 67) + threePoints;
+    console.log('ADDITIONAL WORKERSS ', additionalWorkers);
     return (
       <View
         style={{
@@ -111,7 +129,7 @@ class JobDetailsScreen extends Component {
           }
           contentContainerStyle={styles.containerFlex}>
           <Card style={styles.cardContainer}>
-            <View>
+            <View style={styles.marginSpace}>
               <View style={styles.containerIssue}>
                 <Text style={styles.keyTitle}>{t('JOBS.issue')}</Text>
                 <Text style={styles.keyTitle}>{created}</Text>
@@ -120,7 +138,7 @@ class JobDetailsScreen extends Component {
                 <Text style={styles.jobTitleStyle}>{this.state.job.title}</Text>
               </View>
             </View>
-            <View>
+            <View style={styles.marginSpace}>
               <View>
                 <Text style={styles.keyTitle}>{t('JOBS.description')}</Text>
               </View>
@@ -146,7 +164,7 @@ class JobDetailsScreen extends Component {
                 </Text>
               </View>
             </View>
-            <View>
+            <View style={styles.marginSpace}>
               <View>
                 <Text style={styles.keyTitle}>{t('JOBS.fieldworker')}</Text>
               </View>
@@ -160,6 +178,43 @@ class JobDetailsScreen extends Component {
                 </Text>
               </View>
             </View>
+            {additionalWorkers && additionalWorkers.length > 0 && (
+              <View>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                  }}>
+                  <Text style={styles.keyTitle}>{t('JOBS.additionalFieldWorker')}</Text>
+                </View>
+                {additionalWorkers.map((res) => (
+                  <View style={styles.marginSpace}>
+                    <View
+                      style={[
+                        styles.valueContainer,
+                        { width: '100%', flexDirection: 'row', justifyContent: 'space-between' },
+                      ]}>
+                      <View style={styles.containerText}>
+                        <Text style={styles.keyValue}>
+                          {`${res.employee.first_name} ${res.employee.last_name}`}
+                        </Text>
+                      </View>
+                      <View style={styles.containerIcon}>
+                        <TouchableOpacity
+                          style={styles.iconDelete}
+                          onPress={() =>
+                            this.deleteAdditionalWorker(
+                              res.employee.id,
+                              `${res.employee.first_name} ${res.employee.last_name}`,
+                            )
+                          }>
+                          <Icon name="close" style={styles.iconClose} type="MaterialIcons" />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
+                  </View>
+                ))}
+              </View>
+            )}
           </Card>
           {lastFiveJobs && lastFiveJobs.results && lastFiveJobs.results.length > 0 && (
             <>
@@ -176,7 +231,7 @@ class JobDetailsScreen extends Component {
                   item.description && item.description.substr(0, 67) + threePoints;
                 return (
                   <Card style={styles.cardContainer}>
-                    <View>
+                    <View style={styles.marginSpace}>
                       <View style={styles.containerIssue}>
                         <Text style={styles.keyTitle}>{t('JOBS.issue')}</Text>
                         <Text style={styles.keyTitle}>{created}</Text>
@@ -185,7 +240,7 @@ class JobDetailsScreen extends Component {
                         <Text style={styles.jobTitleStyle}>{item.title}</Text>
                       </View>
                     </View>
-                    <View>
+                    <View style={styles.marginSpace}>
                       <View>
                         <Text style={styles.keyTitle}>{t('JOBS.description')}</Text>
                       </View>
@@ -211,7 +266,7 @@ class JobDetailsScreen extends Component {
                         </Text>
                       </View>
                     </View>
-                    <View>
+                    <View style={styles.marginSpace}>
                       <View>
                         <Text style={styles.keyTitle}>{t('JOBS.fieldworker')}</Text>
                       </View>
@@ -394,6 +449,28 @@ class JobDetailsScreen extends Component {
 
   getLastJobs = (id) => {
     jobActions.getLastFiveJobs(id);
+  };
+
+  deleteAdditionalWorker = (id, name) => {
+    Alert.alert(
+      'Delete additional worker?',
+      name,
+      [
+        {
+          text: 'Cancel',
+          style: 'cancel',
+        },
+        {
+          text: 'Delete',
+          onPress: () => jobActions.deleteAdditionalWorker(id),
+        },
+      ],
+      { cancelable: false },
+    );
+  };
+
+  getAdditionalWorker = (id) => {
+    jobActions.getListAdditionalWorkers(id);
   };
 
   getJob = () => {

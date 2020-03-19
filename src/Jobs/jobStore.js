@@ -3,7 +3,8 @@ import { storeErrorHandler } from '../utils';
 
 /**
  * The Job store, to handle Jobs data events
- * @extends Flux
+ *
+ * @augments Flux
  */
 class JobStore extends Flux.DashStore {
   constructor() {
@@ -27,9 +28,13 @@ class JobStore extends Flux.DashStore {
 
     this.addEvent('DeleteJob');
 
+    this.addEvent('DeleteAdditionalWorker');
+
     this.addEvent('GetJobs');
 
     this.addEvent('GetLastJobs');
+
+    this.addEvent('GetAdditionalWorkers');
 
     this.addEvent('GetJob');
 

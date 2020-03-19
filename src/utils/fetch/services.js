@@ -1,14 +1,17 @@
 import authStore from '../../Auth/authStore';
-import {API_URL} from 'react-native-dotenv';
+import { API_TEST as API_URL } from 'react-native-dotenv'; // api test
+// import { API_URL } from 'react-native-dotenv'; // api prod
 import * as authActions from '../../Auth/actions';
-import {checkInternetConnection} from 'react-native-offline';
-import {i18n} from '../i18n';
+import { checkInternetConnection } from 'react-native-offline';
+import { i18n } from '../i18n';
 
 /**
  * POST method fetch
- * @param  {string}  url    Endpoint URL
- * @param  {Boolean} isAuth if endpoint needs token, true by default
- * @return {Promise}         the data from the endpoint
+ *
+ * @param {string} url    Endpoint URL
+ * @param data
+ * @param {boolean} isAuth if endpoint needs token, true by default
+ * @returns {Promise}         the data from the endpoint
  */
 export async function postData(url, data, isAuth = true) {
   await checkConnection();
@@ -32,9 +35,11 @@ export async function postData(url, data, isAuth = true) {
 
 /**
  * PUT method fetch
- * @param  {string}  url    Endpoint URL
- * @param  {Boolean} isAuth if endpoint needs token, true by default
- * @return {Promise}         the data from the endpoint
+ *
+ * @param {string} url    Endpoint URL
+ * @param data
+ * @param {boolean} isAuth if endpoint needs token, true by default
+ * @returns {Promise}         the data from the endpoint
  */
 export async function putData(url, data, isAuth = true) {
   await checkConnection();
@@ -58,11 +63,13 @@ export async function putData(url, data, isAuth = true) {
 
 /**
  * GET method fetch
+ *
  * @param  {string}  url    Endpoint URL
- * @param  {Boolean} isAuth true if api requires token, true by default
- * @return {Promise}         the data from the endpoint
+ * @param  {boolean} isAuth true if api requires token, true by default
+ * @returns {Promise}         the data from the endpoint
  */
 export async function getData(url, isAuth = true) {
+  console.log('URLL ? ', API_URL);
   await checkConnection();
 
   const headers = {
@@ -84,9 +91,10 @@ export async function getData(url, isAuth = true) {
 
 /**
  * DELETE method fetch
+ *
  * @param  {string}  url    Endpoint URL
- * @param  {Boolean} isAuth true if api requires token, true by default
- * @return {Promise}         the data from the endpoint
+ * @param  {boolean} isAuth true if api requires token, true by default
+ * @returns {Promise}         the data from the endpoint
  */
 export async function deleteData(url, isAuth = true) {
   await checkConnection();
@@ -109,9 +117,10 @@ export async function deleteData(url, isAuth = true) {
 
 /**
  * GET method fetch
+ *
  * @param  {string}  url    Endpoint URL
- * @param  {Boolean} isAuth true if api requires token, true by default
- * @return {Promise}         the data parsed to blob from the endpoint
+ * @param  {boolean} isAuth true if api requires token, true by default
+ * @returns {Promise}         the data parsed to blob from the endpoint
  */
 export async function downloadData(url, isAuth = true) {
   await checkConnection();
@@ -140,9 +149,11 @@ export async function downloadData(url, isAuth = true) {
 
 /**
  * POST method fetch (multipart/form-data)
- * @param  {string}  url    Endpoint URL
- * @param  {Boolean} isAuth true if api requires token, true by default
- * @return {Promise}         the data from the endpoint
+ *
+ * @param {string} url    Endpoint URL
+ * @param formData
+ * @param {boolean} isAuth true if api requires token, true by default
+ * @returns {Promise}         the data from the endpoint
  */
 export async function postFormData(url, formData, isAuth = true) {
   await checkConnection();
@@ -163,6 +174,9 @@ export async function postFormData(url, formData, isAuth = true) {
 
 /*
 reject or resolve based on status then Parses the response to json
+ */
+/**
+ * @param response
  */
 function checkStatus(response) {
   console.log(response);
@@ -199,6 +213,7 @@ async function checkConnection() {
 
 /**
  * Timeout for fetch request
+ *
  * @param  {number} ms      milliseconds
  * @param  {promise} promise the fetch promise
  */
