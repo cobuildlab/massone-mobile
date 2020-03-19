@@ -1,3 +1,4 @@
+/* eslint-disable jsdoc/require-returns */
 import Flux from 'flux-state';
 import authStore from './authStore';
 import { loginValidator, forgotPasswordValidator, resetPasswordValidator } from './validators';
@@ -109,9 +110,9 @@ const forgotPassword = (email) => {
 /**
  * resetPassword action
  *
- * @param {string]} code   the code from the email
- * @param {string]} password
- * @param {string]} repeatPassword
+ * @param {string} code   the code from the email
+ * @param {string} password
+ * @param {string} repeatPassword
  */
 const resetPassword = (code, password, repeatPassword) => {
   try {
