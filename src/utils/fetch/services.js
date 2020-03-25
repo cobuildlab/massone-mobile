@@ -69,7 +69,7 @@ export async function putData(url, data, isAuth = true) {
  * @returns {Promise}         the data from the endpoint
  */
 export async function getData(url, isAuth = true) {
-  console.log('URLL ? ', API_URL);
+  console.log('URLL ? ', authStore.getState('Login').token);
   await checkConnection();
 
   const headers = {

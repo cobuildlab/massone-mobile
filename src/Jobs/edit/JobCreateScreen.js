@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-key */
 import React, { Component } from 'react';
 import {
   View,
@@ -8,14 +9,14 @@ import {
   Dimensions,
   Platform,
 } from 'react-native';
-import { Body, Item, Input, Text, Icon, Container, ListItem, Picker } from 'native-base';
+import { Body, Item, Input, Text, Icon, ListItem, Picker } from 'native-base';
 import { BLUE_MAIN } from '../../constants/colorPalette';
 import { CustomHeader, Loading, CustomToast } from '../../utils/components';
 import { withNamespaces } from 'react-i18next';
 import * as jobActions from '../actions';
 import jobStore from '../jobStore';
 import moment from 'moment';
-// import { LOG } from '../../utils';
+import { validateRoles } from '../../utils';
 import { withNavigation } from 'react-navigation';
 import styles from './styles';
 import { JOB_STATUS_LIST, JOB_CLOSED, JOB_DISPATCH, JOB_OPEN } from './jobStatus';
@@ -45,6 +46,7 @@ class JobCreateScreen extends Component {
         alert_employee: true,
       },
       employees: [],
+      additionalWorker: [],
       statusList: JOB_STATUS_LIST.filter((status) => status !== JOB_CLOSED),
       priorityList: JOB_PRIORITY_LIST,
       jobTypeList: [],
@@ -54,6 +56,10 @@ class JobCreateScreen extends Component {
   }
 
   componentDidMount() {
+    this.selectEmployeesAddSubscription = jobStore.subscribe(
+      'SelectEmployeeAdditional',
+      this.selectEmployeeAdditional,
+    );
     this.selectEmployeesSubscription = jobStore.subscribe('SelectEmployee', this.selectEmployee);
     this.selectLocationSubscription = jobStore.subscribe('SelectLocation', this.selectLocation);
     this.createJobSubscription = jobStore.subscribe('CreateJob', () => {
@@ -71,6 +77,7 @@ class JobCreateScreen extends Component {
   }
 
   componentWillUnmount() {
+    this.selectEmployeesAddSubscription.unsubscribe();
     this.createJobSubscription.unsubscribe();
     this.selectEmployeesSubscription.unsubscribe();
     this.selectLocationSubscription.unsubscribe();
@@ -102,29 +109,43 @@ class JobCreateScreen extends Component {
 
   onSave = () => {
     this.setState({ isLoading: true }, () => {
-      const { job } = this.state;
+      const { job, additionalWorker } = this.state;
 
-      jobActions.createJob({
-        alert_employee: job.alert_employee,
-        email_customer: job.email_customer,
-        date_finish: job.date_finish || null,
-        date_start: job.date_start || null,
-        employee: this.getId('employee', job),
-        location: this.getId('location', job),
-        description: job.description,
-        priority: job.priority,
-        job_type: job.job_type,
-        status: job.status,
-        title: job.title,
-      });
+      jobActions.createJob(
+        {
+          alert_employee: job.alert_employee,
+          email_customer: job.email_customer,
+          date_finish: job.date_finish || null,
+          date_start: job.date_start || null,
+          employee: this.getId('employee', job),
+          location: this.getId('location', job),
+          description: job.description,
+          priority: job.priority,
+          job_type: job.job_type,
+          status: job.status,
+          title: job.title,
+        },
+        additionalWorker,
+      );
     });
   };
 
   selectEmployee = (employee) => {
-    const { job } = this.state;
-    job.employee = employee;
-    job.status = JOB_DISPATCH;
-    this.setState({ job });
+    const { job, additionalWorker } = this.state;
+    const exitsElement = additionalWorker.filter((res) => res.id === employee.id);
+    if (exitsElement.length === 0) {
+      job.employee = employee;
+      job.status = JOB_DISPATCH;
+      this.setState({ job });
+    }
+  };
+
+  selectEmployeeAdditional = (employee) => {
+    const { additionalWorker, job } = this.state;
+    const exitsElement = additionalWorker.filter((res) => res.id === employee.id);
+    if (exitsElement.length === 0 && job.employee.id !== employee.id) {
+      this.setState({ additionalWorker: [...additionalWorker, employee] });
+    }
   };
 
   deleteEmployee = () => {
@@ -132,6 +153,15 @@ class JobCreateScreen extends Component {
     job.employee = null;
     job.status = JOB_OPEN;
     this.setState({ job });
+  };
+
+  deleteAdditionalWorker = (ix) => {
+    const { additionalWorker } = this.state;
+    let employee = additionalWorker;
+    employee = employee.filter((res, index) => index !== ix);
+    this.setState({
+      additionalWorker: employee,
+    });
   };
 
   selectLocation = (location) => {
@@ -158,8 +188,10 @@ class JobCreateScreen extends Component {
     this.setState({ job });
   };
 
-  goToSearchEmployee = () => {
-    this.props.navigation.navigate('SearchEmployee');
+  goToSearchEmployee = (param) => {
+    this.props.navigation.navigate('SearchEmployee', {
+      additional: param ? true : false,
+    });
   };
 
   goToSearchLocation = () => {
@@ -203,15 +235,17 @@ class JobCreateScreen extends Component {
 
   render() {
     const { t } = this.props;
-    const { job, statusList, jobTypeList } = this.state;
+    const { job, statusList, jobTypeList, additionalWorker } = this.state;
     const { employee } = job;
     const fieldworkerText = employee
       ? `${employee.first_name} ${employee.last_name}`
       : t('JOB_EDIT.selectEmployee');
 
-    // console.log('widhtthtth ', Dimensions.get('window').width);
     return (
-      <Container>
+      <View
+        style={{
+          flex: 1,
+        }}>
         {this.state.isLoading ? <Loading /> : null}
         <CustomHeader leftButton={'goBack'} title={t('JOB_EDIT.createJob')} />
         <DateTimePicker
@@ -477,7 +511,13 @@ class JobCreateScreen extends Component {
                 </ListItem>
               </View>
             </View>
-            <View style={styles.fieldsTextSelects}>
+            <View
+              style={[
+                styles.fieldsTextSelects,
+                {
+                  marginBottom: 0,
+                },
+              ]}>
               <View
                 style={{
                   width: Platform.OS === 'ios' ? '24%' : '22%',
@@ -492,7 +532,7 @@ class JobCreateScreen extends Component {
                   style={styles.borderNonePicker}
                   button
                   noIndentBodyText
-                  onPress={this.goToSearchEmployee}>
+                  onPress={() => this.goToSearchEmployee()}>
                   <Body>
                     <Text
                       style={{
@@ -508,58 +548,91 @@ class JobCreateScreen extends Component {
                       <Icon name="close" style={styles.iconClose} type="MaterialIcons" />
                     </TouchableOpacity>
                   ) : (
-                    <TouchableOpacity onPress={this.goToSearchEmployee}>
+                    <TouchableOpacity onPress={() => this.goToSearchEmployee()}>
                       <Icon name="search" style={styles.iconSearch} type="MaterialIcons" />
                     </TouchableOpacity>
                   )}
                 </ListItem>
               </View>
             </View>
+            {validateRoles(['Admin', 'Massone']) && employee && (
+              <View>
+                <View style={styles.containerAdditional}>
+                  <Text style={styles.textLabel}>Additional fieldworkers</Text>
+                </View>
+                <View>
+                  {additionalWorker &&
+                    additionalWorker.length > 0 &&
+                    additionalWorker.map((item, index) => {
+                      const nameWorker = `${item.first_name} ${item.last_name}`;
+                      return (
+                        <View style={styles.containerFlexAdd}>
+                          <View style={styles.flexAdditionalWorker}>
+                            <View style={styles.containerNameAdditional}>
+                              <Text style={styles.textAdditionalWorker}>{nameWorker}</Text>
+                            </View>
+                            <View style={styles.containerButtonDelete}>
+                              <TouchableOpacity onPress={() => this.deleteAdditionalWorker(index)}>
+                                <Icon name="close" style={styles.iconClose} type="MaterialIcons" />
+                              </TouchableOpacity>
+                            </View>
+                          </View>
+                        </View>
+                      );
+                    })}
+                </View>
+                <View style={styles.containerButtonAdd}>
+                  <TouchableOpacity
+                    onPress={() => this.goToSearchEmployee('additional')}
+                    style={styles.buttonAddWorker}>
+                    <Text style={styles.textAddWorker}>Add</Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            )}
           </ScrollView>
-          <View style={styles.flexTwo}>
-            <View style={styles.containerSwitch}>
-              <View style={styles.viewSwitch}>
-                <Switch
-                  thumbColor={job.alert_employee ? BLUE_MAIN : '#BBBBBB'}
-                  onValueChange={() => this.onChangeBoolean('alert_employee')}
-                  value={job.alert_employee}
-                  trackColor={{
-                    true: '#CAEDFA',
-                    false: '#BBBBBB',
-                  }}
-                />
-                <Text
-                  style={job.alert_employee ? styles.textSwitchActive : styles.textSwitchInative}>
-                  {t('JOB_EDIT.alertEmployee')}
-                </Text>
-              </View>
-              <View style={styles.viewSwitch}>
-                <Switch
-                  thumbColor={job.email_customer ? BLUE_MAIN : '#BBBBBB'}
-                  trackColor={{
-                    true: '#CAEDFA',
-                    false: '#BBBBBB',
-                  }}
-                  onValueChange={() => this.onChangeBoolean('email_customer')}
-                  value={job.email_customer}
-                />
-                <Text
-                  style={job.email_customer ? styles.textSwitchActive : styles.textSwitchInative}>
-                  {t('JOB_EDIT.emailCustomer')}
-                </Text>
-              </View>
+        </View>
+        <View style={styles.flexTwo}>
+          <View style={styles.containerSwitch}>
+            <View style={styles.viewSwitch}>
+              <Switch
+                thumbColor={job.alert_employee ? BLUE_MAIN : '#BBBBBB'}
+                onValueChange={() => this.onChangeBoolean('alert_employee')}
+                value={job.alert_employee}
+                trackColor={{
+                  true: '#CAEDFA',
+                  false: '#BBBBBB',
+                }}
+              />
+              <Text style={job.alert_employee ? styles.textSwitchActive : styles.textSwitchInative}>
+                {t('JOB_EDIT.alertEmployee')}
+              </Text>
             </View>
-            <View style={styles.containerButtonsBotton}>
-              <TouchableOpacity onPress={this.goBack} style={styles.buttonCancel}>
-                <Text style={styles.textButtonCancel}>{t('APP.cancel')}</Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={this.onSave} style={styles.buttonSave}>
-                <Text style={styles.textButtonSave}>{t('APP.save')}</Text>
-              </TouchableOpacity>
+            <View style={styles.viewSwitch}>
+              <Switch
+                thumbColor={job.email_customer ? BLUE_MAIN : '#BBBBBB'}
+                trackColor={{
+                  true: '#CAEDFA',
+                  false: '#BBBBBB',
+                }}
+                onValueChange={() => this.onChangeBoolean('email_customer')}
+                value={job.email_customer}
+              />
+              <Text style={job.email_customer ? styles.textSwitchActive : styles.textSwitchInative}>
+                {t('JOB_EDIT.emailCustomer')}
+              </Text>
             </View>
           </View>
+          <View style={styles.containerButtonsBotton}>
+            <TouchableOpacity onPress={this.goBack} style={styles.buttonCancel}>
+              <Text style={styles.textButtonCancel}>{t('APP.cancel')}</Text>
+            </TouchableOpacity>
+            <TouchableOpacity onPress={this.onSave} style={styles.buttonSave}>
+              <Text style={styles.textButtonSave}>{t('APP.save')}</Text>
+            </TouchableOpacity>
+          </View>
         </View>
-      </Container>
+      </View>
     );
   }
 }
