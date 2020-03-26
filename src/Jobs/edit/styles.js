@@ -3,17 +3,43 @@ import { BLUE_MAIN } from '../../constants/colorPalette';
 
 const styles = StyleSheet.create({
   containerContent: {
-    flex: 1,
+    flex: 1.5,
     // borderWidth: 1,
     paddingHorizontal: 20,
     // borderColor: 'red',
   },
+  containerAdditional: {
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  containerButtonAdd: {
+    alignItems: 'center',
+    marginBottom: 15,
+  },
+  containerFlexAdd: {
+    marginBottom: 20,
+  },
+  containerButtonDelete: {
+    width: '11%',
+  },
+  containerNameAdditional: {
+    width: '89%',
+  },
+  textAddWorker: {
+    color: 'white',
+  },
   flexOne: {
-    flex: 2,
+    // flex: 2,
     marginTop: 13,
-    // borderColor: 'blue',
-    justifyContent: 'space-between',
-    // borderWidth: 2,
+  },
+  flexAdditionalWorker: {
+    flexDirection: 'row',
+    width: '100%',
+  },
+  textAdditionalWorker: {
+    color: '#000000',
+    fontFamily: 'Arial',
+    fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
   },
   pickerStyle: {
     width:
@@ -29,11 +55,13 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     // justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 15,
   },
   fieldsTextSelects: {
     flexDirection: 'row',
     // justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 12,
     width: '100%',
   },
   containerTextDownSlider: {
@@ -62,6 +90,7 @@ const styles = StyleSheet.create({
     width: '100%',
     // justifyContent: 'center',
     alignItems: 'center',
+    marginBottom: 15,
   },
   textLabel: {
     color: '#BBBBBB',
@@ -83,7 +112,8 @@ const styles = StyleSheet.create({
     fontSize: Dimensions.get('window').width <= 360 ? 13 : 15,
   },
   flexTwo: {
-    flex: 0.34,
+    flex: 0.32,
+    paddingHorizontal: 20,
     // borderColor: 'green',
     justifyContent: 'space-around',
     alignItems: 'center',
@@ -103,6 +133,15 @@ const styles = StyleSheet.create({
     borderRadius: 30,
     paddingVertical: Dimensions.get('window').width <= 360 ? 8 : 12,
     borderWidth: 2,
+  },
+  buttonAddWorker: {
+    backgroundColor: BLUE_MAIN,
+    paddingVertical: 6,
+    marginLeft: 15,
+    borderRadius: 20,
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: 80,
   },
   buttonSave: {
     borderColor: BLUE_MAIN,

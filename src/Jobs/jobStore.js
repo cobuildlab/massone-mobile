@@ -76,6 +76,8 @@ class JobStore extends Flux.DashStore {
 
     this.addEvent('SelectEmployee');
 
+    this.addEvent('SelectEmployeeAdditional');
+
     this.addEvent('GetJobTypes');
 
     this.addEvent('SearchLocations');

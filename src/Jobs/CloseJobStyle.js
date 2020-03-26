@@ -8,6 +8,16 @@ export default StyleSheet.create({
   signatureItem: {
     marginBottom: 10,
   },
+  containerTextWorkers: {
+    marginRight: 15,
+    marginBottom: 10,
+  },
+  textFieldWorkers: {
+    textAlign: 'center',
+    marginTop: 10,
+    fontSize: 18,
+    color: 'gray',
+  },
   signatureButtons: {
     flex: 1,
     flexDirection: 'row',

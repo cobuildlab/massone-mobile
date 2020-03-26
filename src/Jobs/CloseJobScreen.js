@@ -46,17 +46,21 @@ class CloseJobScreen extends Component {
       workCompleted: false,
       workPerformed: '',
       parts: [],
-      laborHours: 1,
-      laborOvertime: 1,
+      laborHours: 0,
+      laborOvertime: 0,
       materials: '',
       equipmentUsed: '',
       refrigerantInventory: '',
       signature: '',
       jobTimes: {},
-      selectedHoursLabor: 1,
+      selectedHoursLabor: 0,
       selectedMinutesLabor: 0,
-      selectedHoursLaborOvertime: 1,
+      selectedHoursLaborOvertime: 0,
       selectedMinutesLaborOvertime: 0,
+      additionalWorkersEntry: props.navigation.getParam('additionalWorkersEntry', []),
+      selectHourAdditional: [],
+      selectMinutesAdditional: [],
+      worked_hours_additional: [], //array final hours to send
       /*
       Service order form
        */
@@ -64,6 +68,7 @@ class CloseJobScreen extends Component {
   }
 
   componentDidMount() {
+    const { additionalWorkersEntry, job } = this.state;
     this.closeJobSubscription = jobStore.subscribe('CloseJob', this.closeJobHandler);
     this.getJobTimesSubscription = jobStore.subscribe('GetJobTimes', this.getJobTimesHandler);
     this.selectPartSubscription = jobStore.subscribe('SelectPart', this.selectPartHandler);
@@ -71,6 +76,31 @@ class CloseJobScreen extends Component {
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
     this.loadData();
+    // preparing array of additional workers to send
+    const workers = additionalWorkersEntry.map((res) => {
+      return {
+        id: res.id_doc,
+        job: job.id,
+        employee: res.id,
+        worked_hours: 0,
+      };
+    });
+    // start selects additional workers and minutes
+    const hourSelect = additionalWorkersEntry.map(() => {
+      return {
+        selectHour: 0,
+      };
+    });
+    const minutesSelect = additionalWorkersEntry.map(() => {
+      return {
+        selectMinute: 0,
+      };
+    });
+    this.setState({
+      worked_hours_additional: workers,
+      selectHourAdditional: hourSelect,
+      selectMinutesAdditional: minutesSelect,
+    });
   }
 
   componentWillUnmount() {
@@ -103,8 +133,8 @@ class CloseJobScreen extends Component {
   };
 
   hoursSet = () => {
-    return Array.from(Array(24), (e, val) => {
-      let valItera = val + 1;
+    return Array.from(Array(25), (e, val) => {
+      let valItera = val;
       return <Picker.Item key={valItera} label={`${valItera} hour`} value={valItera} />;
     });
   };
@@ -129,7 +159,15 @@ class CloseJobScreen extends Component {
       selectedMinutesLabor,
       selectedHoursLaborOvertime,
       selectedMinutesLaborOvertime,
+      additionalWorkersEntry,
+      job,
+      selectHourAdditional,
+      selectMinutesAdditional,
+      worked_hours_additional,
+      // laborHours,
     } = this.state;
+    // console.log('Hours select per first fieldworker ',laborHours);
+    console.log('Hours select per additional worker ', worked_hours_additional);
     return (
       <Container>
         {this.state.isLoading ? <Loading /> : null}
@@ -249,6 +287,19 @@ class CloseJobScreen extends Component {
                   ) : null}
                 </Text>
               ) : null}
+              {additionalWorkersEntry.length > 0 && (
+                <>
+                  <View style={styles.containerTextWorkers}>
+                    <Text style={styles.textFieldWorkers}>Fieldworkers</Text>
+                  </View>
+                  <Text
+                    style={{
+                      marginRight: 10,
+                    }}>
+                    {`${job.employee.first_name} ${job.employee.last_name}`}
+                  </Text>
+                </>
+              )}
               <Label>{t('JOBS.laborHoursLabel')}</Label>
               <View
                 style={{
@@ -320,6 +371,67 @@ class CloseJobScreen extends Component {
                 </Picker>
               </View>
             </Item>
+            {selectHourAdditional.length > 0 &&
+              additionalWorkersEntry.map((res, ix) => {
+                const nameFull = `${res.first_name} ${res.last_name}`;
+                return (
+                  <>
+                    <Text
+                      style={{
+                        textAlign: 'center',
+                        marginTop: 10,
+                      }}>
+                      {nameFull}
+                    </Text>
+                    <Item stackedLabel>
+                      <Label>{t('JOBS.laborHoursLabel')}</Label>
+                      <View
+                        style={{
+                          flexDirection: 'row',
+                        }}>
+                        <Picker
+                          mode="dropdown"
+                          iosHeader="Select hour"
+                          iosIcon={<Icon name="arrow-down" />}
+                          style={{ width: undefined }}
+                          selectedValue={selectHourAdditional[ix].selectHour}
+                          onValueChange={(hour) => {
+                            const newHour = selectHourAdditional;
+                            newHour[ix].selectHour = hour;
+                            const newWorked_hours = worked_hours_additional;
+                            newWorked_hours[ix].worked_hours =
+                              parseInt(hour) + parseFloat(selectMinutesAdditional[ix].selectMinute);
+                            this.setState({
+                              selectHourAdditional: newHour,
+                              worked_hours_additional: newWorked_hours,
+                            });
+                          }}>
+                          {this.hoursSet()}
+                        </Picker>
+                        <Picker
+                          mode="dropdown"
+                          iosHeader="Select min"
+                          iosIcon={<Icon name="arrow-down" />}
+                          style={{ width: undefined }}
+                          selectedValue={selectMinutesAdditional[ix].selectMinute}
+                          onValueChange={(min) => {
+                            const newMin = selectMinutesAdditional;
+                            newMin[ix].selectMinute = min;
+                            const newWorked_hours = worked_hours_additional;
+                            newWorked_hours[ix].worked_hours =
+                              parseInt(selectHourAdditional[ix].selectHour) + parseFloat(min);
+                            this.setState({
+                              selectMinutesAdditional: newMin,
+                              worked_hours_additional: newWorked_hours,
+                            });
+                          }}>
+                          {this.minSet()}
+                        </Picker>
+                      </View>
+                    </Item>
+                  </>
+                );
+              })}
             <Item stackedLabel>
               <Label>{t('JOBS.materials')}</Label>
               <Input
@@ -454,6 +566,7 @@ class CloseJobScreen extends Component {
   };
 
   closeJob = () => {
+    const { worked_hours_additional } = this.state;
     if (!this.state.job || !this.state.job.title) return;
 
     Alert.alert(this.props.t('JOBS.wantToCloseJob'), this.state.job.title, [
@@ -482,6 +595,7 @@ class CloseJobScreen extends Component {
               this.state.signature,
               parseFloat(this.state.laborHours),
               parseFloat(this.state.laborOvertime) || 0,
+              worked_hours_additional,
             );
           });
         },

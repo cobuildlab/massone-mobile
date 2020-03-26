@@ -5,13 +5,13 @@ import {
   Button,
   Text,
   H3,
-  H2,
+  // H2,
   Item,
   Input,
   ListItem,
   Body,
   Right,
-  Icon,
+  // Icon,
   Label,
   Form,
   Spinner,
@@ -83,12 +83,8 @@ class SearchCustomerScreen extends Component {
                     <Text>{`${location.address},${location.city}, ${location.state}`}</Text>
                   </Body>
                   <Right>
-                    <Button
-                      title={'ADD'}
-                      onPress={() => this.selectLocation(location)}
-                      transparent
-                      primary>
-                      <Icon name="md-add" />
+                    <Button title={'ADD'} onPress={() => this.selectLocation(location)} primary>
+                      <Text>{t('JOBS.add')}</Text>
                     </Button>
                   </Right>
                 </ListItem>

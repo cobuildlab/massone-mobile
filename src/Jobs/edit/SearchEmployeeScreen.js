@@ -9,7 +9,7 @@ import {
   ListItem,
   Body,
   Right,
-  Icon,
+  // Icon,
   Label,
   Form,
   Spinner,
@@ -79,12 +79,8 @@ class SearchEmployeeScreen extends Component {
                     <Text>{`${employee.first_name} ${employee.last_name}`}</Text>
                   </Body>
                   <Right>
-                    <Button
-                      title={'ADD'}
-                      onPress={() => this.selectEmployee(employee)}
-                      transparent
-                      primary>
-                      <Icon name="md-add" />
+                    <Button title={'ADD'} onPress={() => this.selectEmployee(employee)} primary>
+                      <Text>{t('JOBS.add')}</Text>
                     </Button>
                   </Right>
                 </ListItem>
@@ -103,7 +99,8 @@ class SearchEmployeeScreen extends Component {
   }, 400);
 
   selectEmployee = (employee) => {
-    jobActions.selectEmployee(employee);
+    const additionalWorker = this.props.navigation.getParam('additional');
+    jobActions.selectEmployee(employee, additionalWorker);
     this.props.navigation.goBack();
   };
 }

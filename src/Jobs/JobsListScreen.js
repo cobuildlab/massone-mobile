@@ -289,7 +289,7 @@ class JobsListScreen extends Component {
             style={[
               styles.containerTitle,
               {
-                flexDirection: item.title.length < 18 ? 'row' : 'column',
+                flexDirection: item.title.length < 16 ? 'row' : 'column',
               },
             ]}>
             <Text style={[styles.issueName, styles.textTitleJob]}>

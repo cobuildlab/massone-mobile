@@ -8,10 +8,11 @@ import moment from 'moment';
 /**
  * Edit job action
  *
- * @param  {number} jobId job id
- * @param  {Job} data the job
+ * @param {number} jobId job id
+ * @param {Job} data the job
+ * @param additionalWorker
  */
-export const editJob = (jobId, data) => {
+export const editJob = (jobId, data, additionalWorker) => {
   try {
     createJobValidator(data);
   } catch (e) {
@@ -27,6 +28,9 @@ export const editJob = (jobId, data) => {
 
   putData(`/jobs/${jobId}/`, data)
     .then((data) => {
+      if (additionalWorker.length > 0) {
+        updateAdditionalWorkers(additionalWorker);
+      }
       Flux.dispatchEvent('EditJob', data);
     })
     .catch((err) => {
@@ -37,10 +41,11 @@ export const editJob = (jobId, data) => {
 /**
  * Create job action
  *
- * @param  {Job} data the job
+ * @param {Job} data the job
+ * @param additionalWorkers
  */
-export const createJob = (data) => {
-  console.log(`CREATEJOB:dataaa:`, data);
+export const createJob = (data, additionalWorkers) => {
+  // console.log(`CREATEJOB:dataaa:`, data);
   try {
     createJobValidator(data);
   } catch (e) {
@@ -59,6 +64,11 @@ export const createJob = (data) => {
 
   postData(`/jobs/`, data)
     .then((data) => {
+      // save additional workers if exits
+      const jobID = data.id;
+      if (additionalWorkers.length > 0) {
+        addAdditionalWorkers(additionalWorkers, jobID);
+      }
       Flux.dispatchEvent('CreateJob', data);
     })
     .catch((err) => {
@@ -167,7 +177,7 @@ const getLastFiveJobs = (locationId) => {
 const getListAdditionalWorkers = (jobId) => {
   getData(`/job/${jobId}/additional-worker/`)
     .then((data) => {
-      console.log(`aditional worker`, data);
+      // console.log(`aditional worker`, data);
       Flux.dispatchEvent('GetAdditionalWorkers', data);
     })
     .catch((err) => {
@@ -175,6 +185,7 @@ const getListAdditionalWorkers = (jobId) => {
       Flux.dispatchEvent('JobStoreError', err);
     });
 };
+
 /**
  * Delete additional worker action
  *
@@ -184,10 +195,55 @@ const getListAdditionalWorkers = (jobId) => {
 const deleteAdditionalWorker = (workerId) => {
   deleteData(`/additional-worker/${workerId}/`)
     .then((res) => {
-      console.log('additional worker was deleted', res);
+      // console.log('additional worker was deleted', res);
       Flux.dispatchEvent('DeleteAdditionalWorker', res);
     })
     .catch((err) => {
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
+ * Add additional workers action
+ *
+ * @param jobId
+ * @param {int} urlParams the params for pagination
+ */
+
+const addAdditionalWorkers = (dataWorkers, jobId) => {
+  const dataEntry = dataWorkers.map((res) => {
+    return {
+      job: jobId,
+      employee: res.id, //id employee,
+      worked_hours: 0,
+    };
+  });
+  // console.log('Data to send add Additional Worker ',dataEntry);
+  postData(`/job/${jobId}/additional-worker/`, dataEntry)
+    .then((data) => {
+      console.log('Success additional worker !! ', data);
+    })
+    .catch((err) => {
+      console.log('Error to insert additional workers !! ', err);
+      Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
+ * Update additional workers action
+ *
+ * @param dataWorkers
+ * @param {Array} urlParams the params for pagination
+ */
+
+const updateAdditionalWorkers = (dataWorkers) => {
+  console.log('Data to send update Additional Worker ', dataWorkers);
+  putData(`/job/${dataWorkers[0].job}/additional-worker/`, dataWorkers)
+    .then((data) => {
+      console.log('Success update additional worker !! ', data);
+    })
+    .catch((err) => {
+      console.log('Error to update additional workers !! ', err);
       Flux.dispatchEvent('JobStoreError', err);
     });
 };
@@ -371,6 +427,7 @@ const startJob = (jobId) => {
  * @param {base64} signature
  * @param worked_time
  * @param worked_overtime
+ * @param worked_hours_additional
  */
 const closeJob = (
   jobId,
@@ -387,6 +444,7 @@ const closeJob = (
   signature,
   worked_time,
   worked_overtime,
+  worked_hours_additional,
 ) => {
   try {
     closeJobValidator(
@@ -428,6 +486,10 @@ const closeJob = (
 
   postData(`/service-order/`, payload)
     .then((data) => {
+      console.log('Job closed success ', data);
+      if (worked_hours_additional.length > 0) {
+        updateAdditionalWorkers(worked_hours_additional);
+      }
       Flux.dispatchEvent('CloseJob', data);
     })
     .catch((err) => {
@@ -490,11 +552,16 @@ const searchEmployees = (search = '') => {
 /**
  * To pass the employee from SearchEmployeeScreen to parent route
  *
- * @param  {object} employee
+ * @param {object} employee
+ * @param isAdditional
  */
-const selectEmployee = (employee) => {
+const selectEmployee = (employee, isAdditional) => {
   setTimeout(() => {
-    Flux.dispatchEvent('SelectEmployee', employee);
+    if (isAdditional) {
+      Flux.dispatchEvent('SelectEmployeeAdditional', employee);
+    } else {
+      Flux.dispatchEvent('SelectEmployee', employee);
+    }
   });
 };
 
@@ -554,6 +621,8 @@ export const getJobTypes = () => {
 
 export {
   getLastFiveJobs,
+  updateAdditionalWorkers,
+  addAdditionalWorkers,
   deleteAdditionalWorker,
   getListAdditionalWorkers,
   getJobs,

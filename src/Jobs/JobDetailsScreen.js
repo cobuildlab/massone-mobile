@@ -111,7 +111,7 @@ class JobDetailsScreen extends Component {
       this.state.job.description && this.state.job.description.length > 66 ? '...' : '';
     const descriptionEntry =
       this.state.job.description && this.state.job.description.substr(0, 67) + threePoints;
-    console.log('ADDITIONAL WORKERSS ', additionalWorkers);
+    // console.log('additional workers in detailJob ',additionalWorkers)
     return (
       <View
         style={{
@@ -199,16 +199,18 @@ class JobDetailsScreen extends Component {
                         </Text>
                       </View>
                       <View style={styles.containerIcon}>
-                        <TouchableOpacity
-                          style={styles.iconDelete}
-                          onPress={() =>
-                            this.deleteAdditionalWorker(
-                              res.employee.id,
-                              `${res.employee.first_name} ${res.employee.last_name}`,
-                            )
-                          }>
-                          <Icon name="close" style={styles.iconClose} type="MaterialIcons" />
-                        </TouchableOpacity>
+                        {this.state.job.status !== 'Closed' && (
+                          <TouchableOpacity
+                            style={styles.iconDelete}
+                            onPress={() =>
+                              this.deleteAdditionalWorker(
+                                res.employee.id,
+                                `${res.employee.first_name} ${res.employee.last_name}`,
+                              )
+                            }>
+                            <Icon name="close" style={styles.iconClose} type="MaterialIcons" />
+                          </TouchableOpacity>
+                        )}
                       </View>
                     </View>
                   </View>
@@ -311,12 +313,12 @@ class JobDetailsScreen extends Component {
                     <Text style={styles.textButton}>{t('JOBS.startJob')}</Text>
                   </TouchableOpacity>
                 ) : null}
-                {this.state.job.status === 'Start' ? (
+                {this.state.job.status === 'Start' || this.state.job.status === 'Started' ? (
                   <TouchableOpacity style={styles.btnDanger} onPress={this.goToPauseJob}>
                     <Text style={styles.textButtonDanger}>{t('JOBS.pauseJob')}</Text>
                   </TouchableOpacity>
                 ) : null}
-                {this.state.job.status === 'Start' ? (
+                {this.state.job.status === 'Start' || this.state.job.status === 'Started' ? (
                   <TouchableOpacity style={styles.btnPrimary} onPress={this.goToCloseJob}>
                     <Text style={styles.textButton}>{t('JOBS.closeJob')}</Text>
                   </TouchableOpacity>
@@ -425,8 +427,15 @@ class JobDetailsScreen extends Component {
   };
 
   goToCloseJob = () => {
+    const { additionalWorkers } = this.state;
+    const additionalWorkerAdd = additionalWorkers.map((res) => {
+      return { id_doc: res.id, ...res.employee };
+    });
     if (!this.state.job || !this.state.job.id) return;
-    this.props.navigation.navigate('CloseJob', { job: this.state.job });
+    this.props.navigation.navigate('CloseJob', {
+      job: this.state.job,
+      additionalWorkersEntry: additionalWorkerAdd,
+    });
   };
 
   goToComments = () => {
