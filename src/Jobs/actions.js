@@ -215,7 +215,7 @@ const addAdditionalWorkers = (dataWorkers, jobId) => {
     return {
       job: jobId,
       employee: res.id, //id employee,
-      worked_hours: null,
+      worked_hours: 0,
     };
   });
   // console.log('Data to send add Additional Worker ',dataEntry);
@@ -237,7 +237,7 @@ const addAdditionalWorkers = (dataWorkers, jobId) => {
  */
 
 const updateAdditionalWorkers = (dataWorkers) => {
-  // console.log('Data to send update Additional Worker ', dataWorkers);
+  console.log('Data to send update Additional Worker ', dataWorkers);
   putData(`/job/${dataWorkers[0].job}/additional-worker/`, dataWorkers)
     .then((data) => {
       console.log('Success update additional worker !! ', data);

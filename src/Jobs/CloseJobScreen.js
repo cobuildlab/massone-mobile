@@ -167,7 +167,7 @@ class CloseJobScreen extends Component {
       // laborHours,
     } = this.state;
     // console.log('Hours select per first fieldworker ',laborHours);
-    // console.log('Hours select per additional worker ',worked_hours_additional);
+    console.log('Hours select per additional worker ', worked_hours_additional);
     return (
       <Container>
         {this.state.isLoading ? <Loading /> : null}

@@ -127,7 +127,7 @@ class JobEditScreen extends Component {
           worked_hours: res.worked_hours ? res.worked_hours : 0,
         };
       });
-      console.log('array ready ', additionalWorkers);
+      // console.log('array ready ', additionalWorkers);
 
       jobActions.editJob(
         this.state.jobId,
