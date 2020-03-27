@@ -47,6 +47,7 @@ class JobDetailsScreen extends Component {
     });
     this.deleteAdditionalSubscription = jobStore.subscribe('DeleteAdditionalWorker', () => {
       CustomToast(this.props.t('JOBS.additionalDeleted'));
+      this.refreshAdditionals();
     });
     this.jobStoreError = jobStore.subscribe('JobStoreError', this.errorHandler);
 
@@ -86,6 +87,20 @@ class JobDetailsScreen extends Component {
       lastFiveJobs: lastJobs,
       loadingLastJobs: false,
     });
+  };
+
+  refreshAdditionals = () => {
+    const {
+      job: { id },
+    } = this.state;
+    this.setState(
+      {
+        isLoading: false,
+      },
+      () => {
+        this.getAdditionalWorker(id);
+      },
+    );
   };
 
   updateJobHandler = (data) => {
@@ -204,7 +219,7 @@ class JobDetailsScreen extends Component {
                             style={styles.iconDelete}
                             onPress={() =>
                               this.deleteAdditionalWorker(
-                                res.employee.id,
+                                res.id,
                                 `${res.employee.first_name} ${res.employee.last_name}`,
                               )
                             }>
@@ -460,6 +475,12 @@ class JobDetailsScreen extends Component {
     jobActions.getLastFiveJobs(id);
   };
 
+  handlerDeleteAdditional = (id) => {
+    this.setState({ isLoading: true }, () => {
+      jobActions.deleteAdditionalWorker(id);
+    });
+  };
+
   deleteAdditionalWorker = (id, name) => {
     Alert.alert(
       'Delete additional worker?',
@@ -471,7 +492,7 @@ class JobDetailsScreen extends Component {
         },
         {
           text: 'Delete',
-          onPress: () => jobActions.deleteAdditionalWorker(id),
+          onPress: () => this.handlerDeleteAdditional(id),
         },
       ],
       { cancelable: false },
