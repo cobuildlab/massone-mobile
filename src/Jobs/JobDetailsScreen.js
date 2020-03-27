@@ -123,10 +123,9 @@ class JobDetailsScreen extends Component {
         .format('LLLL')
       : t('JOBS.notProvided');
     const threePoints =
-      this.state.job.description && this.state.job.description.length > 66 ? '...' : '';
+      this.state.job.description && this.state.job.description.length > 200 ? '...' : '';
     const descriptionEntry =
-      this.state.job.description && this.state.job.description.substr(0, 67) + threePoints;
-    // console.log('additional workers in detailJob ',additionalWorkers)
+      this.state.job.description && this.state.job.description.substr(0, 201) + threePoints;
     return (
       <View
         style={{
@@ -243,9 +242,10 @@ class JobDetailsScreen extends Component {
                     .tz(moment.tz.guess())
                     .format('LLLL')
                   : t('JOBS.notProvided');
-                const threePoints = item.description && item.description.length > 66 ? '...' : '';
+                const threePoints = item.description && item.description.length > 200 ? '...' : '';
                 const description =
-                  item.description && item.description.substr(0, 67) + threePoints;
+                  item.description && item.description.substr(0, 201) + threePoints;
+                const completionNotes = item.completion_notes && item.completion_notes;
                 return (
                   <Card style={styles.cardContainer}>
                     <View style={styles.marginSpace}>
@@ -283,6 +283,16 @@ class JobDetailsScreen extends Component {
                         </Text>
                       </View>
                     </View>
+                    {item.completion_notes.length > 0 && (
+                      <View style={styles.marginSpace}>
+                        <View>
+                          <Text style={styles.keyTitle}>{t('JOBS.completionNotes')}</Text>
+                        </View>
+                        <View style={[styles.valueContainer, { flexDirection: 'row' }]}>
+                          <Text style={styles.keyValue}>{completionNotes}</Text>
+                        </View>
+                      </View>
+                    )}
                     <View style={styles.marginSpace}>
                       <View>
                         <Text style={styles.keyTitle}>{t('JOBS.fieldworker')}</Text>
