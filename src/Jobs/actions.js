@@ -27,9 +27,9 @@ export const editJob = (jobId, data, additionalWorker) => {
   }
 
   putData(`/jobs/${jobId}/`, data)
-    .then((data) => {
+    .then(async (data) => {
       if (additionalWorker.length > 0) {
-        updateAdditionalWorkers(additionalWorker);
+        await updateAdditionalWorkers(additionalWorker);
       }
       Flux.dispatchEvent('EditJob', data);
     })
@@ -63,11 +63,11 @@ export const createJob = (data, additionalWorkers) => {
   console.log(`createJob:normalized_data:`, data);
 
   postData(`/jobs/`, data)
-    .then((data) => {
+    .then(async (data) => {
       // save additional workers if exits
       const jobID = data.id;
       if (additionalWorkers.length > 0) {
-        addAdditionalWorkers(additionalWorkers, jobID);
+        await addAdditionalWorkers(additionalWorkers, jobID);
       }
       Flux.dispatchEvent('CreateJob', data);
     })

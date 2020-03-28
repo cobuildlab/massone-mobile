@@ -126,6 +126,7 @@ class JobDetailsScreen extends Component {
       this.state.job.description && this.state.job.description.length > 200 ? '...' : '';
     const descriptionEntry =
       this.state.job.description && this.state.job.description.substr(0, 201) + threePoints;
+    // console.log('additionall info ',additionalWorkers)
     return (
       <View
         style={{
