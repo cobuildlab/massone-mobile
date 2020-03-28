@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, Modal, TouchableOpacity } from 'react-native';
+import { View, Text, ScrollView, Modal, TouchableOpacity, Dimensions } from 'react-native';
 import { Icon, Card } from 'native-base';
 import moment from 'moment';
 import { PropTypes } from 'prop-types';
@@ -8,6 +8,8 @@ import stylesLast from '../JobDetailsStyle';
 
 const LastFiveJobs = (props) => {
   const { modalVisible, setModal, jobs, t } = props;
+  console.log(' Heeigh ', Dimensions.get('window').height);
+  console.log(' widthhh  ', Dimensions.get('window').width);
   return (
     <Modal animationType="fade" transparent visible={modalVisible}>
       <View style={styles.containerModal}>
@@ -15,7 +17,7 @@ const LastFiveJobs = (props) => {
           <View style={styles.containerTextTitle}>
             <Text style={styles.textLastJobs}>The last five jobs</Text>
             <TouchableOpacity style={styles.buttonClose} onPress={() => setModal(false)}>
-              <Icon style={{ color: 'gray', fontSize: 40 }} name="close" />
+              <Icon style={styles.iconCloseModal} name="close" />
             </TouchableOpacity>
           </View>
           <View

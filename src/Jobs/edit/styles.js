@@ -12,6 +12,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: 10,
   },
+  iconCloseModal: {
+    color: 'gray',
+    fontSize: Dimensions.get('window').width > 415 ? 40 : 35,
+  },
   containerScrollModal: {
     paddingHorizontal: 10,
     paddingBottom: 20,
@@ -50,7 +54,7 @@ const styles = StyleSheet.create({
   },
   modalLastJob: {
     borderRadius: 20,
-    height: 650,
+    height: '90%',
     backgroundColor: '#F1F5F7',
     width: '93%',
     alignItems: 'center',
