@@ -284,7 +284,7 @@ class JobDetailsScreen extends Component {
                         </Text>
                       </View>
                     </View>
-                    {item.completion_notes ? (
+                    {item.completion_notes && item.completion_notes !== '' ? (
                       <View style={styles.marginSpace}>
                         <View>
                           <Text style={styles.keyTitle}>{t('JOBS.completionNotes')}</Text>

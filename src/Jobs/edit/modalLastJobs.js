@@ -77,7 +77,7 @@ const LastFiveJobs = (props) => {
                             </Text>
                           </View>
                         </View>
-                        {item.completion_notes ? (
+                        {item.completion_notes && item.completion_notes !== '' ? (
                           <View style={stylesLast.marginSpace}>
                             <View>
                               <Text style={stylesLast.keyTitle}>{t('JOBS.completionNotes')}</Text>
