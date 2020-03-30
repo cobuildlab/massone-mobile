@@ -42,7 +42,7 @@ class JobCreateScreen extends Component {
         job_type: null,
         priority: JOB_MEDIUM,
         status: JOB_OPEN,
-        email_customer: true,
+        email_customer: false,
         alert_employee: true,
       },
       employees: [],
