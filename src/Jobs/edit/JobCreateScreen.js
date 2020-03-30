@@ -555,7 +555,7 @@ class JobCreateScreen extends Component {
                 </ListItem>
               </View>
             </View>
-            {validateRoles(['Admin', 'Massone']) && employee && (
+            {validateRoles(['Admin', 'Massone']) && employee ? (
               <View>
                 <View style={styles.containerAdditional}>
                   <Text style={styles.textLabel}>Additional fieldworkers</Text>
@@ -589,7 +589,7 @@ class JobCreateScreen extends Component {
                   </TouchableOpacity>
                 </View>
               </View>
-            )}
+            ) : null}
           </ScrollView>
         </View>
         <View style={styles.flexTwo}>
