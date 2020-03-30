@@ -1,3 +1,4 @@
+/* eslint-disable react/require-default-props */
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Header, Title, Button, Left, Right, Body, Icon } from 'native-base';
@@ -8,7 +9,8 @@ import { ifIphoneX } from 'react-native-iphone-x-helper';
 /**
  * Use this header and pass the props to select your leftButton, title and
  * rightButton
- * @extends Component
+ *
+ * @augments Component
  */
 class CustomHeader extends Component {
   render() {
@@ -33,7 +35,7 @@ class CustomHeader extends Component {
           { backgroundColor: 'white' },
         )}>
         {leftButton === 'goBack' || leftButton === 'openDrawer' ? (
-          <Left>
+          <Left style={{ flex: 1 }}>
             <Button title={'Left Action'} transparent onPress={this.leftButtonHandler}>
               <Icon
                 name={
@@ -48,10 +50,10 @@ class CustomHeader extends Component {
             </Button>
           </Left>
         ) : null}
-        <Body>
-          <Title style={{ width: 200 }}>{title}</Title>
+        <Body style={{ flex: 1 }}>
+          <Title style={{ alignSelf: 'center', width: 200 }}>{title}</Title>
         </Body>
-        <Right>
+        <Right style={{ flex: 1 }}>
           {rightButton ? (
             <Button title={'Right Button'} transparent onPress={rightButton.handler}>
               <Icon name={rightButton.icon} style={{ color: BLUE_MAIN }} />
@@ -72,12 +74,13 @@ class CustomHeader extends Component {
 
 /**
  * [propTypes description]
- * @type {Object}
+ *
+ * @type {object}
  * @property {string} title the header title
  * @property {string} leftButton 'goBack' || 'openDrawer'
  * @property {object} the right Button
  * @property {string} icon the right button Icon
- * @property {function} handler the right button handler function
+ * @property {Function} handler the right button handler function
  */
 CustomHeader.propTypes = {
   title: PropTypes.string.isRequired,

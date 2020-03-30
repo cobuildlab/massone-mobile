@@ -284,7 +284,7 @@ class JobDetailsScreen extends Component {
                         </Text>
                       </View>
                     </View>
-                    {item.completion_notes.length > 0 && (
+                    {item.completion_notes ? (
                       <View style={styles.marginSpace}>
                         <View>
                           <Text style={styles.keyTitle}>{t('JOBS.completionNotes')}</Text>
@@ -293,7 +293,7 @@ class JobDetailsScreen extends Component {
                           <Text style={styles.keyValue}>{completionNotes}</Text>
                         </View>
                       </View>
-                    )}
+                    ) : null}
                     <View style={styles.marginSpace}>
                       <View>
                         <Text style={styles.keyTitle}>{t('JOBS.fieldworker')}</Text>
