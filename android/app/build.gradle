@@ -131,8 +131,8 @@ android {
         applicationId "com.massonemechanical.fieldworker"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 5
-        versionName "1.2.11"
+        versionCode 8
+        versionName "1.2.13"
     }
     splits {
         abi {
