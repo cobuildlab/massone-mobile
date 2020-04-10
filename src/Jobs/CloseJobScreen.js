@@ -1,12 +1,10 @@
 import React, { Component } from 'react';
-import { Alert, RefreshControl } from 'react-native';
+import { Alert, RefreshControl, TouchableOpacity } from 'react-native';
 import {
   Content,
   Container,
   Button,
   Text,
-  Footer,
-  FooterTab,
   Form,
   Item,
   Input,
@@ -486,14 +484,11 @@ class CloseJobScreen extends Component {
             </ListItem>
           </Form>
         </Content>
-
-        <Footer>
-          <FooterTab>
-            <Button title={'Close'} onPress={this.closeJob} primary transparent>
-              <Text>{t('JOBS.closeJob')}</Text>
-            </Button>
-          </FooterTab>
-        </Footer>
+        <View style={styles.ctnBtnClose}>
+          <TouchableOpacity style={styles.btnPrimary} onPress={this.closeJob}>
+            <Text style={styles.textButton}>{t('JOBS.closeJob')}</Text>
+          </TouchableOpacity>
+        </View>
       </Container>
     );
   }

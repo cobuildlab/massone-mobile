@@ -8,9 +8,26 @@ export default StyleSheet.create({
   signatureItem: {
     marginBottom: 10,
   },
+  ctnBtnClose: {
+    paddingBottom: 20,
+    alignItems: 'center',
+  },
   containerTextWorkers: {
     marginRight: 15,
     marginBottom: 10,
+  },
+  textButton: {
+    color: 'white',
+    fontWeight: '500',
+  },
+  btnPrimary: {
+    borderColor: '#537DBF',
+    backgroundColor: '#537DBF',
+    width: '44%',
+    alignItems: 'center',
+    borderRadius: 30,
+    paddingVertical: 5,
+    borderWidth: 2,
   },
   textFieldWorkers: {
     textAlign: 'center',
