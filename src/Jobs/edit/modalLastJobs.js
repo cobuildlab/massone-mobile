@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, ScrollView, Modal, TouchableOpacity, Dimensions } from 'react-native';
+import { View, Text, ScrollView, Modal, TouchableOpacity } from 'react-native';
 import { Icon, Card } from 'native-base';
 import moment from 'moment';
 import { PropTypes } from 'prop-types';
@@ -8,8 +8,6 @@ import stylesLast from '../JobDetailsStyle';
 
 const LastFiveJobs = (props) => {
   const { modalVisible, setModal, jobs, t } = props;
-  console.log(' Heeigh ', Dimensions.get('window').height);
-  console.log(' widthhh  ', Dimensions.get('window').width);
   return (
     <Modal animationType="fade" transparent visible={modalVisible}>
       <View style={styles.containerModal}>
@@ -64,7 +62,7 @@ const LastFiveJobs = (props) => {
                             <Text style={stylesLast.keyTitle}>{t('JOBS.startDate')}</Text>
                             <Text style={stylesLast.keyValue}>
                               {item.date_start
-                                ? moment(item.date_start).format('DD | MMM | YYYY')
+                                ? moment(item.date_start).format('MMM | DD | YYYY')
                                 : t('JOBS.notProvided')}
                             </Text>
                           </View>
@@ -72,7 +70,7 @@ const LastFiveJobs = (props) => {
                             <Text style={stylesLast.keyTitle}>{t('JOBS.endDate')}</Text>
                             <Text style={stylesLast.keyValue}>
                               {item.date_finish
-                                ? moment(item.date_finish).format('DD | MMM | YYYY')
+                                ? moment(item.date_finish).format('MMM | DD | YYYY')
                                 : t('JOBS.notProvided')}
                             </Text>
                           </View>

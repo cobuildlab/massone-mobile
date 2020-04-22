@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
   },
   iconCloseModal: {
     color: 'gray',
-    fontSize: Dimensions.get('window').width > 415 ? 40 : 35,
+    fontSize: Dimensions.get('window').width > 415 ? 40 : 32,
   },
   containerScrollModal: {
     paddingHorizontal: 10,
@@ -23,7 +23,7 @@ const styles = StyleSheet.create({
   buttonClose: {
     top: 6,
     position: 'absolute',
-    left: 205,
+    left: 215,
   },
   containerTextTitle: {
     flexDirection: 'row',
