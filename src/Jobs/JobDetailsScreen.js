@@ -6,9 +6,11 @@ import styles from './JobDetailsStyle';
 import { CustomHeader, Loading, CustomToast } from '../utils/components';
 import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
+import authStore from '../Auth/authStore';
 import jobStore from './jobStore';
 import moment from 'moment';
-import { LOG } from '../utils';
+import JobDetailOptions from './JobDetailOption';
+import { LOG, validateRoles } from '../utils';
 
 class JobDetailsScreen extends Component {
   static navigationOptions = {
@@ -126,7 +128,7 @@ class JobDetailsScreen extends Component {
       this.state.job.description && this.state.job.description.length > 200 ? '...' : '';
     const descriptionEntry =
       this.state.job.description && this.state.job.description.substr(0, 201) + threePoints;
-    // console.log('additionall info ',additionalWorkers)
+    const emailLoggedIn = authStore.getState('Login') && authStore.getState('Login').email;
     return (
       <View
         style={{
@@ -166,7 +168,7 @@ class JobDetailsScreen extends Component {
                 <Text style={styles.keyTitle}>{t('JOBS.startDate')}</Text>
                 <Text style={styles.keyValue}>
                   {this.state.job.date_start
-                    ? moment(this.state.job.date_start).format('DD | MMM | YYYY')
+                    ? moment(this.state.job.date_start).format('MMM | DD | YYYY')
                     : t('JOBS.notProvided')}
                 </Text>
               </View>
@@ -174,7 +176,7 @@ class JobDetailsScreen extends Component {
                 <Text style={styles.keyTitle}>{t('JOBS.endDate')}</Text>
                 <Text style={styles.keyValue}>
                   {this.state.job.date_finish
-                    ? moment(this.state.job.date_finish).format('DD | MMM | YYYY')
+                    ? moment(this.state.job.date_finish).format('MMM | DD | YYYY')
                     : t('JOBS.notProvided')}
                 </Text>
               </View>
@@ -214,7 +216,7 @@ class JobDetailsScreen extends Component {
                         </Text>
                       </View>
                       <View style={styles.containerIcon}>
-                        {this.state.job.status !== 'Closed' && (
+                        {validateRoles(['Admin', 'Massone']) && this.state.job.status !== 'Closed' && (
                           <TouchableOpacity
                             style={styles.iconDelete}
                             onPress={() =>
@@ -271,7 +273,7 @@ class JobDetailsScreen extends Component {
                         <Text style={styles.keyTitle}>{t('JOBS.startDate')}</Text>
                         <Text style={styles.keyValue}>
                           {item.date_start
-                            ? moment(item.date_start).format('DD | MMM | YYYY')
+                            ? moment(item.date_start).format('MMM | DD | YYYY')
                             : t('JOBS.notProvided')}
                         </Text>
                       </View>
@@ -279,7 +281,7 @@ class JobDetailsScreen extends Component {
                         <Text style={styles.keyTitle}>{t('JOBS.endDate')}</Text>
                         <Text style={styles.keyValue}>
                           {item.date_finish
-                            ? moment(item.date_finish).format('DD | MMM | YYYY')
+                            ? moment(item.date_finish).format('MMM | DD | YYYY')
                             : t('JOBS.notProvided')}
                         </Text>
                       </View>
@@ -314,44 +316,17 @@ class JobDetailsScreen extends Component {
             </>
           )}
         </Content>
-        {this.state.job.status &&
-        this.state.job.status !== 'Paused' &&
-        this.state.job.status !== 'Closed' ? (
-            <>
-              <View style={styles.containerBtnOptions}>
-                {this.state.job.status === 'Dispatch' ? (
-                  <TouchableOpacity style={styles.btnPrimary} onPress={this.acceptJob}>
-                    <Text style={styles.textButton}>{t('JOBS.acceptJob')}</Text>
-                  </TouchableOpacity>
-                ) : null}
-                {this.state.job.status === 'Accept' ? (
-                  <TouchableOpacity style={styles.btnPrimary} onPress={this.startDrive}>
-                    <Text style={styles.textButton}>{t('JOBS.startDrive')}</Text>
-                  </TouchableOpacity>
-                ) : null}
-                {this.state.job.status === 'Start Drive Time' ? (
-                  <TouchableOpacity style={styles.btnPrimary} onPress={this.endDrive}>
-                    <Text style={styles.textButton}>{t('JOBS.endDrive')}</Text>
-                  </TouchableOpacity>
-                ) : null}
-                {this.state.job.status === 'End Drive Time' ? (
-                  <TouchableOpacity style={styles.btnPrimary} onPress={this.startJob}>
-                    <Text style={styles.textButton}>{t('JOBS.startJob')}</Text>
-                  </TouchableOpacity>
-                ) : null}
-                {this.state.job.status === 'Start' || this.state.job.status === 'Started' ? (
-                  <TouchableOpacity style={styles.btnDanger} onPress={this.goToPauseJob}>
-                    <Text style={styles.textButtonDanger}>{t('JOBS.pauseJob')}</Text>
-                  </TouchableOpacity>
-                ) : null}
-                {this.state.job.status === 'Start' || this.state.job.status === 'Started' ? (
-                  <TouchableOpacity style={styles.btnPrimary} onPress={this.goToCloseJob}>
-                    <Text style={styles.textButton}>{t('JOBS.closeJob')}</Text>
-                  </TouchableOpacity>
-                ) : null}
-              </View>
-            </>
-          ) : null}
+        <JobDetailOptions
+          t={t}
+          job={this.state.job}
+          emailLoggedIn={emailLoggedIn}
+          acceptJob={this.acceptJob}
+          startDrive={this.startDrive}
+          endDrive={this.endDrive}
+          startJob={this.startJob}
+          goToPauseJob={this.goToPauseJob}
+          goToCloseJob={this.goToCloseJob}
+        />
       </View>
     );
   }

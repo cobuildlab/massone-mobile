@@ -347,7 +347,7 @@ class JobEditScreen extends Component {
                 <TouchableOpacity onPress={this.showStartDatePicker}>
                   <Text style={styles.textLabelDate}>
                     {job.date_start
-                      ? moment(job.date_start).format('DD  |  MMM  |  YYYY')
+                      ? moment(job.date_start).format('MMM  |  DD  |  YYYY')
                       : t('JOBS.notProvided')}
                   </Text>
                 </TouchableOpacity>
@@ -367,7 +367,7 @@ class JobEditScreen extends Component {
                 <TouchableOpacity onPress={this.showEndDatePicker}>
                   <Text style={styles.textLabelDateGray}>
                     {job.date_finish
-                      ? moment(job.date_finish).format('DD  |  MMM  |  YYYY')
+                      ? moment(job.date_finish).format('MMM  |  DD  |  YYYY')
                       : t('JOBS.notProvided')}
                   </Text>
                 </TouchableOpacity>

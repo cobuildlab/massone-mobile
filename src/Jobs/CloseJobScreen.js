@@ -21,6 +21,7 @@ import { CustomHeader, Loading } from '../utils/components';
 import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
+import authStore from '../Auth/authStore';
 import { LOG } from '../utils';
 import styles from './CloseJobStyle';
 import moment from 'moment';
@@ -166,6 +167,9 @@ class CloseJobScreen extends Component {
     } = this.state;
     // console.log('Hours select per first fieldworker ',laborHours);
     console.log('Hours select per additional worker ', worked_hours_additional);
+    const emailLoggedIn = authStore.getState('Login') && authStore.getState('Login').email;
+    console.log('User logueado ', emailLoggedIn);
+    console.log('JOB employeee ', job.employee.email);
     return (
       <Container>
         {this.state.isLoading ? <Loading /> : null}
@@ -369,67 +373,70 @@ class CloseJobScreen extends Component {
                 </Picker>
               </View>
             </Item>
-            {selectHourAdditional.length > 0 &&
-              additionalWorkersEntry.map((res, ix) => {
-                const nameFull = `${res.first_name} ${res.last_name}`;
-                return (
-                  <>
-                    <Text
-                      style={{
-                        textAlign: 'center',
-                        marginTop: 10,
-                      }}>
-                      {nameFull}
-                    </Text>
-                    <Item stackedLabel>
-                      <Label>{t('JOBS.laborHoursLabel')}</Label>
-                      <View
+            {emailLoggedIn === job.employee.email
+              ? selectHourAdditional.length > 0 &&
+                additionalWorkersEntry.map((res, ix) => {
+                  const nameFull = `${res.first_name} ${res.last_name}`;
+                  return (
+                    <>
+                      <Text
                         style={{
-                          flexDirection: 'row',
+                          textAlign: 'center',
+                          marginTop: 10,
                         }}>
-                        <Picker
-                          mode="dropdown"
-                          iosHeader="Select hour"
-                          iosIcon={<Icon name="arrow-down" />}
-                          style={{ width: undefined }}
-                          selectedValue={selectHourAdditional[ix].selectHour}
-                          onValueChange={(hour) => {
-                            const newHour = selectHourAdditional;
-                            newHour[ix].selectHour = hour;
-                            const newWorked_hours = worked_hours_additional;
-                            newWorked_hours[ix].worked_hours =
-                              parseInt(hour) + parseFloat(selectMinutesAdditional[ix].selectMinute);
-                            this.setState({
-                              selectHourAdditional: newHour,
-                              worked_hours_additional: newWorked_hours,
-                            });
+                        {nameFull}
+                      </Text>
+                      <Item stackedLabel>
+                        <Label>{t('JOBS.laborHoursLabel')}</Label>
+                        <View
+                          style={{
+                            flexDirection: 'row',
                           }}>
-                          {this.hoursSet()}
-                        </Picker>
-                        <Picker
-                          mode="dropdown"
-                          iosHeader="Select min"
-                          iosIcon={<Icon name="arrow-down" />}
-                          style={{ width: undefined }}
-                          selectedValue={selectMinutesAdditional[ix].selectMinute}
-                          onValueChange={(min) => {
-                            const newMin = selectMinutesAdditional;
-                            newMin[ix].selectMinute = min;
-                            const newWorked_hours = worked_hours_additional;
-                            newWorked_hours[ix].worked_hours =
-                              parseInt(selectHourAdditional[ix].selectHour) + parseFloat(min);
-                            this.setState({
-                              selectMinutesAdditional: newMin,
-                              worked_hours_additional: newWorked_hours,
-                            });
-                          }}>
-                          {this.minSet()}
-                        </Picker>
-                      </View>
-                    </Item>
-                  </>
-                );
-              })}
+                          <Picker
+                            mode="dropdown"
+                            iosHeader="Select hour"
+                            iosIcon={<Icon name="arrow-down" />}
+                            style={{ width: undefined }}
+                            selectedValue={selectHourAdditional[ix].selectHour}
+                            onValueChange={(hour) => {
+                              const newHour = selectHourAdditional;
+                              newHour[ix].selectHour = hour;
+                              const newWorked_hours = worked_hours_additional;
+                              newWorked_hours[ix].worked_hours =
+                                parseInt(hour) +
+                                parseFloat(selectMinutesAdditional[ix].selectMinute);
+                              this.setState({
+                                selectHourAdditional: newHour,
+                                worked_hours_additional: newWorked_hours,
+                              });
+                            }}>
+                            {this.hoursSet()}
+                          </Picker>
+                          <Picker
+                            mode="dropdown"
+                            iosHeader="Select min"
+                            iosIcon={<Icon name="arrow-down" />}
+                            style={{ width: undefined }}
+                            selectedValue={selectMinutesAdditional[ix].selectMinute}
+                            onValueChange={(min) => {
+                              const newMin = selectMinutesAdditional;
+                              newMin[ix].selectMinute = min;
+                              const newWorked_hours = worked_hours_additional;
+                              newWorked_hours[ix].worked_hours =
+                                parseInt(selectHourAdditional[ix].selectHour) + parseFloat(min);
+                              this.setState({
+                                selectMinutesAdditional: newMin,
+                                worked_hours_additional: newWorked_hours,
+                              });
+                            }}>
+                            {this.minSet()}
+                          </Picker>
+                        </View>
+                      </Item>
+                    </>
+                  );
+                })
+              : null}
             <Item stackedLabel>
               <Label>{t('JOBS.materials')}</Label>
               <Input
