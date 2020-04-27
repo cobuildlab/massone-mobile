@@ -95,10 +95,12 @@ class PauseJobScreen extends Component {
             <Textarea
               value={this.state.message}
               placeholder={t('JOBS.optionalComments')}
-              onChangeText={(text) => this.setState({ message: text })}
+              onChangeText={(text) => this.setState({ message: text, fieldsEmpty: false })}
               rowSpan={5}
+              maxLength={200}
               bordered
             />
+            <Text style={styles.textCount}>{this.state.message.length}/200</Text>
           </View>
 
           <Button title={'Pause Job'} primary block onPress={this.pauseJob}>
@@ -134,24 +136,30 @@ class PauseJobScreen extends Component {
   };
 
   pauseJob = () => {
-    if (!this.state.job || !this.state.job.title) return;
-
-    Alert.alert(this.props.t('JOBS.wantToPauseJob'), this.state.job.title, [
-      {
-        text: this.props.t('APP.cancel'),
-        onPress: () => {
-          LOG(this, 'Cancel pauseJob');
+    if (
+      this.state.job &&
+      this.state.job.title &&
+      this.state.message !== '' &&
+      this.state.reasonId
+    ) {
+      return Alert.alert(this.props.t('JOBS.wantToPauseJob'), this.state.job.title, [
+        {
+          text: this.props.t('APP.cancel'),
+          onPress: () => {
+            LOG(this, 'Cancel pauseJob');
+          },
         },
-      },
-      {
-        text: this.props.t('JOBS.pause'),
-        onPress: () => {
-          this.setState({ isLoading: true }, () => {
-            jobActions.pauseJob(this.state.job.id, this.state.messsage || '', this.state.reasonId);
-          });
+        {
+          text: this.props.t('JOBS.pause'),
+          onPress: () => {
+            this.setState({ isLoading: true }, () => {
+              jobActions.pauseJob(this.state.job.id, this.state.message, this.state.reasonId);
+            });
+          },
         },
-      },
-    ]);
+      ]);
+    }
+    return CustomToast('Complete all fields', 'warning');
   };
 }
 

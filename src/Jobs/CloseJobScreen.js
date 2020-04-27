@@ -165,11 +165,7 @@ class CloseJobScreen extends Component {
       worked_hours_additional,
       // laborHours,
     } = this.state;
-    // console.log('Hours select per first fieldworker ',laborHours);
-    console.log('Hours select per additional worker ', worked_hours_additional);
     const emailLoggedIn = authStore.getState('Login') && authStore.getState('Login').email;
-    console.log('User logueado ', emailLoggedIn);
-    console.log('JOB employeee ', job.employee.email);
     return (
       <Container>
         {this.state.isLoading ? <Loading /> : null}

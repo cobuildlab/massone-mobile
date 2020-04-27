@@ -264,6 +264,24 @@ const getJobHistory = (jobId, urlParams = '') => {
 };
 
 /**
+ * get comments and reason when job is paused
+ *
+ * @param {int} jobId
+ */
+
+const getReasonAndComent = (jobId) => {
+  getData(`/job/${jobId}/status-history/?last_time_paused=true`)
+    .then((data) => {
+      console.log('dataa PAUSED ', data);
+      // Flux.dispatchEvent('GetJobHistory', data);
+    })
+    .catch((err) => {
+      console.log('dataa PAUSED ERRORR', err);
+      // Flux.dispatchEvent('JobStoreError', err);
+    });
+};
+
+/**
  * Accept job action
  *
  * @param  {string|number} jobId
@@ -294,9 +312,11 @@ const pauseJob = (jobId, message, reasonId) => {
 
   postData(`/jobs/${jobId}/paused/`, { message, reason_id: reasonId })
     .then((data) => {
+      console.log('Job PAUSED SUCCESS ', data);
       Flux.dispatchEvent('PauseJob', data);
     })
     .catch((err) => {
+      console.log('Job PAUSED Err ', err);
       Flux.dispatchEvent('JobStoreError', err);
     });
 };
@@ -643,4 +663,5 @@ export {
   selectPart,
   selectEmployee,
   searchEmployees,
+  getReasonAndComent,
 };
