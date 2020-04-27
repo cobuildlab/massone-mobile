@@ -85,6 +85,8 @@ export default {
     jobDetails: 'Job details',
     jobStatusAndType: 'Status - Type',
     jobComments: 'Job comments',
+    comment: 'Comment',
+    reason: 'Reason',
     for: 'for',
     For: 'For',
     notAssigned: 'Not Assigned',

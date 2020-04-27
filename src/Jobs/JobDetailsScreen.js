@@ -25,6 +25,7 @@ class JobDetailsScreen extends Component {
       lastFiveJobs: [],
       additionalWorkers: [],
       loadingLastJobs: true,
+      pausedInfo: null,
       jobId: props.navigation.getParam('jobId', null),
     };
   }
@@ -43,6 +44,11 @@ class JobDetailsScreen extends Component {
     this.startJobSubscription = jobStore.subscribe('StartJob', this.updateJobHandler);
     this.closeJobSubscription = jobStore.subscribe('CloseJob', this.updateJobHandler);
     this.editJobSubscription = jobStore.subscribe('EditJob', this.updateJobHandler);
+
+    this.getCommentAndReasonSubscription = jobStore.subscribe(
+      'GetCommentsAndReason',
+      this.getCommentReasonHandler,
+    );
     this.deleteJobSubscription = jobStore.subscribe('DeleteJob', () => {
       CustomToast(this.props.t('JOBS.jobDeleted'));
       this.props.navigation.goBack();
@@ -69,12 +75,14 @@ class JobDetailsScreen extends Component {
     this.deleteJobSubscription.unsubscribe();
     this.getLastJobsSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
+    this.getCommentAndReasonSubscription.unsubscribe();
   }
 
   getJobHandler = (job) => {
     this.setState({ isLoading: false, job }, () => {
       this.getLastJobs(job.location.id);
       this.getAdditionalWorker(job.id);
+      this.getReasonAndCommets(job.id);
     });
   };
 
@@ -88,6 +96,12 @@ class JobDetailsScreen extends Component {
     this.setState({
       lastFiveJobs: lastJobs,
       loadingLastJobs: false,
+    });
+  };
+
+  getCommentReasonHandler = (results) => {
+    this.setState({
+      pausedInfo: results,
     });
   };
 
@@ -117,7 +131,7 @@ class JobDetailsScreen extends Component {
 
   render() {
     const { t } = this.props;
-    const { lastFiveJobs, additionalWorkers } = this.state;
+    const { lastFiveJobs, additionalWorkers, pausedInfo } = this.state;
     const { employee } = this.state.job;
     const created = this.state.job.date_start
       ? moment(this.state.job.date_start)
@@ -195,6 +209,39 @@ class JobDetailsScreen extends Component {
                 </Text>
               </View>
             </View>
+            {this.state.job.status === 'Paused' ? (
+              <View
+                style={[
+                  styles.marginSpace,
+                  {
+                    // alignItems: 'center',
+                  },
+                ]}>
+                <View>
+                  <Text style={styles.jobPausedStyle}>JOB PAUSED</Text>
+                </View>
+                {pausedInfo && pausedInfo.status === 'Paused' ? (
+                  <>
+                    <View style={styles.marginSpace}>
+                      <Text style={styles.keyTitle}>{t('JOBS.reason')}</Text>
+                      <View style={[styles.valueContainer, { flexDirection: 'row' }]}>
+                        <Text style={styles.keyValue}>
+                          {pausedInfo.reason ? pausedInfo.reason : t('JOBS.notProvided')}
+                        </Text>
+                      </View>
+                    </View>
+                    <View>
+                      <Text style={styles.keyTitle}>{t('JOBS.comment')}</Text>
+                    </View>
+                    <View style={[styles.valueContainer, { flexDirection: 'row' }]}>
+                      <Text style={styles.keyValue}>
+                        {pausedInfo.comment ? pausedInfo.comment : t('JOBS.notProvided')}
+                      </Text>
+                    </View>
+                  </>
+                ) : null}
+              </View>
+            ) : null}
             {additionalWorkers && additionalWorkers.length > 0 && (
               <View>
                 <View

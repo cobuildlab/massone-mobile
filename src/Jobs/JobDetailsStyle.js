@@ -15,6 +15,13 @@ export default StyleSheet.create({
     fontWeight: 'bold',
     fontSize: Dimensions.get('window').width <= 360 ? 18 : 19,
   },
+  jobPausedStyle: {
+    color: '#537DBF',
+    fontFamily: 'Arial',
+    fontWeight: 'bold',
+    textAlign: 'center',
+    fontSize: Dimensions.get('window').width <= 360 ? 18 : 19,
+  },
   marginSpace: {
     marginBottom: 18,
   },
