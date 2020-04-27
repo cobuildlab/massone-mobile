@@ -10,6 +10,7 @@ import authStore from '../Auth/authStore';
 import jobStore from './jobStore';
 import moment from 'moment';
 import JobDetailOptions from './JobDetailOption';
+import ReasonComments from './ReasonAndComments';
 import { LOG, validateRoles } from '../utils';
 
 class JobDetailsScreen extends Component {
@@ -209,39 +210,6 @@ class JobDetailsScreen extends Component {
                 </Text>
               </View>
             </View>
-            {this.state.job.status === 'Paused' ? (
-              <View
-                style={[
-                  styles.marginSpace,
-                  {
-                    // alignItems: 'center',
-                  },
-                ]}>
-                <View>
-                  <Text style={styles.jobPausedStyle}>JOB PAUSED</Text>
-                </View>
-                {pausedInfo && pausedInfo.status === 'Paused' ? (
-                  <>
-                    <View style={styles.marginSpace}>
-                      <Text style={styles.keyTitle}>{t('JOBS.reason')}</Text>
-                      <View style={[styles.valueContainer, { flexDirection: 'row' }]}>
-                        <Text style={styles.keyValue}>
-                          {pausedInfo.reason ? pausedInfo.reason : t('JOBS.notProvided')}
-                        </Text>
-                      </View>
-                    </View>
-                    <View>
-                      <Text style={styles.keyTitle}>{t('JOBS.comment')}</Text>
-                    </View>
-                    <View style={[styles.valueContainer, { flexDirection: 'row' }]}>
-                      <Text style={styles.keyValue}>
-                        {pausedInfo.comment ? pausedInfo.comment : t('JOBS.notProvided')}
-                      </Text>
-                    </View>
-                  </>
-                ) : null}
-              </View>
-            ) : null}
             {additionalWorkers && additionalWorkers.length > 0 && (
               <View>
                 <View
@@ -281,6 +249,9 @@ class JobDetailsScreen extends Component {
                 ))}
               </View>
             )}
+            {this.state.job.status === 'Paused' ? (
+              <ReasonComments pausedInfo={pausedInfo} t={t} />
+            ) : null}
           </Card>
           {lastFiveJobs && lastFiveJobs.results && lastFiveJobs.results.length > 0 && (
             <>

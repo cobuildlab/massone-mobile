@@ -82,6 +82,7 @@ export default {
     address: 'Address',
     jobs: 'Jobs',
     job: 'Job',
+    jobPausedTitle: 'JOB PAUSED',
     jobDetails: 'Job details',
     jobStatusAndType: 'Status - Type',
     jobComments: 'Job comments',
