@@ -489,6 +489,10 @@ class JobDetailsScreen extends Component {
     jobActions.getListAdditionalWorkers(id);
   };
 
+  getReasonAndCommets = (id) => {
+    jobActions.getReasonAndComent(id);
+  };
+
   getJob = () => {
     jobActions.getJob(this.state.jobId);
   };

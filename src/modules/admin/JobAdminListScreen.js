@@ -1,14 +1,6 @@
 import React from 'react';
 // import { Loading } from '../../utils/components';
-import {
-  Content,
-  Accordion,
-  Container,
-  Text,
-  Card,
-  CardItem,
-  Left,
-} from 'native-base';
+import { Content, Accordion, Container, Text, Card, CardItem, Left } from 'native-base';
 import { CustomHeader } from '../../utils/components';
 import { withNamespaces } from 'react-i18next';
 import jobStore from '../../Jobs/jobStore';
@@ -17,18 +9,9 @@ import moment from 'moment';
 import { H2 } from '../../shared/componets/text/H2';
 import Loading from '../../utils/components/Loading';
 import { log } from 'pure-logger';
-import { H3 } from '../../shared/componets/text/H3';
 import { GreenNormalText } from '../../shared/componets/text/GreenNormalText';
 
-const WEEK_DAYS = [
-  'Sunday',
-  'Monday',
-  'Tuesday',
-  'Wednesday',
-  'Thursday',
-  'Friday',
-  'Saturday',
-];
+const WEEK_DAYS = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
 
 /**
  *
@@ -118,14 +101,10 @@ class JobAdminListScreen extends React.Component {
                     </CardItem>
                     {thisDayJobs.map((job, i) => {
                       console.log('DEBUG:job', job);
-                      const jobType = job.job_type
-                        ? job.job_type.name
-                        : 'Not Assigned';
+                      const jobType = job.job_type ? job.job_type.name : 'Not Assigned';
                       const employee =
                         job.employee && job.employee.first_name
-                          ? `${job.employee.first_name} ${
-                            job.employee.last_name
-                          }`
+                          ? `${job.employee.first_name} ${job.employee.last_name}`
                           : t('JOBS.notAsigned');
                       const created = job.created
                         ? moment(job.created)
@@ -137,31 +116,60 @@ class JobAdminListScreen extends React.Component {
                           <H2>{`JOB # ${job.id}`}</H2>
                           <CardItem cardBody>
                             <Left>
-                              <H3>{job.title}</H3>
+                              <Text style={{ fontWeight: '600' }}>{`${t('JOBS.job')}: `}</Text>
+                              <Text>{job.title}</Text>
                             </Left>
                           </CardItem>
                           <CardItem cardBody>
                             <Left>
-                              <Text style={{ fontWeight: '700' }}>
+                              <Text style={{ fontWeight: '600' }}>{`${t(
+                                'JOBS.fieldworker',
+                              )}: `}</Text>
+                              <Text>
                                 <Text>{employee}</Text>
                               </Text>
                             </Left>
                           </CardItem>
                           <CardItem cardBody>
                             <Left>
-                              <GreenNormalText>
-                                {`${job.status} - ${jobType}`}
-                              </GreenNormalText>
+                              <Text style={{ fontWeight: '600' }}>{`${t(
+                                'JOBS.jobStatusAndType',
+                              )}: `}</Text>
+                              <GreenNormalText>{`${job.status} - ${jobType}`}</GreenNormalText>
                             </Left>
                           </CardItem>
                           <CardItem cardBody>
                             <Left>
-                              <Text>
-                                <Text>{`${t('JOBS.createdAt')}: `}</Text>
-                                <Text>{created}</Text>
-                              </Text>
+                              <Text style={{ fontWeight: '600' }}>{`${t(
+                                'JOBS.createdAt',
+                              )}: `}</Text>
+                              <Text>{created}</Text>
                             </Left>
                           </CardItem>
+                          {job.completion_notes ? (
+                            <CardItem cardBody>
+                              <Left>
+                                <Text>
+                                  <Text style={{ fontWeight: '600' }}>{`${t(
+                                    'JOBS.completionNotes',
+                                  )}: `}</Text>
+                                  <Text>{job.completion_notes}</Text>
+                                </Text>
+                              </Left>
+                            </CardItem>
+                          ) : null}
+                          {job.worked_performed ? (
+                            <CardItem cardBody>
+                              <Left>
+                                <Text>
+                                  <Text style={{ fontWeight: '600' }}>{`${t(
+                                    'JOBS.workPerformed',
+                                  )}: `}</Text>
+                                  <Text>{job.worked_performed}</Text>
+                                </Text>
+                              </Left>
+                            </CardItem>
+                          ) : null}
                         </Content>
                       );
                     })}

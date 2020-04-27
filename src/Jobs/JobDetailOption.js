@@ -16,7 +16,7 @@ const JobDetailOptions = (props) => {
   } = props;
   return job.status &&
     job.employee.email === emailLoggedIn &&
-    job.status !== 'Paused' &&
+    // job.status !== 'Paused' &&
     job.status !== 'Closed' ? (
       <>
         <View style={styles.containerBtnOptions}>
@@ -35,7 +35,7 @@ const JobDetailOptions = (props) => {
               <Text style={styles.textButton}>{t('JOBS.endDrive')}</Text>
             </TouchableOpacity>
           ) : null}
-          {job.status === 'End Drive Time' ? (
+          {job.status === 'End Drive Time' || job.status === 'Paused' ? (
             <TouchableOpacity style={styles.btnPrimary} onPress={startJob}>
               <Text style={styles.textButton}>{t('JOBS.startJob')}</Text>
             </TouchableOpacity>

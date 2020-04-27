@@ -81,7 +81,9 @@ export default {
   JOBS: {
     address: 'Address',
     jobs: 'Jobs',
+    job: 'Job',
     jobDetails: 'Job details',
+    jobStatusAndType: 'Status - Type',
     jobComments: 'Job comments',
     for: 'for',
     For: 'For',

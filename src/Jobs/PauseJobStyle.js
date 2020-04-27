@@ -13,6 +13,12 @@ export default StyleSheet.create({
     color: BLUE_MAIN,
     textAlign: 'center',
   },
+  textCount: {
+    textAlign: 'right',
+    marginTop: 5,
+    color: 'gray',
+    fontSize: 14,
+  },
   textJob: {
     textAlign: 'center',
   },
