@@ -10,6 +10,7 @@ import authStore from '../Auth/authStore';
 import jobStore from './jobStore';
 import moment from 'moment';
 import JobDetailOptions from './JobDetailOption';
+import ReasonComments from './ReasonAndComments';
 import { LOG, validateRoles } from '../utils';
 
 class JobDetailsScreen extends Component {
@@ -25,6 +26,7 @@ class JobDetailsScreen extends Component {
       lastFiveJobs: [],
       additionalWorkers: [],
       loadingLastJobs: true,
+      pausedInfo: null,
       jobId: props.navigation.getParam('jobId', null),
     };
   }
@@ -43,6 +45,11 @@ class JobDetailsScreen extends Component {
     this.startJobSubscription = jobStore.subscribe('StartJob', this.updateJobHandler);
     this.closeJobSubscription = jobStore.subscribe('CloseJob', this.updateJobHandler);
     this.editJobSubscription = jobStore.subscribe('EditJob', this.updateJobHandler);
+
+    this.getCommentAndReasonSubscription = jobStore.subscribe(
+      'GetCommentsAndReason',
+      this.getCommentReasonHandler,
+    );
     this.deleteJobSubscription = jobStore.subscribe('DeleteJob', () => {
       CustomToast(this.props.t('JOBS.jobDeleted'));
       this.props.navigation.goBack();
@@ -69,12 +76,14 @@ class JobDetailsScreen extends Component {
     this.deleteJobSubscription.unsubscribe();
     this.getLastJobsSubscription.unsubscribe();
     this.jobStoreError.unsubscribe();
+    this.getCommentAndReasonSubscription.unsubscribe();
   }
 
   getJobHandler = (job) => {
     this.setState({ isLoading: false, job }, () => {
       this.getLastJobs(job.location.id);
       this.getAdditionalWorker(job.id);
+      this.getReasonAndCommets(job.id);
     });
   };
 
@@ -88,6 +97,12 @@ class JobDetailsScreen extends Component {
     this.setState({
       lastFiveJobs: lastJobs,
       loadingLastJobs: false,
+    });
+  };
+
+  getCommentReasonHandler = (results) => {
+    this.setState({
+      pausedInfo: results,
     });
   };
 
@@ -117,7 +132,7 @@ class JobDetailsScreen extends Component {
 
   render() {
     const { t } = this.props;
-    const { lastFiveJobs, additionalWorkers } = this.state;
+    const { lastFiveJobs, additionalWorkers, pausedInfo } = this.state;
     const { employee } = this.state.job;
     const created = this.state.job.date_start
       ? moment(this.state.job.date_start)
@@ -234,6 +249,9 @@ class JobDetailsScreen extends Component {
                 ))}
               </View>
             )}
+            {this.state.job.status === 'Paused' ? (
+              <ReasonComments pausedInfo={pausedInfo} t={t} />
+            ) : null}
           </Card>
           {lastFiveJobs && lastFiveJobs.results && lastFiveJobs.results.length > 0 && (
             <>

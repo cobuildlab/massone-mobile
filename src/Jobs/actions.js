@@ -270,14 +270,17 @@ const getJobHistory = (jobId, urlParams = '') => {
  */
 
 const getReasonAndComent = (jobId) => {
-  getData(`/job/${jobId}/status-history/?last_time_paused=true`)
+  getData(`/job/${jobId}/status-history/`)
     .then((data) => {
       console.log('dataa PAUSED ', data);
-      // Flux.dispatchEvent('GetJobHistory', data);
+      if (data.results.length > 0) {
+        const lastElement = data.results[data.results.length - 1];
+        Flux.dispatchEvent('GetCommentsAndReason', lastElement);
+      }
     })
     .catch((err) => {
       console.log('dataa PAUSED ERRORR', err);
-      // Flux.dispatchEvent('JobStoreError', err);
+      Flux.dispatchEvent('JobStoreError', err);
     });
 };
 
@@ -310,7 +313,7 @@ const pauseJob = (jobId, message, reasonId) => {
     return Flux.dispatchEvent('JobStoreError', err);
   }
 
-  postData(`/jobs/${jobId}/paused/`, { message, reason_id: reasonId })
+  postData(`/jobs/${jobId}/paused/`, { comment: message, reason_id: reasonId })
     .then((data) => {
       console.log('Job PAUSED SUCCESS ', data);
       Flux.dispatchEvent('PauseJob', data);

@@ -97,6 +97,7 @@ class PauseJobScreen extends Component {
               placeholder={t('JOBS.optionalComments')}
               onChangeText={(text) => this.setState({ message: text, fieldsEmpty: false })}
               rowSpan={5}
+              autoCorrect={false}
               maxLength={200}
               bordered
             />
