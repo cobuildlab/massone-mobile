@@ -137,12 +137,7 @@ class PauseJobScreen extends Component {
   };
 
   pauseJob = () => {
-    if (
-      this.state.job &&
-      this.state.job.title &&
-      this.state.message !== '' &&
-      this.state.reasonId
-    ) {
+    if (this.state.job && this.state.job.title && this.state.reasonId) {
       return Alert.alert(this.props.t('JOBS.wantToPauseJob'), this.state.job.title, [
         {
           text: this.props.t('APP.cancel'),
