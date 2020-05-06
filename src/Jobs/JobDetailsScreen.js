@@ -83,7 +83,9 @@ class JobDetailsScreen extends Component {
     this.setState({ isLoading: false, job }, () => {
       this.getLastJobs(job.location.id);
       this.getAdditionalWorker(job.id);
-      this.getReasonAndCommets(job.id);
+      if (job.status === 'Paused') {
+        this.getReasonAndCommets(job.id);
+      }
     });
   };
 
