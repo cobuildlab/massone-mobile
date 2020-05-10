@@ -189,6 +189,7 @@ class CloseJobScreen extends Component {
               <Label>{t('JOBS.completionNotes')}</Label>
               <Input
                 value={this.state.completionNotes}
+                multiline
                 placeholder={t('JOBS.completionNotesPlaceholder')}
                 onChangeText={(completionNotes) => this.setState({ completionNotes })}
               />

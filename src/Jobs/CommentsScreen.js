@@ -21,18 +21,10 @@ import { withNamespaces } from 'react-i18next';
 import * as jobActions from './actions';
 import jobStore from './jobStore';
 import moment from 'moment';
-import ImagePicker from 'react-native-image-picker';
-import { DocumentPicker, DocumentPickerUtil } from 'react-native-document-picker';
+import ImagePicker from 'react-native-image-crop-picker';
 import { BLUE_MAIN } from '../constants/colorPalette';
 import { LOG, WARN, sortByDate } from '../utils';
 import { getBottomSpace, isIphoneX } from 'react-native-iphone-x-helper';
-
-const IMAGE_PICKER_OPTIONS = {
-  mediaType: 'photo',
-  cameraType: 'back',
-  noData: true,
-  skipBackup: true,
-};
 
 class CommentsScreen extends Component {
   static navigationOptions = {
@@ -232,10 +224,10 @@ class CommentsScreen extends Component {
         <View>
           {attachFile && (
             <View style={{ flexDirection: 'row', justifyContent: 'space-around' }}>
-              <Button title={'SELECT IMAGE'} onPress={this.selectImage} dark transparent>
+              <Button title={'SELECT IMAGE'} onPress={this.getPhotoFromPicker} dark transparent>
                 <Icon active name="md-image" />
               </Button>
-              <Button title={'OPEN CAMERA'} onPress={this.openCamera} dark transparent>
+              <Button title={'OPEN CAMERA'} onPress={this.takePhotoFromPicker} dark transparent>
                 <Icon active name="md-camera" />
               </Button>
             </View>
@@ -348,79 +340,66 @@ class CommentsScreen extends Component {
     });
   };
 
-  selectFile = () => {
-    DocumentPicker.show(
-      {
-        filetype: [DocumentPickerUtil.pdf(), DocumentPickerUtil.images()],
-      },
-      (err, res) => {
-        if (err) return this.errorHandler(err);
-
-        if (res.type === 'application/pdf') return this.handleFile(res);
-
-        this.handleImagePickerResponse(res);
-      },
-    );
+  getPhotoFromPicker = () => {
+    ImagePicker.openPicker({
+      mediaType: 'photo',
+      compressImageQuality: Platform.OS === 'ios' ? 2.5 : 1,
+      width: 1080,
+      height: 1250,
+      cropping: true,
+    })
+      .then((image) => {
+        console.log('Imageee pickerrr ', image);
+        const imageView = image.path;
+        const ext =
+          Platform.OS === 'ios' ? image.filename.split('.').pop() : imageView.split('.').pop(); // Extract image extension
+        const filename = `${moment().valueOf()}.${ext.toLowerCase()}`;
+        const type = `image/${ext.toLowerCase() === 'jpg' ? 'jpeg' : ext.toLowerCase()}`;
+        const selectedImage = {
+          uri: imageView,
+          type,
+          name: filename,
+        };
+        // console.log('Selected image ', selectedImage);
+        this.setState({
+          selectedImage,
+          attachFile: false,
+        });
+      })
+      .catch((e) => console.log('Error ', e));
   };
 
-  selectImage = () => {
-    ImagePicker.launchImageLibrary(IMAGE_PICKER_OPTIONS, this.handleImagePickerResponse);
-  };
-
-  openCamera = () => {
-    ImagePicker.launchCamera(IMAGE_PICKER_OPTIONS, this.handleImagePickerResponse);
-  };
-
-  /**
-   * Handle react-native-image-picker or react-native-document-picker
-   * response and set the selected image
-   * @param  {object} response A react-native-image-picker or
-   * react-native-document-picker image response with the uri, type & name
-   */
-  handleImagePickerResponse = (response) => {
-    if (response.didCancel) {
-      // for react-native-image-picker response
-      LOG(this, 'User cancelled image picker');
-    } else if (response.error) {
-      // for react-native-image-picker response
-      LOG(this, `ImagePicker Error: ${response.error}`);
-    } else if (response.customButton) {
-      // for react-native-image-picker response
-      LOG(this, `User tapped custom button: ${response.customButton}`);
-    } else {
-      if (!response.uri) return;
-
-      let type = response.type;
-      if (type === undefined && response.fileName === undefined) {
-        const pos = response.uri.lastIndexOf('.');
-        type = response.uri.substring(pos + 1);
-        if (type) type = `image/${type}`;
-      }
-      if (type === undefined) {
-        const splitted = response.fileName.split('.');
-        type = splitted[splitted.length - 1];
-        if (type) type = `image/${type}`;
-      }
-
-      let name = response.fileName;
-      if (name === undefined) {
-        const pos = response.uri.lastIndexOf('/');
-        name = response.uri.substring(pos + 1);
-      }
-
-      const selectedImage = {
-        uri: response.uri,
-        type: type.toLowerCase(),
-        name,
-      };
-
-      this.setState({ selectedImage, selectedFile: {} });
-    }
+  takePhotoFromPicker = () => {
+    ImagePicker.openCamera({
+      compressImageQuality: Platform.OS === 'ios' ? 2.5 : 1,
+      mediaType: 'photo',
+      width: 1080,
+      height: 1250,
+      cropping: true,
+    })
+      .then((image) => {
+        // console.log(`DEBUG:AddPost:fromCAmera:`, image);
+        const imageView = image.path;
+        const ext = imageView.split('.').pop(); // Extract image extension
+        const filename = `${moment().valueOf()}.${ext.toLowerCase()}`;
+        const selectedImage = {
+          uri: imageView,
+          type: image.mime.toLowerCase(),
+          name: filename,
+        };
+        // console.log('Selected image ', selectedImage);
+        this.setState({
+          selectedImage,
+          attachFile: false,
+        });
+      })
+      .catch((e) => console.log('Error ', e));
   };
 
   /**
    * Handle react-native-document-picker
    * response and set the selected file only, DONT USE FOR IMAGES
+   *
    * @param  {object} response react-native-document-picker file
    * response with the uri, type & name
    */
