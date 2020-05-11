@@ -190,7 +190,7 @@ class CommentsScreen extends Component {
                       cardBody>
                       <Image
                         source={{ uri: image.image_comment }}
-                        style={{ height: 200, flex: 1 }}
+                        style={{ height: 220, flex: 1 }}
                       />
                     </CardItem>
                   ))
@@ -345,6 +345,7 @@ class CommentsScreen extends Component {
       mediaType: 'photo',
       compressImageQuality: Platform.OS === 'ios' ? 2.5 : 1,
       width: 500,
+      forceJpg: true,
       height: 600,
       cropping: true,
     })
