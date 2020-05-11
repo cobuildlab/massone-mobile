@@ -358,6 +358,7 @@ class CommentsScreen extends Component {
           uri: imageView,
           type: image.mime.toLowerCase(),
           name: filename,
+          size: image.size,
         };
         // console.log('Selected image ', selectedImage);
         this.setState({
@@ -385,6 +386,7 @@ class CommentsScreen extends Component {
           uri: imageView,
           type: image.mime.toLowerCase(),
           name: filename,
+          size: image.size,
         };
         // console.log('Selected image ', selectedImage);
         this.setState({
