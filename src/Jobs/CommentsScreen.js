@@ -344,20 +344,18 @@ class CommentsScreen extends Component {
     ImagePicker.openPicker({
       mediaType: 'photo',
       compressImageQuality: Platform.OS === 'ios' ? 2.5 : 1,
-      width: 1080,
-      height: 1250,
+      width: 500,
+      height: 600,
       cropping: true,
     })
       .then((image) => {
-        console.log('Imageee pickerrr ', image);
+        // console.log('Imageee pickerrr ', image);
         const imageView = image.path;
-        const ext =
-          Platform.OS === 'ios' ? image.filename.split('.').pop() : imageView.split('.').pop(); // Extract image extension
+        const ext = imageView.split('.').pop(); // Extract image extension
         const filename = `${moment().valueOf()}.${ext.toLowerCase()}`;
-        const type = `image/${ext.toLowerCase() === 'jpg' ? 'jpeg' : ext.toLowerCase()}`;
         const selectedImage = {
           uri: imageView,
-          type,
+          type: image.mime.toLowerCase(),
           name: filename,
         };
         // console.log('Selected image ', selectedImage);
@@ -373,8 +371,8 @@ class CommentsScreen extends Component {
     ImagePicker.openCamera({
       compressImageQuality: Platform.OS === 'ios' ? 2.5 : 1,
       mediaType: 'photo',
-      width: 1080,
-      height: 1250,
+      width: 500,
+      height: 600,
       cropping: true,
     })
       .then((image) => {
