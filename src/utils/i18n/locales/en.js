@@ -125,6 +125,7 @@ export default {
     closeJob: 'Close job',
     invalidJob: 'Invalid job',
     invalidFiles: 'Invalid File',
+    invalidSizePicture: 'The maximum image size is 10MB',
     invalidFileType: 'Only jpg, png and pdf files are allowed',
     viewPdf: 'View pdf',
     viewImage: 'View image',

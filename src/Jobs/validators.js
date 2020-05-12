@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { isValidString, isValidNumber, isValidInteger } from '../utils';
+import { isValidString, isValidNumber, isValidInteger, isValidSize } from '../utils';
 import { i18n } from '../utils/i18n';
 
 const validFileTypes = ['image/jpg', 'image/jpeg', 'image/png', 'application/pdf'];
@@ -20,9 +20,10 @@ const pauseJobValidator = (jobId, message, reasonId) => {
 
 /**
  * Login validator
+ *
  * @param  {string} jobId
  * @param  {string} message
- * @param  {array} files
+ * @param  {Array} files
  * @throws {Error} if there is a invalid or missing value
  */
 const commentJobValidator = (jobId, message, files) => {
@@ -46,6 +47,9 @@ const commentJobValidator = (jobId, message, files) => {
       if (!isValidString(file.name)) {
         throw new Error(i18n.t('JOBS.invalidFiles'));
       }
+      if (!isValidSize(file.size)) {
+        throw new Error(i18n.t('JOBS.invalidSizePicture'));
+      }
       if (isValidString(file.type)) {
         let isValidType = false;
         for (const type of validFileTypes) {
@@ -60,6 +64,7 @@ const commentJobValidator = (jobId, message, files) => {
 
 /**
  * Validator to Create service order to close job
+ *
  * @param {number} jobId
  * @param {string} equipment
  * @param {string} completionNotes
