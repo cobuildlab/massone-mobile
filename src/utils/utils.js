@@ -22,7 +22,7 @@ const isValidString = (stringToTest, allowEmpty = false, allowNull = false) => {
  * @param size The string to validate
  */
 const isValidSize = (size) => {
-  if (size > 1799999) return false;
+  if (size > 9899999) return false;
   return true;
 };
 
