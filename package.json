@@ -33,7 +33,7 @@
     "react-native-linear-gradient": "^2.5.6",
     "react-native-modal-datetime-picker": "^8.5.1",
     "react-native-offline": "^5.4.0",
-    "react-native-screens": "^2.0.0-beta.6",
+    "react-native-screens": "^2.18.1",
     "react-native-signature-capture": "^0.4.10",
     "react-native-view-pdf": "^0.10.1",
     "react-navigation": "^3.0.0",
