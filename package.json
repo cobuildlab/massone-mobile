@@ -19,7 +19,7 @@
     "flux-state": "^4.1.0",
     "i18next": "^12.1.0",
     "moment": "^2.24.0",
-    "moment-timezone": "^0.5.27",
+    "moment-timezone": "^0.5.35",
     "native-base": "^2.8.1",
     "pure-logger": "0.0.1",
     "react": "16.9.0",
