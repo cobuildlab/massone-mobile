@@ -5597,10 +5597,10 @@ mock-apollo-client@^0.2.0:
   resolved "https://registry.yarnpkg.com/mock-apollo-client/-/mock-apollo-client-0.2.0.tgz#8d9c99247d4f16cb5553479473c63dbce8a856fa"
   integrity sha512-Sfrvzn3yBGqGZeIazp0N5lLSXvQL0MUaUFb60hVfMYIapLqZJH04Ll0TnX7lA4uRUz7mq+g0fpBzztZ/khS9LA==
 
-moment-timezone@^0.5.27:
-  version "0.5.28"
-  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.28.tgz#f093d789d091ed7b055d82aa81a82467f72e4338"
-  integrity sha512-TDJkZvAyKIVWg5EtVqRzU97w0Rb0YVbfpqyjgu6GwXCAohVRqwZjf4fOzDE6p1Ch98Sro/8hQQi65WDXW5STPw==
+moment-timezone@^0.5.35:
+  version "0.5.35"
+  resolved "https://registry.yarnpkg.com/moment-timezone/-/moment-timezone-0.5.35.tgz#6fa2631bdbe8ff04f6b8753f7199516be6dc9839"
+  integrity sha512-cY/pBOEXepQvlgli06ttCTKcIf8cD1nmNwOKQQAdHBqYApQSpAqotBMX0RJZNgMp6i0PlZuf1mFtnlyEkwyvFw==
   dependencies:
     moment ">= 2.9.0"
 
